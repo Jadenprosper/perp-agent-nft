@@ -3,12 +3,11 @@
     "id": 1,
     "name": "Lord Leverage",
     "traits": {
-      "eyewear": "matte black wraparound shield sunglasses",
-      "accessory": "silver Cuban link chain on neck",
-      "outfit": "black crewneck fleece sweater",
-      "bag": "plain crumpled brown bag no stickers",
-      "detail": "tiny enamel pin green candle on lapel",
-      "background": "night trading desk with dual monitors showing abstract green candles, soft bokeh, no readable text"
+      "outfit": "thick black crewneck fleece sweater with ribbed collar",
+      "eyewear": "glossy jet-black wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "thin polished silver curb chain on neck",
+      "bag": "plain crumpled brown kraft bag, no stickers",
+      "background": "night trading desk with dual monitors showing abstract green/red candlestick shapes, soft bokeh"
     },
     "image": "/agents/1.jpg"
   },
@@ -16,12 +15,11 @@
     "id": 2,
     "name": "Sir Buys-The-Top",
     "traits": {
-      "eyewear": "glossy jet-black V-notch shield sunglasses",
-      "accessory": "knit charcoal beanie with cuff on bag",
-      "outfit": "olive bomber jacket zipped",
-      "bag": "single green up-arrow sticker",
-      "detail": "tiny enamel pin red crash candle on lapel",
-      "background": "3am dark bedroom lit only by red chart glow on wall, messy blankets silhouette"
+      "outfit": "olive green bomber jacket zipped",
+      "eyewear": "matte charcoal wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "charcoal knit beanie with cuff on TOP of bag",
+      "bag": "one small solid green upward triangle sticker",
+      "background": "3am dark bedroom lit only by red chart glow on the wall, messy bed silhouette"
     },
     "image": "/agents/2.jpg"
   },
@@ -29,12 +27,11 @@
     "id": 3,
     "name": "Captain Stop-Loss",
     "traits": {
-      "eyewear": "dark smoke mirrored shield sunglasses",
-      "accessory": "flat black newsboy cap on bag",
-      "outfit": "gray pullover hoodie",
-      "bag": "single red down-arrow sticker",
-      "detail": "round metal badge with blank chart icon on chest",
-      "background": "rooftop at dusk overlooking city skyline with subtle ascending price line neon"
+      "outfit": "navy blue heavyweight hoodie",
+      "eyewear": "thin gold-rim wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "thick gold Cuban link chain on neck",
+      "bag": "one small solid red X made of two tape strips",
+      "background": "nighttime rooftop with distant city lights and LED ticker of abstract colored bars only"
     },
     "image": "/agents/3.jpg"
   },
@@ -42,12 +39,11 @@
     "id": 4,
     "name": "Duke of Dump",
     "traits": {
-      "eyewear": "gunmetal sport wraparound shades",
-      "accessory": "no extra headgear",
-      "outfit": "white ribbed turtleneck",
-      "bag": "tiny crescent moon sticker",
-      "detail": "hexagon badge with up-arrow on jacket",
-      "background": "busy trading floor pit with blurred suited figures and ticker boards unreadable"
+      "outfit": "charcoal gray quilted puffer jacket high collar",
+      "eyewear": "chrome-edge wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "black leather O-ring choker on neck",
+      "bag": "one small solid white circle sticker",
+      "background": "busy trading floor with trader silhouettes and glowing screens far away"
     },
     "image": "/agents/4.jpg"
   },
@@ -55,12 +51,11 @@
     "id": 5,
     "name": "Baron Bagholder",
     "traits": {
-      "eyewear": "onyx rectangular shield glasses",
-      "accessory": "plain black beanie perched on bag top",
-      "outfit": "navy zip-up hoodie",
-      "bag": "simple green candlestick doodle",
-      "detail": "shield-shaped badge with dollar mark on chest",
-      "background": "server room aisle with blue LED racks receding into distance"
+      "outfit": "black technical softshell over white crew tee",
+      "eyewear": "smoke-tinted wraparound shield sunglasses with dark gradient lenses and black strap (same frame shape as reference)",
+      "accessory": "dark red paisley bandana as neckerchief under bag",
+      "bag": "one small solid yellow lightning-bolt sticker",
+      "background": "server room with blue LED rack lights and cable blur, cool lighting"
     },
     "image": "/agents/5.jpg"
   },
@@ -68,12 +63,11 @@
     "id": 6,
     "name": "Agent Long",
     "traits": {
-      "eyewear": "pitch-black visor-style shades",
-      "accessory": "backwards black baseball cap on bag",
-      "outfit": "purple oversized hoodie",
-      "bag": "simple red crash candle doodle",
-      "detail": "star enamel pin gold on collar",
-      "background": "minimalist loft with huge wall chart mural of soft green candles"
+      "outfit": "brown leather motorcycle jacket with soft collar",
+      "eyewear": "mirrored silver-lens wraparound shield sunglasses with black frame and strap (same frame shape as reference)",
+      "accessory": "charcoal flat ivy cap sitting on TOP of bag",
+      "bag": "strip of clear packing tape across a fold, no writing",
+      "background": "neon city night through a large window, pink and cyan glow beside a glowing laptop chart"
     },
     "image": "/agents/6.jpg"
   },
@@ -81,12 +75,11 @@
     "id": 7,
     "name": "Queen of Quants",
     "traits": {
-      "eyewear": "charcoal wraparound racing shades",
-      "accessory": "thin gold chain necklace on neck",
       "outfit": "black suit jacket no tie",
-      "bag": "yellow sticky note reading REKT",
-      "detail": "rocket enamel pin small on zipper pull",
-      "background": "coffee shop window seat rainy day, laptop glow, city bokeh outside"
+      "eyewear": "gunmetal frame wraparound shield sunglasses with black lenses and strap (same frame shape as reference)",
+      "accessory": "no extra accessory",
+      "bag": "one small solid green circle sticker",
+      "background": "home office dawn desk with ultrawide monitor abstract green chart glow"
     },
     "image": "/agents/7.jpg"
   },
@@ -94,12 +87,11 @@
     "id": 8,
     "name": "Prince Pump",
     "traits": {
-      "eyewear": "obsidian oversized shield sunglasses",
-      "accessory": "thick black rope necklace on neck",
       "outfit": "red tropical short-sleeve shirt",
-      "bag": "diamond-hands doodle in black marker",
-      "detail": "bull silhouette pin on lapel",
-      "background": "garage setup with RGB PC and single ultrawide showing purple orderbook bars abstract"
+      "eyewear": "glossy onyx wraparound shield sunglasses with deep blue tint lenses and black strap (same frame shape as reference)",
+      "accessory": "thin black leather cord necklace with small silver bead",
+      "bag": "one small solid red triangle sticker",
+      "background": "crypto cafe booth with laptop chart glow and bokeh string lights"
     },
     "image": "/agents/8.jpg"
   },
@@ -107,12 +99,11 @@
     "id": 9,
     "name": "Lady Liquidation",
     "traits": {
-      "eyewear": "black chrome half-rim shield shades",
-      "accessory": "dark bandana tied around bag",
       "outfit": "charcoal quarter-zip pullover",
-      "bag": "small orange rocket sticker",
-      "detail": "bear silhouette pin on lapel",
-      "background": "yacht deck at sunset with soft gold coin-like bokeh on water"
+      "eyewear": "matte black wraparound shield sunglasses with bronze-tint lenses and black strap (same frame shape as reference)",
+      "accessory": "backwards black baseball cap on TOP of bag",
+      "bag": "one small solid white star sticker",
+      "background": "glass high-rise trading office at night overlooking blurred city grid"
     },
     "image": "/agents/9.jpg"
   },
@@ -120,12 +111,11 @@
     "id": 10,
     "name": "Count Candle",
     "traits": {
-      "eyewear": "stealth black angular shield sunglasses",
-      "accessory": "simple black snapback forward on bag",
       "outfit": "forest green flannel shirt",
-      "bag": "blue dollar-sign sticker",
-      "detail": "diamond enamel pin on collar",
-      "background": "subway car late night empty seats, phone chart glow reflection"
+      "eyewear": "obsidian wraparound shield sunglasses with green-mirror lenses and black strap (same frame shape as reference)",
+      "accessory": "simple black snapback forward on TOP of bag",
+      "bag": "one small solid yellow diamond sticker",
+      "background": "basement trading cave with stacked monitors abstract candles"
     },
     "image": "/agents/10.jpg"
   },
@@ -133,12 +123,11 @@
     "id": 11,
     "name": "Major Margin",
     "traits": {
-      "eyewear": "matte black wraparound shield sunglasses",
-      "accessory": "silver Cuban link chain on neck",
       "outfit": "beige trench coat collar up",
-      "bag": "green checkmark stamp",
-      "detail": "lightning bolt pin silver on chest",
-      "background": "mountain cabin desk by snowy window, wood panels, green candle lamp light"
+      "eyewear": "glossy jet-black wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "no extra accessory",
+      "bag": "one small solid orange hexagon sticker",
+      "background": "airport lounge desk with blurred departure boards as colored bars and laptop chart"
     },
     "image": "/agents/11.jpg"
   },
@@ -146,12 +135,11 @@
     "id": 12,
     "name": "Sergeant Scalp",
     "traits": {
-      "eyewear": "glossy jet-black V-notch shield sunglasses",
-      "accessory": "knit charcoal beanie with cuff on bag",
       "outfit": "maroon varsity jacket",
-      "bag": "red X stamp",
-      "detail": "moon phase pin on lapel",
-      "background": "neon Tokyo alley with wet pavement reflections and cyan chart neon sign shapes"
+      "eyewear": "matte charcoal wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "thin polished silver curb chain on neck",
+      "bag": "one small solid blue oval sticker",
+      "background": "co-working loft trading desk with exposed brick and soft monitor glow"
     },
     "image": "/agents/12.jpg"
   },
@@ -159,12 +147,11 @@
     "id": 13,
     "name": "Admiral All-In",
     "traits": {
-      "eyewear": "dark smoke mirrored shield sunglasses",
-      "accessory": "flat black newsboy cap on bag",
       "outfit": "sky blue denim jacket",
-      "bag": "black flame doodle",
-      "detail": "skull tiny pin on collar",
-      "background": "library reading room with tall shelves and a chalkboard of abstract curves"
+      "eyewear": "smoke-tinted wraparound shield sunglasses with dark gradient lenses and black strap (same frame shape as reference)",
+      "accessory": "thick gold Cuban link chain on neck",
+      "bag": "one small solid purple chevron sticker",
+      "background": "van-life mobile trading desk with laptop charts and rainy window bokeh"
     },
     "image": "/agents/13.jpg"
   },
@@ -172,12 +159,11 @@
     "id": 14,
     "name": "General Greencandle",
     "traits": {
-      "eyewear": "gunmetal sport wraparound shades",
-      "accessory": "no extra headgear",
       "outfit": "black leather moto jacket",
-      "bag": "white skull sticker tiny",
-      "detail": "flame enamel pin on zipper",
-      "background": "gym corner after hours, kettlebells, TV with muted red crash candles"
+      "eyewear": "mirrored silver-lens wraparound shield sunglasses with black frame and strap (same frame shape as reference)",
+      "accessory": "charcoal knit beanie with cuff on TOP of bag",
+      "bag": "one small solid teal lightning sticker",
+      "background": "yacht cabin trading desk with soft blue chart light and porthole blur"
     },
     "image": "/agents/14.jpg"
   },
@@ -185,12 +171,11 @@
     "id": 15,
     "name": "Corporal Crash",
     "traits": {
-      "eyewear": "onyx rectangular shield glasses",
-      "accessory": "plain black beanie perched on bag top",
       "outfit": "cream cable-knit sweater",
-      "bag": "gold star sticker",
-      "detail": "crown mini pin on lapel",
-      "background": "airport lounge window plane wing, tablet with ascending teal line"
+      "eyewear": "gunmetal frame wraparound shield sunglasses with black lenses and strap (same frame shape as reference)",
+      "accessory": "black leather O-ring choker on neck",
+      "bag": "one small solid mint leaf sticker",
+      "background": "mountain cabin trading loft with laptop chart and snowy window bokeh"
     },
     "image": "/agents/15.jpg"
   },
@@ -198,12 +183,11 @@
     "id": 16,
     "name": "Knight of Nighttrades",
     "traits": {
-      "eyewear": "pitch-black visor-style shades",
-      "accessory": "backwards black baseball cap on bag",
       "outfit": "teal tech fleece hoodie",
-      "bag": "purple lightning bolt sticker",
-      "detail": "anchor pin navy on chest",
-      "background": "beach sunrise with surfboard and phone showing green sparkline"
+      "eyewear": "glossy onyx wraparound shield sunglasses with deep blue tint lenses and black strap (same frame shape as reference)",
+      "accessory": "dark red paisley bandana as neckerchief under bag",
+      "bag": "one small solid coral teardrop sticker",
+      "background": "Tokyo alley neon reflections through rain-streaked window beside phone chart"
     },
     "image": "/agents/16.jpg"
   },
@@ -211,12 +195,11 @@
     "id": 17,
     "name": "Oracle of Overleverage",
     "traits": {
-      "eyewear": "charcoal wraparound racing shades",
-      "accessory": "thin gold chain necklace on neck",
       "outfit": "burgundy polo shirt",
-      "bag": "teal wave doodle",
-      "detail": "compass pin brass on collar",
-      "background": "penthouse glass wall night city, floating translucent red and green candles"
+      "eyewear": "matte black wraparound shield sunglasses with bronze-tint lenses and black strap (same frame shape as reference)",
+      "accessory": "charcoal flat ivy cap sitting on TOP of bag",
+      "bag": "one small solid gold moon sticker",
+      "background": "Dubai penthouse trading desk soft gold city bokeh and monitors"
     },
     "image": "/agents/17.jpg"
   },
@@ -224,12 +207,11 @@
     "id": 18,
     "name": "Duke Diamondhands",
     "traits": {
-      "eyewear": "obsidian oversized shield sunglasses",
-      "accessory": "thick black rope necklace on neck",
       "outfit": "slate gray henley",
-      "bag": "pink heart sticker tiny",
-      "detail": "key enamel pin on lapel",
-      "background": "basement bunker concrete walls, emergency light, single green terminal glow"
+      "eyewear": "thin gold-rim wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "thin black leather cord necklace with small silver bead",
+      "bag": "one small solid silver heart sticker",
+      "background": "London trading pit after hours empty desks lingering screen glow"
     },
     "image": "/agents/18.jpg"
   },
@@ -237,12 +219,11 @@
     "id": 19,
     "name": "Earl of Entries",
     "traits": {
-      "eyewear": "black chrome half-rim shield shades",
-      "accessory": "dark bandana tied around bag",
       "outfit": "orange safety puffer vest over tee",
-      "bag": "brown coffee-stain ring mark",
-      "detail": "lock pin silver on chest",
-      "background": "co-working space plants and whiteboards with scribbled chart shapes no letters"
+      "eyewear": "chrome-edge wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "backwards black baseball cap on TOP of bag",
+      "bag": "one small solid lime square sticker",
+      "background": "Singapore marina night trading apartment desk lamp and skyline blur"
     },
     "image": "/agents/19.jpg"
   },
@@ -250,12 +231,11 @@
     "id": 20,
     "name": "Viscount Volatility",
     "traits": {
-      "eyewear": "stealth black angular shield sunglasses",
-      "accessory": "simple black snapback forward on bag",
       "outfit": "white dress shirt open collar",
-      "bag": "duct-tape patch on corner",
-      "detail": "gear cog pin on collar",
-      "background": "desert mesa at golden hour, holographic chart floating above laptop"
+      "eyewear": "obsidian wraparound shield sunglasses with green-mirror lenses and black strap (same frame shape as reference)",
+      "accessory": "simple black snapback forward on TOP of bag",
+      "bag": "one small solid magenta arrowhead sticker",
+      "background": "NYC subway seat late night phone chart glow and abstract ad color panels"
     },
     "image": "/agents/20.jpg"
   },
@@ -263,12 +243,11 @@
     "id": 21,
     "name": "Marquis of Moon",
     "traits": {
-      "eyewear": "matte black wraparound shield sunglasses",
-      "accessory": "silver Cuban link chain on neck",
       "outfit": "black turtleneck under blazer",
-      "bag": "barcode sticker blank bars only",
-      "detail": "wifi signal pin on lapel",
-      "background": "rainy fire escape iron stairs, neon sign shapes, distant skyline"
+      "eyewear": "glossy jet-black wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "no extra accessory",
+      "bag": "one small solid navy flame sticker",
+      "background": "warehouse loft trading desk LED strips and chart projector glow"
     },
     "image": "/agents/21.jpg"
   },
@@ -276,12 +255,11 @@
     "id": 22,
     "name": "Baroness Breakout",
     "traits": {
-      "eyewear": "glossy jet-black V-notch shield sunglasses",
-      "accessory": "knit charcoal beanie with cuff on bag",
       "outfit": "camo pattern softshell jacket",
-      "bag": "green bull silhouette sticker",
-      "detail": "leaf pin green on chest",
-      "background": "vineyard terrace dusk, laptop on rustic table, soft green vine lights"
+      "eyewear": "matte charcoal wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "thin polished silver curb chain on neck",
+      "bag": "one small solid cyan circle sticker",
+      "background": "university carrel late-night laptop trading chart glow"
     },
     "image": "/agents/22.jpg"
   },
@@ -289,12 +267,11 @@
     "id": 23,
     "name": "Countess Consolidation",
     "traits": {
-      "eyewear": "dark smoke mirrored shield sunglasses",
-      "accessory": "flat black newsboy cap on bag",
       "outfit": "pink pastel hoodie",
-      "bag": "red bear silhouette sticker",
-      "detail": "heart pin tiny pink on collar",
-      "background": "ice hockey rink empty seats, jumbotron with abstract green bars"
+      "eyewear": "smoke-tinted wraparound shield sunglasses with dark gradient lenses and black strap (same frame shape as reference)",
+      "accessory": "thick gold Cuban link chain on neck",
+      "bag": "one small solid pink triangle sticker",
+      "background": "garage trading battlestation RGB PC glow abstract chart wallpaper"
     },
     "image": "/agents/23.jpg"
   },
@@ -302,12 +279,11 @@
     "id": 24,
     "name": "Sir Scalper",
     "traits": {
-      "eyewear": "gunmetal sport wraparound shades",
-      "accessory": "no extra headgear",
       "outfit": "mustard yellow work jacket",
-      "bag": "small target bullseye sticker",
-      "detail": "star-and-bar rank pin on shoulder seam",
-      "background": "basketball court night under lights, scoreboard blurred shapes only"
+      "eyewear": "mirrored silver-lens wraparound shield sunglasses with black frame and strap (same frame shape as reference)",
+      "accessory": "charcoal knit beanie with cuff on TOP of bag",
+      "bag": "one small solid amber star sticker",
+      "background": "hotel suite midnight trading desk city window bokeh"
     },
     "image": "/agents/24.jpg"
   },
@@ -315,12 +291,11 @@
     "id": 25,
     "name": "Dame Degenerate",
     "traits": {
-      "eyewear": "onyx rectangular shield glasses",
-      "accessory": "plain black beanie perched on bag top",
       "outfit": "indigo wash denim shirt",
-      "bag": "black infinity symbol doodle",
-      "detail": "round trading-floor visitor badge blank on chest",
-      "background": "recording studio booth, waveform screens soft purple, foam walls"
+      "eyewear": "gunmetal frame wraparound shield sunglasses with black lenses and strap (same frame shape as reference)",
+      "accessory": "black leather O-ring choker on neck",
+      "bag": "one small solid indigo diamond sticker",
+      "background": "rooftop greenhouse desk phone chart glow soft plant blur"
     },
     "image": "/agents/25.jpg"
   },
@@ -328,12 +303,11 @@
     "id": 26,
     "name": "Lord Limitorder",
     "traits": {
-      "eyewear": "pitch-black visor-style shades",
-      "accessory": "backwards black baseball cap on bag",
       "outfit": "black compression athletic top",
-      "bag": "white cloud doodle",
-      "detail": "lanyard clip with blank ID sleeve on collar",
-      "background": "kitchen island 2am, cereal bowl, laptop open to red candles"
+      "eyewear": "glossy onyx wraparound shield sunglasses with deep blue tint lenses and black strap (same frame shape as reference)",
+      "accessory": "dark red paisley bandana as neckerchief under bag",
+      "bag": "one small solid cream hexagon sticker",
+      "background": "desert night campsite laptop trading chart and starry sky bokeh"
     },
     "image": "/agents/26.jpg"
   },
@@ -341,12 +315,11 @@
     "id": 27,
     "name": "Lady Lambo",
     "traits": {
-      "eyewear": "charcoal wraparound racing shades",
-      "accessory": "thin gold chain necklace on neck",
       "outfit": "brown suede trucker jacket",
-      "bag": "orange caution triangle sticker",
-      "detail": "reflective safety strip patch on shoulder",
-      "background": "hotel business center cubicle, printer lights, muted navy charts"
+      "eyewear": "matte black wraparound shield sunglasses with bronze-tint lenses and black strap (same frame shape as reference)",
+      "accessory": "charcoal flat ivy cap sitting on TOP of bag",
+      "bag": "one small solid emerald oval sticker",
+      "background": "train cabin dusk tablet trading chart with window motion blur"
     },
     "image": "/agents/27.jpg"
   },
@@ -354,12 +327,11 @@
     "id": 28,
     "name": "Duke Drawdown",
     "traits": {
-      "eyewear": "obsidian oversized shield sunglasses",
-      "accessory": "thick black rope necklace on neck",
       "outfit": "lime green windbreaker",
-      "bag": "blue wifi-signal doodle",
-      "detail": "neon green zip-pull tab charm",
-      "background": "train sleeper cabin bunk, phone glow painting green on curtains"
+      "eyewear": "thin gold-rim wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "thin black leather cord necklace with small silver bead",
+      "bag": "one small solid ruby chevron sticker",
+      "background": "ferry deck night harbor lights and phone trading chart glow"
     },
     "image": "/agents/28.jpg"
   },
@@ -367,12 +339,11 @@
     "id": 29,
     "name": "Captain FOMO",
     "traits": {
-      "eyewear": "black chrome half-rim shield shades",
-      "accessory": "dark bandana tied around bag",
       "outfit": "wine red velvet blazer",
-      "bag": "green leaf sticker",
-      "detail": "orange hazard stripe patch on sleeve top",
-      "background": "space station cupola Earth curve, HUD overlay of soft candlesticks"
+      "eyewear": "chrome-edge wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "backwards black baseball cap on TOP of bag",
+      "bag": "one small solid sapphire lightning sticker",
+      "background": "stadium VIP box jumbotron abstract colored bars and tablet chart"
     },
     "image": "/agents/29.jpg"
   },
@@ -380,12 +351,11 @@
     "id": 30,
     "name": "Major Maxpain",
     "traits": {
-      "eyewear": "stealth black angular shield sunglasses",
-      "accessory": "simple black snapback forward on bag",
       "outfit": "ash gray sweatshirt with zipper pocket",
-      "bag": "red stop-hand doodle",
-      "detail": "camo fabric patch square on chest",
-      "background": "underwater viewing tunnel aquarium blue, bubbles as candle shapes"
+      "eyewear": "obsidian wraparound shield sunglasses with green-mirror lenses and black strap (same frame shape as reference)",
+      "accessory": "simple black snapback forward on TOP of bag",
+      "bag": "one small solid violet leaf sticker",
+      "background": "museum atrium after-hours soft bokeh with phone trading app glow"
     },
     "image": "/agents/30.jpg"
   },
@@ -393,12 +363,11 @@
     "id": 31,
     "name": "Agent Alpha",
     "traits": {
-      "eyewear": "matte black wraparound shield sunglasses",
-      "accessory": "silver Cuban link chain on neck",
       "outfit": "navy peacoat",
-      "bag": "yellow lightning sticky",
-      "detail": "leather brand patch blank oval on jacket",
-      "background": "volcano overlook night, lava glow mirroring red candles on tablet"
+      "eyewear": "glossy jet-black wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "no extra accessory",
+      "bag": "one small solid peach teardrop sticker",
+      "background": "art gallery soft light phone trading chart reflection"
     },
     "image": "/agents/31.jpg"
   },
@@ -406,12 +375,11 @@
     "id": 32,
     "name": "Agent Beta",
     "traits": {
-      "eyewear": "glossy jet-black V-notch shield sunglasses",
-      "accessory": "knit charcoal beanie with cuff on bag",
       "outfit": "white hoodie with black drawstrings",
-      "bag": "black chess-king doodle",
-      "detail": "woven name-tape blank on chest pocket",
-      "background": "balloon basket above clouds sunrise, map with ascending route line"
+      "eyewear": "matte charcoal wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "thin polished silver curb chain on neck",
+      "bag": "one small solid olive moon sticker",
+      "background": "recording studio booth soft meter color blur and laptop chart"
     },
     "image": "/agents/32.jpg"
   },
@@ -419,12 +387,11 @@
     "id": 33,
     "name": "Agent Gamma",
     "traits": {
-      "eyewear": "dark smoke mirrored shield sunglasses",
-      "accessory": "flat black newsboy cap on bag",
       "outfit": "copper-brown chore coat",
-      "bag": "silver foil star",
-      "detail": "velcro morale patch with green arrow",
-      "background": "formula pit garage, tire racks, telemetry screens abstract lines"
+      "eyewear": "smoke-tinted wraparound shield sunglasses with dark gradient lenses and black strap (same frame shape as reference)",
+      "accessory": "thick gold Cuban link chain on neck",
+      "bag": "one small solid neon-green heart sticker",
+      "background": "esports arena backstage RGB blur and trading laptop"
     },
     "image": "/agents/33.jpg"
   },
@@ -432,12 +399,11 @@
     "id": 34,
     "name": "Agent Delta",
     "traits": {
-      "eyewear": "gunmetal sport wraparound shades",
-      "accessory": "no extra headgear",
       "outfit": "electric blue track jacket",
-      "bag": "green plus-sign sticker",
-      "detail": "velcro morale patch with red arrow",
-      "background": "sailboat cabin nav station, radar-like circular chart glow"
+      "eyewear": "mirrored silver-lens wraparound shield sunglasses with black frame and strap (same frame shape as reference)",
+      "accessory": "charcoal knit beanie with cuff on TOP of bag",
+      "bag": "one small solid blood-red square sticker",
+      "background": "data center cold-aisle blue lights near trading tablet"
     },
     "image": "/agents/34.jpg"
   },
@@ -445,12 +411,11 @@
     "id": 35,
     "name": "Agent Theta",
     "traits": {
-      "eyewear": "onyx rectangular shield glasses",
-      "accessory": "plain black beanie perched on bag top",
       "outfit": "khaki utility shirt",
-      "bag": "red minus-sign sticker",
-      "detail": "chess king pin black on lapel",
-      "background": "lighthouse keeper room, spiral stairs, storm windows, green beacon tint"
+      "eyewear": "gunmetal frame wraparound shield sunglasses with black lenses and strap (same frame shape as reference)",
+      "accessory": "black leather O-ring choker on neck",
+      "bag": "one small solid sky-blue arrowhead sticker",
+      "background": "blockchain conference hall blurred color-field banners and laptop chart"
     },
     "image": "/agents/35.jpg"
   },
@@ -458,12 +423,11 @@
     "id": 36,
     "name": "Agent Vega",
     "traits": {
-      "eyewear": "pitch-black visor-style shades",
-      "accessory": "backwards black baseball cap on bag",
       "outfit": "black hoodie with neon green zipper",
-      "bag": "blue chart-line scribble ascending",
-      "detail": "dice pin showing six on collar",
-      "background": "observatory dome open, telescope, constellation dots forming chart path"
+      "eyewear": "glossy onyx wraparound shield sunglasses with deep blue tint lenses and black strap (same frame shape as reference)",
+      "accessory": "dark red paisley bandana as neckerchief under bag",
+      "bag": "one small solid mustard flame sticker",
+      "background": "startup office standup monitor glow trading dashboard abstract"
     },
     "image": "/agents/36.jpg"
   },
@@ -471,12 +435,11 @@
     "id": 37,
     "name": "Agent Rho",
     "traits": {
-      "eyewear": "charcoal wraparound racing shades",
-      "accessory": "thin gold chain necklace on neck",
       "outfit": "soft lavender sweater",
-      "bag": "red chart-line scribble descending",
-      "detail": "poker chip pin red on chest",
-      "background": "museum gallery white walls, abstract art that looks like candlesticks"
+      "eyewear": "matte black wraparound shield sunglasses with bronze-tint lenses and black strap (same frame shape as reference)",
+      "accessory": "charcoal flat ivy cap sitting on TOP of bag",
+      "bag": "one small solid plum circle sticker",
+      "background": "corner bodega night street bokeh through glass with phone chart"
     },
     "image": "/agents/37.jpg"
   },
@@ -484,12 +447,11 @@
     "id": 38,
     "name": "Trader Travis",
     "traits": {
-      "eyewear": "obsidian oversized shield sunglasses",
-      "accessory": "thick black rope necklace on neck",
       "outfit": "deep teal cardigan",
-      "bag": "white dice sticker showing six",
-      "detail": "abacus bead charm on zipper",
-      "background": "botanical greenhouse mist, tablets on potting bench with green lines"
+      "eyewear": "thin gold-rim wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "thin black leather cord necklace with small silver bead",
+      "bag": "one small solid forest-green triangle sticker",
+      "background": "24h diner booth neon smear and laptop trading chart"
     },
     "image": "/agents/38.jpg"
   },
@@ -497,12 +459,11 @@
     "id": 39,
     "name": "Perp Penelope",
     "traits": {
-      "eyewear": "black chrome half-rim shield shades",
-      "accessory": "dark bandana tied around bag",
       "outfit": "rust orange flannel",
-      "bag": "black key doodle",
-      "detail": "USB stick charm dangling from zipper only",
-      "background": "skatepark bowl dusk, graffiti arrows up and down no words, city beyond"
+      "eyewear": "chrome-edge wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "backwards black baseball cap on TOP of bag",
+      "bag": "one small solid ice-blue star sticker",
+      "background": "laundromat late night fluorescent haze phone trading chart"
     },
     "image": "/agents/39.jpg"
   },
@@ -510,12 +471,11 @@
     "id": 40,
     "name": "Futures Felix",
     "traits": {
-      "eyewear": "stealth black angular shield sunglasses",
-      "accessory": "simple black snapback forward on bag",
       "outfit": "graphite technical shell jacket",
-      "bag": "gold coin sticker",
-      "detail": "padlock charm on zipper pull",
-      "background": "rooftop greenhouse night, grow lights magenta, tablet green candles"
+      "eyewear": "obsidian wraparound shield sunglasses with green-mirror lenses and black strap (same frame shape as reference)",
+      "accessory": "simple black snapback forward on TOP of bag",
+      "bag": "one small solid copper diamond sticker",
+      "background": "rooftop pool night underwater bokeh and phone trading chart"
     },
     "image": "/agents/40.jpg"
   },
@@ -523,12 +483,11 @@
     "id": 41,
     "name": "Swap Samurai",
     "traits": {
-      "eyewear": "matte black wraparound shield sunglasses",
-      "accessory": "silver Cuban link chain on neck",
       "outfit": "ivory linen shirt",
-      "bag": "green shield sticker",
-      "detail": "stopwatch face pin on lapel",
-      "background": "clocktower interior gears, giant clock face, soft gold candle overlays"
+      "eyewear": "glossy jet-black wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "no extra accessory",
+      "bag": "one small solid rose-gold hexagon sticker",
+      "background": "helipad night city rim light tablet trading glow"
     },
     "image": "/agents/41.jpg"
   },
@@ -536,12 +495,11 @@
     "id": 42,
     "name": "Basis Boris",
     "traits": {
-      "eyewear": "glossy jet-black V-notch shield sunglasses",
-      "accessory": "knit charcoal beanie with cuff on bag",
       "outfit": "crimson satin bomber",
-      "bag": "purple crystal doodle",
-      "detail": "hourglass pin tiny on collar",
-      "background": "subway map mural wall stylized lines like order flow, no station names"
+      "eyewear": "matte charcoal wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "thin polished silver curb chain on neck",
+      "bag": "one small solid turquoise oval sticker",
+      "background": "observatory dome soft instrument glow laptop trading chart"
     },
     "image": "/agents/42.jpg"
   },
@@ -549,12 +507,11 @@
     "id": 43,
     "name": "Funding Fiona",
     "traits": {
-      "eyewear": "dark smoke mirrored shield sunglasses",
-      "accessory": "flat black newsboy cap on bag",
       "outfit": "moss green fleece",
-      "bag": "orange sun sticker",
-      "detail": "crystal shard pin on chest",
-      "background": "film projection booth, reels, screen showing red descending silhouette"
+      "eyewear": "smoke-tinted wraparound shield sunglasses with dark gradient lenses and black strap (same frame shape as reference)",
+      "accessory": "thick gold Cuban link chain on neck",
+      "bag": "one small solid crimson chevron sticker",
+      "background": "planetarium seating star-projection bokeh phone trading chart"
     },
     "image": "/agents/43.jpg"
   },
@@ -562,12 +519,11 @@
     "id": 44,
     "name": "Liquid Larry",
     "traits": {
-      "eyewear": "gunmetal sport wraparound shades",
-      "accessory": "no extra headgear",
       "outfit": "steel blue oxford shirt",
-      "bag": "navy anchor doodle",
-      "detail": "paperclip shaped silver pin on lapel",
-      "background": "arcade cabinet row neon, one screen showing pixel green candles"
+      "eyewear": "mirrored silver-lens wraparound shield sunglasses with black frame and strap (same frame shape as reference)",
+      "accessory": "charcoal knit beanie with cuff on TOP of bag",
+      "bag": "one small solid lemon lightning sticker",
+      "background": "aquarium tunnel blue caustics phone trading glow"
     },
     "image": "/agents/44.jpg"
   },
@@ -575,12 +531,11 @@
     "id": 45,
     "name": "Margin Maya",
     "traits": {
-      "eyewear": "onyx rectangular shield glasses",
-      "accessory": "plain black beanie perched on bag top",
       "outfit": "jet black puffer jacket",
-      "bag": "cyan droplet sticker",
-      "detail": "bandage cross pin on collar",
-      "background": "laundromat night fluorescent, phone propped on washer with teal chart"
+      "eyewear": "gunmetal frame wraparound shield sunglasses with black lenses and strap (same frame shape as reference)",
+      "accessory": "black leather O-ring choker on neck",
+      "bag": "one small solid slate leaf sticker",
+      "background": "botanical conservatory rain glass soft green blur tablet chart"
     },
     "image": "/agents/45.jpg"
   },
@@ -588,12 +543,11 @@
     "id": 46,
     "name": "Collateral Cole",
     "traits": {
-      "eyewear": "pitch-black visor-style shades",
-      "accessory": "backwards black baseball cap on bag",
       "outfit": "sand-colored linen blazer",
-      "bag": "magenta spark sticker",
-      "detail": "plus-cross medic pin mint on chest",
-      "background": "diner booth chrome edge, milkshake, placemat doodle of candles"
+      "eyewear": "glossy onyx wraparound shield sunglasses with deep blue tint lenses and black strap (same frame shape as reference)",
+      "accessory": "dark red paisley bandana as neckerchief under bag",
+      "bag": "one small solid lavender teardrop sticker",
+      "background": "ice hotel corridor cool blue ambient phone trading chart"
     },
     "image": "/agents/46.jpg"
   },
@@ -601,12 +555,11 @@
     "id": 47,
     "name": "Notional Nora",
     "traits": {
-      "eyewear": "charcoal wraparound racing shades",
-      "accessory": "thin gold chain necklace on neck",
       "outfit": "violet cropped hoodie",
-      "bag": "gray gear doodle",
-      "detail": "target bullseye pin on lapel",
-      "background": "attic dormer window rain, fairy lights, corkboard of chart printouts blurred"
+      "eyewear": "matte black wraparound shield sunglasses with bronze-tint lenses and black strap (same frame shape as reference)",
+      "accessory": "charcoal flat ivy cap sitting on TOP of bag",
+      "bag": "one small solid burgundy moon sticker",
+      "background": "spa recovery dim amber light phone trading chart"
     },
     "image": "/agents/47.jpg"
   },
@@ -614,12 +567,11 @@
     "id": 48,
     "name": "Leverage Leo",
     "traits": {
-      "eyewear": "obsidian oversized shield sunglasses",
-      "accessory": "thick black rope necklace on neck",
       "outfit": "forest camo hoodie",
-      "bag": "lime arrow-loop doodle",
-      "detail": "infinity loop pin on collar",
-      "background": "shipping container office harbor cranes, monitor green cascade"
+      "eyewear": "thin gold-rim wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "thin black leather cord necklace with small silver bead",
+      "bag": "one small solid seafoam heart sticker",
+      "background": "boxing gym wall TV abstract red/green candles and mirror blur"
     },
     "image": "/agents/48.jpg"
   },
@@ -627,12 +579,11 @@
     "id": 49,
     "name": "Short Sheila",
     "traits": {
-      "eyewear": "black chrome half-rim shield shades",
-      "accessory": "dark bandana tied around bag",
       "outfit": "pearl gray cashmere sweater",
-      "bag": "crimson flame sticker",
-      "detail": "circuit board etch pin on chest",
-      "background": "treehouse wooden rails, canopy, hanging tablet with soft moon chart"
+      "eyewear": "chrome-edge wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "backwards black baseball cap on TOP of bag",
+      "bag": "one small solid tangerine square sticker",
+      "background": "climbing gym colorful holds blur laptop trading bag desk"
     },
     "image": "/agents/49.jpg"
   },
@@ -640,12 +591,11 @@
     "id": 50,
     "name": "Long Logan",
     "traits": {
-      "eyewear": "stealth black angular shield sunglasses",
-      "accessory": "simple black snapback forward on bag",
       "outfit": "bright coral polo",
-      "bag": "ivory paperclip stuck on bag",
-      "detail": "waveform audio pin purple on lapel",
-      "background": "ski lodge fireplace, snowboards, TV muted red crash candles"
+      "eyewear": "obsidian wraparound shield sunglasses with green-mirror lenses and black strap (same frame shape as reference)",
+      "accessory": "simple black snapback forward on TOP of bag",
+      "bag": "one small solid graphite arrowhead sticker",
+      "background": "golf club lounge night course lights laptop trading chart"
     },
     "image": "/agents/50.jpg"
   },
@@ -653,12 +603,11 @@
     "id": 51,
     "name": "Flat Frankie",
     "traits": {
-      "eyewear": "matte black wraparound shield sunglasses",
-      "accessory": "silver Cuban link chain on neck",
       "outfit": "midnight blue silk shirt",
-      "bag": "black mask doodle",
-      "detail": "vinyl record mini pin on collar",
-      "background": "surf van interior dash, ocean view, phone mount green sparkline"
+      "eyewear": "glossy jet-black wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "no extra accessory",
+      "bag": "one small solid jade flame sticker",
+      "background": "marina slip night boat lights tablet trading chart"
     },
     "image": "/agents/51.jpg"
   },
@@ -666,12 +615,11 @@
     "id": 52,
     "name": "Hedge Hector",
     "traits": {
-      "eyewear": "glossy jet-black V-notch shield sunglasses",
-      "accessory": "knit charcoal beanie with cuff on bag",
       "outfit": "olive field jacket",
-      "bag": "green frog tiny sticker",
-      "detail": "cassette tape pin on chest",
-      "background": "helicopter cockpit night city grid, HUD candles soft"
+      "eyewear": "matte charcoal wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "thin polished silver curb chain on neck",
+      "bag": "one small solid wine-red circle sticker",
+      "background": "private jet cabin soft LED seatback abstract trading chart"
     },
     "image": "/agents/52.jpg"
   },
@@ -679,12 +627,11 @@
     "id": 53,
     "name": "Arb Avery",
     "traits": {
-      "eyewear": "dark smoke mirrored shield sunglasses",
-      "accessory": "flat black newsboy cap on bag",
       "outfit": "white sleeveless turtleneck",
-      "bag": "red chili pepper sticker",
-      "detail": "camera lens aperture pin on lapel",
-      "background": "submarine control room red lighting, sonar arcs like charts"
+      "eyewear": "smoke-tinted wraparound shield sunglasses with dark gradient lenses and black strap (same frame shape as reference)",
+      "accessory": "thick gold Cuban link chain on neck",
+      "bag": "one small solid cobalt triangle sticker",
+      "background": "first-class lounge blurred luxury interiors laptop trading chart"
     },
     "image": "/agents/53.jpg"
   },
@@ -692,12 +639,11 @@
     "id": 54,
     "name": "Spread Spencer",
     "traits": {
-      "eyewear": "gunmetal sport wraparound shades",
-      "accessory": "no extra headgear",
       "outfit": "black mesh athletic jersey",
-      "bag": "blue rocket trail doodle",
-      "detail": "film strip pin on collar",
-      "background": "planetarium seats, projected night sky with constellation price path"
+      "eyewear": "mirrored silver-lens wraparound shield sunglasses with black frame and strap (same frame shape as reference)",
+      "accessory": "charcoal knit beanie with cuff on TOP of bag",
+      "bag": "one small solid sand star sticker",
+      "background": "bank vault corridor cool metal bokeh tablet trading chart"
     },
     "image": "/agents/54.jpg"
   },
@@ -705,12 +651,11 @@
     "id": 55,
     "name": "Skew Skylar",
     "traits": {
-      "eyewear": "onyx rectangular shield glasses",
-      "accessory": "plain black beanie perched on bag top",
       "outfit": "tan canvas jacket",
-      "bag": "yellow banana sticker",
-      "detail": "microphone grille pin on chest",
-      "background": "pottery studio kiln glow, clay charts on shelves abstract"
+      "eyewear": "gunmetal frame wraparound shield sunglasses with black lenses and strap (same frame shape as reference)",
+      "accessory": "black leather O-ring choker on neck",
+      "bag": "one small solid chartreuse diamond sticker",
+      "background": "gold desk soft case reflections phone trading chart"
     },
     "image": "/agents/55.jpg"
   },
@@ -718,12 +663,11 @@
     "id": 56,
     "name": "Smile Simone",
     "traits": {
-      "eyewear": "pitch-black visor-style shades",
-      "accessory": "backwards black baseball cap on bag",
       "outfit": "royal blue hoodie",
-      "bag": "white ghost doodle",
-      "detail": "headphone silhouette pin on lapel",
-      "background": "tattoo parlor neon flash sheets of arrows and candles no lettering"
+      "eyewear": "glossy onyx wraparound shield sunglasses with deep blue tint lenses and black strap (same frame shape as reference)",
+      "accessory": "dark red paisley bandana as neckerchief under bag",
+      "bag": "one small solid midnight-blue hexagon sticker",
+      "background": "coin shop warm wood blur desk lamp and tablet chart"
     },
     "image": "/agents/56.jpg"
   },
@@ -731,12 +675,11 @@
     "id": 57,
     "name": "Vol Vera",
     "traits": {
-      "eyewear": "charcoal wraparound racing shades",
-      "accessory": "thin gold chain necklace on neck",
       "outfit": "charcoal double-breasted coat",
-      "bag": "orange pumpkin sticker",
-      "detail": "sneaker mini pin on collar",
-      "background": "barbershop mirror wall, clippers, TV corner soft green bars"
+      "eyewear": "matte black wraparound shield sunglasses with bronze-tint lenses and black strap (same frame shape as reference)",
+      "accessory": "charcoal flat ivy cap sitting on TOP of bag",
+      "bag": "one small solid hot-pink oval sticker",
+      "background": "pawn shop neon color smear laptop trading chart"
     },
     "image": "/agents/57.jpg"
   },
@@ -744,12 +687,11 @@
     "id": 58,
     "name": "Gamma Greg",
     "traits": {
-      "eyewear": "obsidian oversized shield sunglasses",
-      "accessory": "thick black rope necklace on neck",
       "outfit": "mint green lightweight jacket",
-      "bag": "teal fish doodle",
-      "detail": "skateboard deck pin on chest",
-      "background": "bike repair shop, wheels hanging, tablet on workbench teal line"
+      "eyewear": "thin gold-rim wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "thin black leather cord necklace with small silver bead",
+      "bag": "one small solid moss chevron sticker",
+      "background": "mechanic shop LED lights tablet trading chart on toolbox"
     },
     "image": "/agents/58.jpg"
   },
@@ -757,12 +699,11 @@
     "id": 59,
     "name": "Delta Dana",
     "traits": {
-      "eyewear": "black chrome half-rim shield shades",
-      "accessory": "dark bandana tied around bag",
       "outfit": "brick red sweatshirt",
-      "bag": "pink rose sticker",
-      "detail": "surfboard pin tiny on lapel",
-      "background": "flower market stall dawn, crates, phone with pink ascending curve"
+      "eyewear": "chrome-edge wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "backwards black baseball cap on TOP of bag",
+      "bag": "one small solid ivory lightning sticker",
+      "background": "darkroom red safelight phone trading chart"
     },
     "image": "/agents/59.jpg"
   },
@@ -770,12 +711,11 @@
     "id": 60,
     "name": "Theta Theo",
     "traits": {
-      "eyewear": "stealth black angular shield sunglasses",
-      "accessory": "simple black snapback forward on bag",
       "outfit": "pale pink button-up",
-      "bag": "brown coffee cup doodle",
-      "detail": "mountain peak pin on collar",
-      "background": "night market food stalls steam, lanterns, chart neon reflection puddles"
+      "eyewear": "obsidian wraparound shield sunglasses with green-mirror lenses and black strap (same frame shape as reference)",
+      "accessory": "simple black snapback forward on TOP of bag",
+      "bag": "one small solid rust leaf sticker",
+      "background": "film set practical lights tablet trading chart"
     },
     "image": "/agents/60.jpg"
   },
@@ -783,12 +723,11 @@
     "id": 61,
     "name": "Vega Vince",
     "traits": {
-      "eyewear": "matte black wraparound shield sunglasses",
-      "accessory": "silver Cuban link chain on neck",
       "outfit": "dark plum hoodie",
-      "bag": "black cat silhouette sticker",
-      "detail": "wave crest pin teal on chest",
-      "background": "warehouse mezzanine forklifts blurred, LED strip candles on wall"
+      "eyewear": "glossy jet-black wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "no extra accessory",
+      "bag": "one small solid electric-blue teardrop sticker",
+      "background": "newsroom bullpen after hours lingering trading screen glow"
     },
     "image": "/agents/61.jpg"
   },
@@ -796,12 +735,11 @@
     "id": 62,
     "name": "Rho Riley",
     "traits": {
-      "eyewear": "glossy jet-black V-notch shield sunglasses",
-      "accessory": "knit charcoal beanie with cuff on bag",
       "outfit": "seafoam green sweater",
-      "bag": "green cactus doodle",
-      "detail": "snowflake pin cyan on lapel",
-      "background": "data center cold aisle fog, orange warning lights, green rack LEDs"
+      "eyewear": "matte charcoal wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "thin polished silver curb chain on neck",
+      "bag": "one small solid soft-gray moon sticker",
+      "background": "radio booth soft meters as color blur laptop trading chart"
     },
     "image": "/agents/62.jpg"
   },
@@ -809,12 +747,11 @@
     "id": 63,
     "name": "Candle Carla",
     "traits": {
-      "eyewear": "dark smoke mirrored shield sunglasses",
-      "accessory": "flat black newsboy cap on bag",
       "outfit": "black and white striped tee",
-      "bag": "red balloon sticker",
-      "detail": "sunburst pin orange on collar",
-      "background": "university lecture hall empty, projector showing abstract candlestick slide"
+      "eyewear": "smoke-tinted wraparound shield sunglasses with dark gradient lenses and black strap (same frame shape as reference)",
+      "accessory": "thick gold Cuban link chain on neck",
+      "bag": "one small solid cherry heart sticker",
+      "background": "podcast foam-wall studio laptop trading chart"
     },
     "image": "/agents/63.jpg"
   },
@@ -822,12 +759,11 @@
     "id": 64,
     "name": "Wick Walter",
     "traits": {
-      "eyewear": "gunmetal sport wraparound shades",
-      "accessory": "no extra headgear",
       "outfit": "burnt sienna jacket",
-      "bag": "blue planet sticker",
-      "detail": "planet ring pin blue on chest",
-      "background": "chess club room, boards, wall chart of rating-like ascending line"
+      "eyewear": "mirrored silver-lens wraparound shield sunglasses with black frame and strap (same frame shape as reference)",
+      "accessory": "charcoal knit beanie with cuff on TOP of bag",
+      "bag": "one small solid pine square sticker",
+      "background": "maker space 3D printer LED glow laptop trading chart"
     },
     "image": "/agents/64.jpg"
   },
@@ -835,12 +771,11 @@
     "id": 65,
     "name": "Doji Jules",
     "traits": {
-      "eyewear": "onyx rectangular shield glasses",
-      "accessory": "plain black beanie perched on bag top",
       "outfit": "cobalt blue windbreaker",
-      "bag": "gold crown tiny sticker",
-      "detail": "rocket trail pin on lapel",
-      "background": "billiards hall felt green, neon beer signs shapes, TV red candles"
+      "eyewear": "gunmetal frame wraparound shield sunglasses with black lenses and strap (same frame shape as reference)",
+      "accessory": "black leather O-ring choker on neck",
+      "bag": "one small solid blush arrowhead sticker",
+      "background": "robotics lab indicator lights monitor trading abstract"
     },
     "image": "/agents/65.jpg"
   },
@@ -848,12 +783,11 @@
     "id": 66,
     "name": "Hammer Hank",
     "traits": {
-      "eyewear": "pitch-black visor-style shades",
-      "accessory": "backwards black baseball cap on bag",
       "outfit": "heather gray zip hoodie",
-      "bag": "silver lock doodle",
-      "detail": "airplane pin sky-blue on collar",
-      "background": "bowling alley lanes night, pin lights, score screens abstract bars"
+      "eyewear": "glossy onyx wraparound shield sunglasses with deep blue tint lenses and black strap (same frame shape as reference)",
+      "accessory": "dark red paisley bandana as neckerchief under bag",
+      "bag": "one small solid bronze flame sticker",
+      "background": "quant library stacks green lamp laptop trading chart"
     },
     "image": "/agents/66.jpg"
   },
@@ -861,12 +795,11 @@
     "id": 67,
     "name": "Shooting-Star Sage",
     "traits": {
-      "eyewear": "charcoal wraparound racing shades",
-      "accessory": "thin gold chain necklace on neck",
       "outfit": "espresso brown leather jacket",
-      "bag": "green recycling arrows doodle",
-      "detail": "helicopter pin tiny on chest",
-      "background": "karaoke private room disco ball, lyric screen replaced by green candles"
+      "eyewear": "matte black wraparound shield sunglasses with bronze-tint lenses and black strap (same frame shape as reference)",
+      "accessory": "charcoal flat ivy cap sitting on TOP of bag",
+      "bag": "one small solid arctic circle sticker",
+      "background": "math chalkboard soft blur tablet trading chart"
     },
     "image": "/agents/67.jpg"
   },
@@ -874,12 +807,11 @@
     "id": 68,
     "name": "Engulfing Eli",
     "traits": {
-      "eyewear": "obsidian oversized shield sunglasses",
-      "accessory": "thick black rope necklace on neck",
       "outfit": "aqua blue fleece",
-      "bag": "red megaphone doodle",
-      "detail": "sailboat pin on lapel",
-      "background": "rooftop infinity pool night, water reflecting cyan chart neon"
+      "eyewear": "thin gold-rim wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "thin black leather cord necklace with small silver bead",
+      "bag": "one small solid venom-green triangle sticker",
+      "background": "physics lab equipment bokeh monitor trading glow"
     },
     "image": "/agents/68.jpg"
   },
@@ -887,12 +819,11 @@
     "id": 69,
     "name": "Harami Harper",
     "traits": {
-      "eyewear": "black chrome half-rim shield shades",
-      "accessory": "dark bandana tied around bag",
       "outfit": "cherry red hoodie",
-      "bag": "purple music-note sticker",
-      "detail": "lighthouse pin on collar",
-      "background": "vine-covered courtyard fountain, laptop on stone table soft gold line"
+      "eyewear": "chrome-edge wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "backwards black baseball cap on TOP of bag",
+      "bag": "one small solid royal-purple star sticker",
+      "background": "cleanroom hallway yellow light tablet trading chart"
     },
     "image": "/agents/69.jpg"
   },
@@ -900,12 +831,11 @@
     "id": 70,
     "name": "Morning-Star Mo",
     "traits": {
-      "eyewear": "stealth black angular shield sunglasses",
-      "accessory": "simple black snapback forward on bag",
       "outfit": "slate teal bomber",
-      "bag": "orange traffic-cone tiny sticker",
-      "detail": "hot-air balloon pin on chest",
-      "background": "industrial loft brick, exposed pipes, triptych monitors purple and green"
+      "eyewear": "obsidian wraparound shield sunglasses with green-mirror lenses and black strap (same frame shape as reference)",
+      "accessory": "simple black snapback forward on TOP of bag",
+      "bag": "one small solid clay diamond sticker",
+      "background": "chip fab viewing window soft light phone trading chart"
     },
     "image": "/agents/70.jpg"
   },
@@ -913,12 +843,11 @@
     "id": 71,
     "name": "Evening-Star Eve",
     "traits": {
-      "eyewear": "matte black wraparound shield sunglasses",
-      "accessory": "silver Cuban link chain on neck",
       "outfit": "off-white fisherman sweater",
-      "bag": "cyan snowflake doodle",
-      "detail": "Ferris wheel pin tiny on lapel",
-      "background": "capsule hotel pod LED ceiling, handheld chart glow"
+      "eyewear": "glossy jet-black wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "no extra accessory",
+      "bag": "one small solid aqua hexagon sticker",
+      "background": "satellite ground station dusk dish blur laptop trading chart"
     },
     "image": "/agents/71.jpg"
   },
@@ -926,12 +855,11 @@
     "id": 72,
     "name": "Tweezer Ty",
     "traits": {
-      "eyewear": "glossy jet-black V-notch shield sunglasses",
-      "accessory": "knit charcoal beanie with cuff on bag",
       "outfit": "neon yellow running jacket",
-      "bag": "magenta butterfly sticker",
-      "detail": "coffee cup pin brown on collar",
-      "background": "ferry deck foghorn mist, city skyline, tablet green sparkline"
+      "eyewear": "matte charcoal wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "thin polished silver curb chain on neck",
+      "bag": "one small solid scarlet oval sticker",
+      "background": "radio telescope control soft abstract screens"
     },
     "image": "/agents/72.jpg"
   },
@@ -939,12 +867,11 @@
     "id": 73,
     "name": "Spinning-Top Sam",
     "traits": {
-      "eyewear": "dark smoke mirrored shield sunglasses",
-      "accessory": "flat black newsboy cap on bag",
       "outfit": "dusty rose hoodie",
-      "bag": "gray mountain doodle",
-      "detail": "espresso bean pin on chest",
-      "background": "camel caravan desert night, hologram candles above sand"
+      "eyewear": "smoke-tinted wraparound shield sunglasses with dark gradient lenses and black strap (same frame shape as reference)",
+      "accessory": "thick gold Cuban link chain on neck",
+      "bag": "one small solid pearl chevron sticker",
+      "background": "weather station night instruments tablet trading chart"
     },
     "image": "/agents/73.jpg"
   },
@@ -952,12 +879,11 @@
     "id": 74,
     "name": "Marubozu Max",
     "traits": {
-      "eyewear": "gunmetal sport wraparound shades",
-      "accessory": "no extra headgear",
       "outfit": "ink black hoodie with reflective strips",
-      "bag": "lime smiley simple doodle",
-      "detail": "donut sprinkle pin on lapel",
-      "background": "rice terrace overlook dawn mist, drone light painting green path"
+      "eyewear": "mirrored silver-lens wraparound shield sunglasses with black frame and strap (same frame shape as reference)",
+      "accessory": "charcoal knit beanie with cuff on TOP of bag",
+      "bag": "one small solid sunflower lightning sticker",
+      "background": "lighthouse keeper room beam spill laptop trading chart"
     },
     "image": "/agents/74.jpg"
   },
@@ -965,12 +891,11 @@
     "id": 75,
     "name": "Breakout Bea",
     "traits": {
-      "eyewear": "onyx rectangular shield glasses",
-      "accessory": "plain black beanie perched on bag top",
       "outfit": "sage green overshirt",
-      "bag": "crimson heart with crack doodle",
-      "detail": "pizza slice pin on collar",
-      "background": "bamboo forest path, paper lanterns, floating soft red and green bars"
+      "eyewear": "gunmetal frame wraparound shield sunglasses with black lenses and strap (same frame shape as reference)",
+      "accessory": "black leather O-ring choker on neck",
+      "bag": "one small solid deep-teal leaf sticker",
+      "background": "night train caboose window blur phone trading chart"
     },
     "image": "/agents/75.jpg"
   },
@@ -978,12 +903,11 @@
     "id": 76,
     "name": "Fakeout Finn",
     "traits": {
-      "eyewear": "pitch-black visor-style shades",
-      "accessory": "backwards black baseball cap on bag",
       "outfit": "goldenrod workshirt",
-      "bag": "navy compass doodle",
-      "detail": "chili pepper pin red on chest",
-      "background": "temple courtyard stone lanterns, incense smoke forming chart curve"
+      "eyewear": "glossy onyx wraparound shield sunglasses with deep blue tint lenses and black strap (same frame shape as reference)",
+      "accessory": "dark red paisley bandana as neckerchief under bag",
+      "bag": "one small solid ash teardrop sticker",
+      "background": "subway operator booth glass reflections tablet trading chart"
     },
     "image": "/agents/76.jpg"
   },
@@ -991,12 +915,11 @@
     "id": 77,
     "name": "Pump Pat",
     "traits": {
-      "eyewear": "charcoal wraparound racing shades",
-      "accessory": "thin gold chain necklace on neck",
       "outfit": "titanium gray tech jacket",
-      "bag": "amber hourglass doodle",
-      "detail": "banana pin yellow on lapel",
-      "background": "castle parapet night banners blank, torchlight and teal HUD candles"
+      "eyewear": "matte black wraparound shield sunglasses with bronze-tint lenses and black strap (same frame shape as reference)",
+      "accessory": "charcoal flat ivy cap sitting on TOP of bag",
+      "bag": "one small solid fuchsia moon sticker",
+      "background": "air traffic tower night windows soft radar color fields tablet chart"
     },
     "image": "/agents/77.jpg"
   },
@@ -1004,12 +927,11 @@
     "id": 78,
     "name": "Dump Drew",
     "traits": {
-      "eyewear": "obsidian oversized shield sunglasses",
-      "accessory": "thick black rope necklace on neck",
       "outfit": "magenta fleece",
-      "bag": "jade bamboo doodle",
-      "detail": "cactus pin green on collar",
-      "background": "hot air balloon festival field, baskets, sky dotted with candle shapes"
+      "eyewear": "thin gold-rim wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "thin black leather cord necklace with small silver bead",
+      "bag": "one small solid hunter heart sticker",
+      "background": "cargo ship bridge night instruments trading tablet glow"
     },
     "image": "/agents/78.jpg"
   },
@@ -1017,12 +939,11 @@
     "id": 79,
     "name": "Chop Casey",
     "traits": {
-      "eyewear": "black chrome half-rim shield shades",
-      "accessory": "dark bandana tied around bag",
       "outfit": "walnut brown cardigan",
-      "bag": "ivory feather sticker",
-      "detail": "mushroom pin on chest",
-      "background": "carnival midway night Ferris wheel glow, striped tents, ascending light path, no signs or lettering"
+      "eyewear": "chrome-edge wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "backwards black baseball cap on TOP of bag",
+      "bag": "one small solid powder-blue square sticker",
+      "background": "submarine control soft red lighting abstract screens"
     },
     "image": "/agents/79.jpg"
   },
@@ -1030,12 +951,11 @@
     "id": 80,
     "name": "Range Rowan",
     "traits": {
-      "eyewear": "stealth black angular shield sunglasses",
-      "accessory": "simple black snapback forward on bag",
       "outfit": "ice blue denim jacket",
-      "bag": "charcoal mountain-range scribble",
-      "detail": "frog face pin tiny on lapel",
-      "background": "drive-in movie lot cars, giant screen red crash silhouette"
+      "eyewear": "obsidian wraparound shield sunglasses with green-mirror lenses and black strap (same frame shape as reference)",
+      "accessory": "simple black snapback forward on TOP of bag",
+      "bag": "one small solid mahogany arrowhead sticker",
+      "background": "space station cupola earth glow tablet trading chart"
     },
     "image": "/agents/80.jpg"
   },
@@ -1043,12 +963,11 @@
     "id": 81,
     "name": "Trend Trent",
     "traits": {
-      "eyewear": "matte black wraparound shield sunglasses",
-      "accessory": "silver Cuban link chain on neck",
       "outfit": "scarlet racing jacket",
-      "bag": "neon green circuit-trace doodle",
-      "detail": "cat silhouette pin on collar",
-      "background": "parking garage rooftop golden hour, skyline, laptop on hood green line"
+      "eyewear": "glossy jet-black wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "no extra accessory",
+      "bag": "one small solid lime-glow flame sticker",
+      "background": "mars habitat sim soft LED laptop trading chart"
     },
     "image": "/agents/81.jpg"
   },
@@ -1056,12 +975,11 @@
     "id": 82,
     "name": "Reversal Remy",
     "traits": {
-      "eyewear": "glossy jet-black V-notch shield sunglasses",
-      "accessory": "knit charcoal beanie with cuff on bag",
       "outfit": "pewter gray turtleneck",
-      "bag": "hot pink lightning sticky",
-      "detail": "ghost pin white on chest",
-      "background": "construction crane cabin view city grid, tablet telemetry candles"
+      "eyewear": "matte charcoal wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "thin polished silver curb chain on neck",
+      "bag": "one small solid onyx circle sticker",
+      "background": "VR arcade neon room blur trading headset stand laptop"
     },
     "image": "/agents/82.jpg"
   },
@@ -1069,12 +987,11 @@
     "id": 83,
     "name": "Continuation Quinn",
     "traits": {
-      "eyewear": "dark smoke mirrored shield sunglasses",
-      "accessory": "flat black newsboy cap on bag",
       "outfit": "hunter green hoodie",
-      "bag": "sky blue airplane doodle",
-      "detail": "pumpkin pin orange on lapel",
-      "background": "wind turbine nacelle hatch view fields, tablet wind-price overlay soft"
+      "eyewear": "smoke-tinted wraparound shield sunglasses with dark gradient lenses and black strap (same frame shape as reference)",
+      "accessory": "thick gold Cuban link chain on neck",
+      "bag": "one small solid apricot triangle sticker",
+      "background": "LAN party RGB PC glow monitors abstract trading candles"
     },
     "image": "/agents/83.jpg"
   },
@@ -1082,12 +999,11 @@
     "id": 84,
     "name": "Support Sierra",
     "traits": {
-      "eyewear": "gunmetal sport wraparound shades",
-      "accessory": "no extra headgear",
       "outfit": "champagne silk top",
-      "bag": "forest mushroom sticker",
-      "detail": "rose pin pink on collar",
-      "background": "solar farm rows dusk, panels reflecting orange, phone green sparkline"
+      "eyewear": "mirrored silver-lens wraparound shield sunglasses with black frame and strap (same frame shape as reference)",
+      "accessory": "charcoal knit beanie with cuff on TOP of bag",
+      "bag": "one small solid denim star sticker",
+      "background": "retro arcade cabinet glow color fields phone trading chart"
     },
     "image": "/agents/84.jpg"
   },
@@ -1095,12 +1011,11 @@
     "id": 85,
     "name": "Resistance Remi",
     "traits": {
-      "eyewear": "onyx rectangular shield glasses",
-      "accessory": "plain black beanie perched on bag top",
       "outfit": "obsidian black bomber",
-      "bag": "sunset gradient stripe taped on",
-      "detail": "sunflower pin on chest",
-      "background": "hydro dam overlook night floodlights, water white noise, cyan HUD"
+      "eyewear": "gunmetal frame wraparound shield sunglasses with black lenses and strap (same frame shape as reference)",
+      "accessory": "black leather O-ring choker on neck",
+      "bag": "one small solid emerald-dark diamond sticker",
+      "background": "pinball hall glass reflections phone trading chart"
     },
     "image": "/agents/85.jpg"
   },
@@ -1108,12 +1023,11 @@
     "id": 86,
     "name": "Fibonacci Fay",
     "traits": {
-      "eyewear": "pitch-black visor-style shades",
-      "accessory": "backwards black baseball cap on bag",
       "outfit": "tangerine orange hoodie",
-      "bag": "checkerboard corner patch",
-      "detail": "feather pin ivory on lapel",
-      "background": "oil rig helipad dusk ocean, flare stack, tablet red and green candles"
+      "eyewear": "glossy onyx wraparound shield sunglasses with deep blue tint lenses and black strap (same frame shape as reference)",
+      "accessory": "dark red paisley bandana as neckerchief under bag",
+      "bag": "one small solid snow hexagon sticker",
+      "background": "casino floor bokeh lights abstract no logos laptop trading chart"
     },
     "image": "/agents/86.jpg"
   },
@@ -1121,12 +1035,11 @@
     "id": 87,
     "name": "Pivot Pete",
     "traits": {
-      "eyewear": "charcoal wraparound racing shades",
-      "accessory": "thin gold chain necklace on neck",
       "outfit": "storm gray softshell",
-      "bag": "polka-dot washi tape strip",
-      "detail": "bamboo pin jade on collar",
-      "background": "grain silo catwalk sunset Midwest flat, phone ascending gold line"
+      "eyewear": "matte black wraparound shield sunglasses with bronze-tint lenses and black strap (same frame shape as reference)",
+      "accessory": "charcoal flat ivy cap sitting on TOP of bag",
+      "bag": "one small solid green oval sticker",
+      "background": "horse track night tote board colored bars only tablet chart"
     },
     "image": "/agents/87.jpg"
   },
@@ -1134,12 +1047,11 @@
     "id": 88,
     "name": "ATR Aria",
     "traits": {
-      "eyewear": "obsidian oversized shield sunglasses",
-      "accessory": "thick black rope necklace on neck",
       "outfit": "lilac knit sweater",
-      "bag": "black washi tape X",
-      "detail": "butterfly pin magenta on chest",
-      "background": "orchard ladder apple trees, clipboard chart doodle soft"
+      "eyewear": "thin gold-rim wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "thin black leather cord necklace with small silver bead",
+      "bag": "one small solid red chevron sticker",
+      "background": "formula paddock garage soft tool light tablet trading chart"
     },
     "image": "/agents/88.jpg"
   },
@@ -1147,12 +1059,11 @@
     "id": 89,
     "name": "RSI Reese",
     "traits": {
-      "eyewear": "black chrome half-rim shield shades",
-      "accessory": "dark bandana tied around bag",
       "outfit": "mahogany leather vest over shirt",
-      "bag": "green paint-splat mark",
-      "detail": "fish pin teal on lapel",
-      "background": "vineyard cellar barrels, tasting table, tablet purple orderbook bars"
+      "eyewear": "chrome-edge wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "backwards black baseball cap on TOP of bag",
+      "bag": "one small solid white lightning sticker",
+      "background": "motocross pit night headlight bokeh phone trading chart"
     },
     "image": "/agents/89.jpg"
   },
@@ -1160,12 +1071,11 @@
     "id": 90,
     "name": "MACD Mack",
     "traits": {
-      "eyewear": "stealth black angular shield sunglasses",
-      "accessory": "simple black snapback forward on bag",
       "outfit": "cyan athletic hoodie",
-      "bag": "red paint-splat mark",
-      "detail": "dolphin pin tiny on collar",
-      "background": "cheese cave shelves, cooler lights, tiny green terminal"
+      "eyewear": "obsidian wraparound shield sunglasses with green-mirror lenses and black strap (same frame shape as reference)",
+      "accessory": "simple black snapback forward on TOP of bag",
+      "bag": "one small solid yellow leaf sticker",
+      "background": "skatepark night floodlights laptop trading on bench"
     },
     "image": "/agents/90.jpg"
   },
@@ -1173,12 +1083,11 @@
     "id": 91,
     "name": "Bollinger Bill",
     "traits": {
-      "eyewear": "matte black wraparound shield sunglasses",
-      "accessory": "silver Cuban link chain on neck",
       "outfit": "bone white crewneck",
-      "bag": "blue fingerprint doodle",
-      "detail": "owl pin on chest",
-      "background": "brewery copper tanks, taproom TV soft green candles"
+      "eyewear": "glossy jet-black wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "no extra accessory",
+      "bag": "one small solid orange teardrop sticker",
+      "background": "empty basketball court night lights phone trading chart"
     },
     "image": "/agents/91.jpg"
   },
@@ -1186,12 +1095,11 @@
     "id": 92,
     "name": "Ichimoku Izzy",
     "traits": {
-      "eyewear": "glossy jet-black V-notch shield sunglasses",
-      "accessory": "knit charcoal beanie with cuff on bag",
       "outfit": "blood orange puffer",
-      "bag": "yellow sticky with LFG only",
-      "detail": "fox pin orange on lapel",
-      "background": "coffee roastery warm drum glow, hanging cups, laptop teal line, no labels or lettering"
+      "eyewear": "matte charcoal wraparound shield sunglasses with black strap (same frame shape as reference)",
+      "accessory": "thin polished silver curb chain on neck",
+      "bag": "one small solid blue moon sticker",
+      "background": "tennis club lounge night courts blur laptop trading chart"
     },
     "image": "/agents/92.jpg"
   },
@@ -1199,12 +1107,11 @@
     "id": 93,
     "name": "Orderbook Ollie",
     "traits": {
-      "eyewear": "dark smoke mirrored shield sunglasses",
-      "accessory": "flat black newsboy cap on bag",
       "outfit": "deep indigo hoodie",
-      "bag": "white bandage strip on bag",
-      "detail": "wolf pin gray on collar",
-      "background": "chocolate factory tempering machines, molds, monitor pink ascending"
+      "eyewear": "smoke-tinted wraparound shield sunglasses with dark gradient lenses and black strap (same frame shape as reference)",
+      "accessory": "thick gold Cuban link chain on neck",
+      "bag": "one small solid purple heart sticker",
+      "background": "surf shop neon wave smear tablet trading chart"
     },
     "image": "/agents/93.jpg"
   },
@@ -1212,12 +1119,11 @@
     "id": 94,
     "name": "Footprint Fran",
     "traits": {
-      "eyewear": "gunmetal sport wraparound shades",
-      "accessory": "no extra headgear",
       "outfit": "olive drab military sweater",
-      "bag": "orange price-tag blank sticker",
-      "detail": "eagle pin on chest",
-      "background": "print shop press rollers ink, posters of abstract candles drying"
+      "eyewear": "mirrored silver-lens wraparound shield sunglasses with black frame and strap (same frame shape as reference)",
+      "accessory": "charcoal knit beanie with cuff on TOP of bag",
+      "bag": "one small solid teal square sticker",
+      "background": "ski lodge fireplace warm bokeh laptop trading chart"
     },
     "image": "/agents/94.jpg"
   },
@@ -1225,12 +1131,11 @@
     "id": 95,
     "name": "DOM Dakota",
     "traits": {
-      "eyewear": "onyx rectangular shield glasses",
-      "accessory": "plain black beanie perched on bag top",
       "outfit": "silver metallic windbreaker",
-      "bag": "purple hologram square sticker",
-      "detail": "phoenix pin crimson on lapel",
-      "background": "record pressing plant vinyl stacks, waveform screens purple"
+      "eyewear": "gunmetal frame wraparound shield sunglasses with black lenses and strap (same frame shape as reference)",
+      "accessory": "black leather O-ring choker on neck",
+      "bag": "one small solid mint arrowhead sticker",
+      "background": "hot springs night steam bokeh phone trading chart"
     },
     "image": "/agents/95.jpg"
   },
@@ -1238,12 +1143,11 @@
     "id": 96,
     "name": "Tape Tyler",
     "traits": {
-      "eyewear": "pitch-black visor-style shades",
-      "accessory": "backwards black baseball cap on bag",
       "outfit": "raspberry pink hoodie",
-      "bag": "mint green plus-cross sticker",
-      "detail": "dragon scale pin on collar",
-      "background": "glassblowing studio glory hole orange, molten shapes like candles"
+      "eyewear": "glossy onyx wraparound shield sunglasses with deep blue tint lenses and black strap (same frame shape as reference)",
+      "accessory": "dark red paisley bandana as neckerchief under bag",
+      "bag": "one small solid coral flame sticker",
+      "background": "vineyard terrace night string lights tablet trading chart"
     },
     "image": "/agents/96.jpg"
   },
@@ -1251,12 +1155,11 @@
     "id": 97,
     "name": "Level2 Lee",
     "traits": {
-      "eyewear": "charcoal wraparound racing shades",
-      "accessory": "thin gold chain necklace on neck",
       "outfit": "espresso waffle-knit henley",
-      "bag": "rosewood stamp circle blank",
-      "detail": "rune circle blank pin on chest",
-      "background": "blacksmith forge sparks, anvil, wall chalk curve ascending"
+      "eyewear": "matte black wraparound shield sunglasses with bronze-tint lenses and black strap (same frame shape as reference)",
+      "accessory": "charcoal flat ivy cap sitting on TOP of bag",
+      "bag": "one small solid gold circle sticker",
+      "background": "olive grove dusk soft hills phone trading glow"
     },
     "image": "/agents/97.jpg"
   },
@@ -1264,12 +1167,11 @@
     "id": 98,
     "name": "Iceberg Iris",
     "traits": {
-      "eyewear": "obsidian oversized shield sunglasses",
-      "accessory": "thick black rope necklace on neck",
       "outfit": "arctic white technical jacket",
-      "bag": "graphite pencil scribble swirl",
-      "detail": "hologram square pin purple on lapel",
-      "background": "candle-making workshop shelves of wax pillars, soft warm lighting"
+      "eyewear": "thin gold-rim wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "thin black leather cord necklace with small silver bead",
+      "bag": "one small solid silver triangle sticker",
+      "background": "rice terrace night insect-light bokeh tablet trading chart"
     },
     "image": "/agents/98.jpg"
   },
@@ -1277,12 +1179,11 @@
     "id": 99,
     "name": "Spoof Sterling",
     "traits": {
-      "eyewear": "black chrome half-rim shield shades",
-      "accessory": "dark bandana tied around bag",
       "outfit": "jade green bomber",
-      "bag": "copper rivet detail on bag edge",
-      "detail": "iridescent oil-slick pin on collar",
-      "background": "observatory cafe terrace dome behind, latte art swirl like chart"
+      "eyewear": "chrome-edge wraparound shield sunglasses with black lenses and black strap (same frame shape as reference)",
+      "accessory": "backwards black baseball cap on TOP of bag",
+      "bag": "one small solid lime star sticker",
+      "background": "bamboo forest lantern bokeh phone trading chart"
     },
     "image": "/agents/99.jpg"
   },
@@ -1290,12 +1191,11 @@
     "id": 100,
     "name": "Deputy of Degen",
     "traits": {
-      "eyewear": "stealth black angular shield sunglasses",
-      "accessory": "simple black snapback forward on bag",
       "outfit": "noir black hoodie with orange cuffs",
-      "bag": "iridescent oil-slick smudge mark",
-      "detail": "copper rivet cluster decorative on jacket placket",
-      "background": "moon colony dome habitat Earthrise, HUD soft green candlesticks"
+      "eyewear": "obsidian wraparound shield sunglasses with green-mirror lenses and black strap (same frame shape as reference)",
+      "accessory": "simple black snapback forward on TOP of bag",
+      "bag": "one small solid magenta diamond sticker",
+      "background": "coastal cliff night lighthouse flash bokeh laptop trading chart"
     },
     "image": "/agents/100.jpg"
   }
