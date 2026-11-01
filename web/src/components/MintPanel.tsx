@@ -20,7 +20,7 @@ export function MintPanel({
   onMint: (payload: { rules: string; max_size: string }) => Promise<void>;
   onConnect: () => void;
 }) {
-  const [rules, setRules] = useState("long ETH at 3200, TP 3500, SL 3100");
+  const [rules, setRules] = useState("Long ETH At 3200, TP 3500, SL 3100");
   const [maxSize, setMaxSize] = useState("0.01");
   const soldOut = !!stats?.sold_out;
 
@@ -38,14 +38,14 @@ export function MintPanel({
             <Lock size={22} />
           </div>
           <div>
-            <h2 className="font-display text-lg font-semibold">desk locked</h2>
+            <h2 className="font-display text-lg font-semibold">Desk Locked</h2>
             <p className="mt-2 max-w-sm text-sm text-cream-mute">
-              connect Meteor or MyNearWallet (testnet) to mint your one-and-only agent NFT and unlock
-              the trading desk.
+              Connect Meteor Or MyNearWallet (Testnet) To Mint Your One-And-Only Agent NFT And Unlock
+              The Trading Desk.
             </p>
           </div>
           <button className="btn-primary" onClick={onConnect}>
-            [ connect wallet ]
+            [ Connect Wallet ]
           </button>
         </div>
       </motion.section>
@@ -64,14 +64,14 @@ export function MintPanel({
         <div className="relative flex flex-col items-center gap-3 py-3 text-center">
           <Skull className="text-rust" size={32} />
           <h2 className="font-display text-xl font-bold tracking-tight text-rust">
-            SOLD OUT · 100/100
+            Sold Out · 100/100
           </h2>
           <p className="max-w-sm text-sm text-cream-mute">
-            every robot already clocked in. the mint button took a sabbatical. hunt a transfer, bribe
-            a friend, or wait for the sequel drop.
+            Every Robot Already Clocked In. The Mint Button Took A Sabbatical. Hunt A Transfer, Bribe
+            A Friend, Or Wait For The Sequel Drop.
           </p>
           <p className="font-mono text-[11px] text-cream-mute/60">
-            connected as {owner} · zero seats left
+            Connected As {owner} · Zero Seats Left
           </p>
         </div>
       </motion.section>
@@ -91,10 +91,10 @@ export function MintPanel({
             <Wand2 size={16} />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-cream">you already hired yours</h2>
+            <h2 className="text-sm font-semibold text-cream">You Already Hired Yours</h2>
             <p className="mt-1 text-xs text-cream-mute">
-              one agent per wallet on this drop. run the desk, or transfer the NFT if you want to
-              hand the keys off.
+              One Agent Per Wallet On This Drop. Run The Desk, Or Transfer The NFT If You Want To
+              Hand The Keys Off.
             </p>
             <p className="mt-2 font-mono text-[11px] text-cream-mute/55">{owner}</p>
           </div>
@@ -115,24 +115,24 @@ export function MintPanel({
           <Wand2 size={16} />
         </div>
         <div>
-          <h2 className="text-sm font-semibold">mint your agent NFT</h2>
+          <h2 className="text-sm font-semibold">Mint Your Agent NFT</h2>
           <p className="text-[11px] text-cream-mute">
-            unique traits · one / wallet · in-app only
+            Unique Traits · One / Wallet · In-App Only
           </p>
         </div>
       </div>
       <div className="space-y-3">
         <label className="block space-y-1.5">
-          <span className="label-micro">starter rules (plain english)</span>
+          <span className="label-micro">Starter Rules (Plain English)</span>
           <textarea
             className="input min-h-[84px] resize-y"
             value={rules}
             onChange={(e) => setRules(e.target.value)}
-            placeholder="long ETH at 3200, TP 3500, SL 3100"
+            placeholder="Long ETH At 3200, TP 3500, SL 3100"
           />
         </label>
         <label className="block space-y-1.5">
-          <span className="label-micro">max size (safety leash)</span>
+          <span className="label-micro">Max Size (Safety Leash)</span>
           <input
             className="input"
             value={maxSize}
@@ -145,10 +145,10 @@ export function MintPanel({
           onClick={() => onMint({ rules, max_size: maxSize })}
         >
           <Plus size={15} />
-          {busy ? "summoning…" : `[ mint · ${(stats?.minted ?? 0) + 1}/100 ]`}
+          {busy ? "Summoning…" : `[ Mint · ${(stats?.minted ?? 0) + 1}/100 ]`}
         </button>
         <p className="text-center font-mono text-[10px] text-cream-mute/55">
-          minting as <span className="text-brown-300">{owner}</span> · testnet vibes
+          Minting As <span className="text-brown-300">{owner}</span> · Testnet Vibes
         </p>
       </div>
     </motion.section>

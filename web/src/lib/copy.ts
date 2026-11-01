@@ -1,41 +1,41 @@
 export const STATUS_FLAVOR: Record<string, string> = {
-  idle: "staring at the wall. teach it a trade.",
-  armed: "locked in. one tap from chaos (testnet chaos).",
-  active: "in the trenches. funding rates fear this NFT.",
-  paused: "touching grass. rare behavior for a degen agent.",
+  idle: "Staring At The Wall. Teach It A Trade.",
+  armed: "Locked In. One Tap From Chaos (Testnet Chaos).",
+  active: "In The Trenches. Funding Rates Fear This NFT.",
+  paused: "Touching Grass. Rare Behavior For A Degen Agent.",
 };
 
 export const EMPTY_LINES = [
-  "no agents yet — the desk is lonely and slightly judgmental.",
-  "mint one before the charts start talking trash.",
-  "zero NFTs. even the loading spinner looks disappointed.",
+  "No Agents Yet — The Desk Is Lonely And Slightly Judgmental.",
+  "Mint One Before The Charts Start Talking Trash.",
+  "Zero NFTs. Even The Loading Spinner Looks Disappointed.",
 ];
 
 export const LOADING_LINES = [
-  "bribing the sequencer with vibes…",
-  "asking the NFT if it feels bullish…",
-  "warming up TP/SL trigger fingers…",
-  "checking if this is still testnet (yes)…",
+  "Bribing The Sequencer With Vibes…",
+  "Asking The NFT If It Feels Bullish…",
+  "Warming Up TP/SL Trigger Fingers…",
+  "Checking If This Is Still Testnet (Yes)…",
 ];
 
 export const ERR_PREFIX = [
-  "oof.",
-  "bruh moment:",
-  "agent said nah:",
-  "charts rejected that:",
+  "Oof.",
+  "Bruh Moment:",
+  "Agent Said Nah:",
+  "Charts Rejected That:",
 ];
 
 export const SOLD_OUT_LINES = [
-  "that's all she wrote — 100/100 agents hired. the HR dept is crying.",
-  "sold out. the first 100 desks are full. try catching a transfer (or invent time travel).",
-  "100/100. the printers stopped. even the faucet is judging latecomers.",
-  "drop closed. every robot already has a boss. come back for season 2 (or a secondary).",
+  "That's All She Wrote — 100/100 Agents Hired. The HR Dept Is Crying.",
+  "Sold Out. The First 100 Desks Are Full. Try Catching A Transfer (Or Invent Time Travel).",
+  "100/100. The Printers Stopped. Even The Faucet Is Judging Latecomers.",
+  "Drop Closed. Every Robot Already Has A Boss. Come Back For Season 2 (Or A Secondary).",
 ];
 
 export const LOCKED_LINES = [
-  "this desk is token-gated. no NFT, no orders — just vibes and FOMO.",
-  "wallet connected, but your agent called in sick (you don't own one yet).",
-  "mint your one-per-wallet agent to unlock the trading desk.",
+  "This Desk Is Token-Gated. No NFT, No Orders — Just Vibes And FOMO.",
+  "Wallet Connected, But Your Agent Called In Sick (You Don't Own One Yet).",
+  "Mint Your One-Per-Wallet Agent To Unlock The Trading Desk.",
 ];
 
 export function pick<T>(arr: T[]): T {

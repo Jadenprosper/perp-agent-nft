@@ -31,7 +31,7 @@ export function ToastStack({
           >
             <p className="flex-1 text-sm font-medium text-cream">{t.text}</p>
             <button
-              aria-label="dismiss"
+              aria-label="Dismiss"
               className="rounded p-1 text-cream-mute hover:bg-ink-700 hover:text-cream"
               onClick={() => onDismiss(t.id)}
             >

@@ -91,9 +91,9 @@ export function PnlSharePanel({
       a.href = dataUrl;
       a.download = `perp-agent-${nft.token_id}-${tier}-pnl.png`;
       a.click();
-      onToast("PNG saved — go flex responsibly.");
+      onToast("PNG Saved — Go Flex Responsibly.");
     } catch (e) {
-      onError(e instanceof Error ? e.message : "png export failed");
+      onError(e instanceof Error ? e.message : "PNG Export Failed");
     } finally {
       setBusy(false);
     }
@@ -102,34 +102,34 @@ export function PnlSharePanel({
   function shareOnX() {
     const text = buildShareText(snapshot, tier, oneLiner);
     window.open(xIntentUrl(text), "_blank", "noopener,noreferrer");
-    onToast("opened X compose — you hit post, we don't.", "info");
+    onToast("Opened X Compose — You Hit Post, We Don't.", "info");
   }
 
   return (
     <div className="grid gap-4 lg:grid-cols-2">
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-sm font-semibold text-cream-dim">shareable PnL card</h3>
+          <h3 className="text-sm font-semibold text-cream-dim">Shareable PnL Card</h3>
           <span className="chip" style={{ borderColor: `${TIER_SCENES[tier].accent}66` }}>
             {TIER_SCENES[tier].label}
           </span>
         </div>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          <Field label="market">
+          <Field label="Market">
             <input className="input py-2" value={market} onChange={(e) => setMarket(e.target.value.toUpperCase())} />
           </Field>
-          <Field label="side">
+          <Field label="Side">
             <select
               className="input py-2"
               value={side}
               onChange={(e) => setSide(e.target.value as PnlSide)}
             >
-              <option value="long">long</option>
-              <option value="short">short</option>
+              <option value="long">Long</option>
+              <option value="short">Short</option>
             </select>
           </Field>
-          <Field label="leverage">
+          <Field label="Leverage">
             <input
               className="input py-2"
               type="number"
@@ -139,7 +139,7 @@ export function PnlSharePanel({
               onChange={(e) => setLeverage(Number(e.target.value) || 1)}
             />
           </Field>
-          <Field label="entry">
+          <Field label="Entry">
             <input
               className="input py-2"
               type="number"
@@ -147,7 +147,7 @@ export function PnlSharePanel({
               onChange={(e) => setEntry(Number(e.target.value) || 0)}
             />
           </Field>
-          <Field label="exit / mark">
+          <Field label="Exit / Mark">
             <input
               className="input py-2"
               type="number"
@@ -155,7 +155,7 @@ export function PnlSharePanel({
               onChange={(e) => setExit(Number(e.target.value) || 0)}
             />
           </Field>
-          <Field label="size">
+          <Field label="Size">
             <input
               className="input py-2"
               type="number"
@@ -173,14 +173,14 @@ export function PnlSharePanel({
               checked={liquidated}
               onChange={(e) => setLiquidated(e.target.checked)}
             />
-            mark liquidated
+            Mark Liquidated
           </label>
           <button
             type="button"
             className="chip hover:bg-brown-500/20"
             onClick={() => setTierOverride("auto")}
           >
-            <RefreshCw size={11} /> auto ({autoTier})
+            <RefreshCw size={11} /> Auto ({autoTier.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())})
           </button>
         </div>
 
@@ -190,7 +190,7 @@ export function PnlSharePanel({
               key={t}
               type="button"
               onClick={() => setTierOverride(t)}
-              className={`rounded-md px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-micro transition ${
+              className={`rounded-md px-2.5 py-1.5 font-mono text-[10px] tracking-micro transition ${
                 tier === t && tierOverride !== "auto"
                   ? "bg-brown-500 text-ink-950"
                   : tier === t
@@ -206,16 +206,16 @@ export function PnlSharePanel({
         <div className="flex flex-col gap-2 sm:flex-row">
           <button className="btn-primary flex-1" disabled={busy} onClick={downloadPng}>
             <Download size={15} />
-            {busy ? "rendering…" : "download PNG"}
+            {busy ? "Rendering…" : "Download PNG"}
           </button>
           <button className="btn-ghost flex-1" onClick={shareOnX}>
             <Share2 size={15} />
-            share on X
+            Share On X
           </button>
         </div>
         <p className="text-[11px] text-cream-mute/55">
-          opens x.com/intent/post with caption prefilled — no auto-posting. PNG is rendered in your
-          browser from the card preview.
+          Opens An X Draft With Caption Prefilled — No Auto-Posting. PNG Is Rendered In Your
+          Browser From The Card Preview.
         </p>
       </div>
 

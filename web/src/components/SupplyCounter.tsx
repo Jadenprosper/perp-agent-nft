@@ -65,7 +65,7 @@ export function SupplyCounter({
           ) : (
             <Flame size={15} className="text-brown-400" />
           )}
-          <span className="label-micro">first drop</span>
+          <span className="label-micro">First Drop</span>
         </div>
         <AnimatePresence mode="wait">
           <motion.span
@@ -101,8 +101,8 @@ export function SupplyCounter({
           <span className="text-rust/90">{soldLine}</span>
         ) : (
           <>
-            <span className="text-brown-300">{remaining}</span> desks left · one agent per wallet ·
-            mint in-app
+            <span className="text-brown-300">{remaining}</span> Desks Left · One Agent Per Wallet ·
+            Mint In-App
           </>
         )}
       </p>

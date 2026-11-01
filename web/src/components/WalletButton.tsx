@@ -26,7 +26,7 @@ export function WalletButton({
         }).unsubscribe;
         setReady(true);
       } catch (e) {
-        console.error("wallet selector init failed", e);
+        console.error("Wallet Selector Init Failed", e);
         setReady(true);
       }
     })();
@@ -48,7 +48,7 @@ export function WalletButton({
   }, [onChange]);
 
   if (!ready) {
-    return <button className="btn-ghost px-3 py-2 text-xs opacity-60">warming…</button>;
+    return <button className="btn-ghost px-3 py-2 text-xs opacity-60">Warming…</button>;
   }
 
   if (accountId) {
@@ -58,7 +58,7 @@ export function WalletButton({
           <Wallet size={11} />
           {accountId}
         </span>
-        <button className="btn-ghost px-2.5 py-2 text-xs" onClick={disconnect} title="sign out">
+        <button className="btn-ghost px-2.5 py-2 text-xs" onClick={disconnect} title="Sign Out">
           <LogOut size={13} />
         </button>
       </div>
@@ -68,7 +68,7 @@ export function WalletButton({
   return (
     <button className="btn-primary px-3 py-2 text-xs sm:text-sm" onClick={connect}>
       <Wallet size={14} />
-      connect
+      Connect
     </button>
   );
 }

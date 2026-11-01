@@ -14,14 +14,14 @@ import { EMPTY_LINES, ERR_PREFIX, LOADING_LINES, pick } from "@/lib/copy";
 import { getModal } from "@/lib/near";
 
 const TICKER = [
-  "100 agent desks · one per wallet",
-  "plain english → TP / SL",
-  "transfer the NFT · transfer the bot",
-  "Hyperliquid testnet only",
-  "NEAR HACKATHON · NFTs That Do Something",
-  "no mainnet keys were harmed",
-  "sold out? bribe a friend",
-  "the JPEG finally got a job",
+  "100 Agent Desks · One Per Wallet",
+  "Plain English → TP / SL",
+  "Transfer The NFT · Transfer The Bot",
+  "Hyperliquid Testnet Only",
+  "NEAR Hackathon · NFTs That Do Something",
+  "No Mainnet Keys Were Harmed",
+  "Sold Out? Bribe A Friend",
+  "The JPEG Finally Got A Job",
 ];
 
 export default function HomePage() {
@@ -33,7 +33,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [mode, setMode] = useState("dry_run");
-  const [vibe, setVibe] = useState("booting…");
+  const [vibe, setVibe] = useState("Booting…");
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [emptyLine] = useState(() => pick(EMPTY_LINES));
   const [loadingLine] = useState(() => pick(LOADING_LINES));
@@ -56,7 +56,7 @@ export default function HomePage() {
       setGallery(all.nfts);
       setStats(all.mint || health.mint);
       setMode(health.mode);
-      setVibe(health.vibe);
+      setVibe(String(health.vibe || "").replace(/\b\w/g, (c) => c.toUpperCase()) || "Online");
       const owned = accountId
         ? all.nfts.filter((n) => n.owner_id === accountId)
         : [];
@@ -67,7 +67,7 @@ export default function HomePage() {
         return null;
       });
     } catch (e) {
-      onError(e instanceof Error ? e.message : "backend ghosted us");
+      onError(e instanceof Error ? e.message : "Backend Ghosted Us");
     } finally {
       setLoading(false);
     }
@@ -102,7 +102,7 @@ export default function HomePage() {
       setSelectedId(res.nft.token_id);
       setView("desk");
     } catch (e) {
-      onError(e instanceof Error ? e.message : "mint failed");
+      onError(e instanceof Error ? e.message : "Mint Failed");
       void api.mintStats().then(setStats).catch(() => undefined);
     } finally {
       setBusy(false);
@@ -125,7 +125,7 @@ export default function HomePage() {
     <div className="relative min-h-screen">
       {/* ticker — papertrade energy */}
       <div className="overflow-hidden border-b border-brown-400/15 bg-ink-900/95">
-        <div className="ticker-track flex whitespace-nowrap py-1.5 font-mono text-[10px] uppercase tracking-micro text-brown-300/80">
+        <div className="ticker-track flex whitespace-nowrap py-1.5 font-mono text-[10px] tracking-micro text-brown-300/80">
           <span className="px-4">{tickerText}</span>
           <span className="px-4" aria-hidden>
             {tickerText}
@@ -138,7 +138,7 @@ export default function HomePage() {
         <div className="mx-auto flex max-w-[1400px] items-center gap-3 px-3 py-2.5 sm:px-4">
           <a href="#" className="group flex shrink-0 items-baseline gap-0.5">
             <span className="font-display text-lg font-semibold tracking-tight text-cream sm:text-xl">
-              perp agent
+              Perp Agent
             </span>
             <span className="cursor-blink font-mono text-brown-400">_</span>
           </a>
@@ -168,10 +168,10 @@ export default function HomePage() {
           <div className="ml-auto flex items-center gap-2">
             <span className="chip chip-live hidden sm:inline-flex">
               <span className="h-1.5 w-1.5 rounded-full bg-brown-400" />
-              live · testnet
+              Live · Testnet
             </span>
             <span className="chip hidden lg:inline-flex">
-              <FlaskConical size={10} /> {mode}
+              <FlaskConical size={10} /> {String(mode || "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) || "—"}
             </span>
             <a
               className="btn-bracket hidden px-2 py-1.5 sm:inline-flex"
@@ -179,7 +179,7 @@ export default function HomePage() {
               target="_blank"
               rel="noreferrer"
             >
-              <Github size={12} /> repo
+              <Github size={12} /> Repo
             </a>
             <WalletButton accountId={accountId} onChange={setAccountId} />
           </div>
@@ -189,14 +189,14 @@ export default function HomePage() {
         <div className="flex gap-1 border-t border-brown-400/10 px-3 py-1.5 md:hidden">
           {(
             [
-              ["desk", "desk"],
-              ["mint", "mint"],
+              ["desk", "Desk"],
+              ["mint", "Mint"],
             ] as const
           ).map(([id, label]) => (
             <button
               key={id}
               onClick={() => setView(id)}
-              className={`flex-1 rounded-md py-1.5 font-mono text-[11px] uppercase tracking-micro ${
+              className={`flex-1 rounded-md py-1.5 font-mono text-[11px] tracking-micro ${
                 view === id
                   ? "bg-brown-500/25 text-brown-200"
                   : "text-cream-mute"
@@ -214,9 +214,9 @@ export default function HomePage() {
           <SupplyCounter stats={stats} compact />
           <div className="hidden h-4 w-px bg-brown-400/20 sm:block" />
           <p className="hidden text-xs text-cream-mute sm:block">
-            first drop ·{" "}
-            <span className="text-brown-300">{stats?.remaining ?? "—"}</span> seats left · one agent /
-            wallet
+            First Drop ·{" "}
+            <span className="text-brown-300">{stats?.remaining ?? "—"}</span> Seats Left · One Agent /
+            Wallet
           </p>
           <p className="ml-auto truncate font-mono text-[10px] text-cream-mute/70">{vibe}</p>
         </div>
@@ -232,9 +232,9 @@ export default function HomePage() {
           <div className="space-y-0 p-3 sm:p-4">
             <div className="mb-3 flex items-end justify-between px-0.5">
               <div>
-                <p className="label-micro">hire desk</p>
+                <p className="label-micro">Hire Desk</p>
                 <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-cream">
-                  the NFT got a job
+                  The NFT Got A Job
                 </h1>
               </div>
               <button
@@ -244,14 +244,14 @@ export default function HomePage() {
                   void refresh();
                 }}
               >
-                <Activity size={11} /> refresh
+                <Activity size={11} /> Refresh
               </button>
             </div>
 
             <p className="mb-4 text-xs leading-relaxed text-cream-mute">
-              mint one of <span className="text-brown-300">100</span> unique agents. write trades in
-              plain english. place Hyperliquid testnet TP/SL. transfer the NFT — the desk clocks in
-              for the new owner.
+              Mint One Of <span className="text-brown-300">100</span> Unique Agents. Write Trades In
+              Plain English. Place Hyperliquid Testnet TP/SL. Transfer The NFT — The Desk Clocks In
+              For The New Owner.
             </p>
 
             <MintPanel
@@ -266,7 +266,7 @@ export default function HomePage() {
             <section className="mt-4">
               <div className="mb-2 flex items-center justify-between px-0.5">
                 <h2 className="label-micro text-cream-dim">
-                  {accountId ? "your agent" : "connect to see your agent"}
+                  {accountId ? "Your Agent" : "Connect To See Your Agent"}
                 </h2>
               </div>
 
@@ -276,12 +276,12 @@ export default function HomePage() {
                 </div>
               ) : !accountId ? (
                 <div className="rounded-md border border-dashed border-brown-400/25 bg-ink-900/40 p-6 text-center text-sm text-cream-mute">
-                  wallet first — Meteor or MyNearWallet on testnet.
+                  Wallet First — Meteor Or MyNearWallet On Testnet.
                 </div>
               ) : mine.length === 0 ? (
                 <div className="rounded-md border border-dashed border-brown-400/25 bg-ink-900/40 p-6 text-center text-sm text-cream-mute">
                   {stats?.sold_out
-                    ? "sold out and you missed the drop. catch a transfer if you can."
+                    ? "Sold Out And You Missed The Drop. Catch A Transfer If You Can."
                     : emptyLine}
                 </div>
               ) : (
@@ -304,7 +304,7 @@ export default function HomePage() {
             {gallery.length > 0 && (
               <section className="mt-5">
                 <h2 className="label-micro mb-2 px-0.5">
-                  floor gallery · {gallery.length} hired
+                  Floor Gallery · {gallery.length} Hired
                 </h2>
                 <div className="flex gap-2 overflow-x-auto pb-1">
                   {gallery.slice(0, 12).map((n) => (
@@ -335,9 +335,9 @@ export default function HomePage() {
           <div className="p-3 sm:p-4">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <div>
-                <p className="label-micro">agent terminal</p>
+                <p className="label-micro">Agent Terminal</p>
                 <p className="text-sm text-cream-mute">
-                  NFT-gated · no jpeg, no desk · dry-run by default
+                  NFT-Gated · No JPEG, No Desk · Dry-Run By Default
                 </p>
               </div>
               <SupplyCounter stats={stats} />
@@ -355,9 +355,9 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="border-t border-brown-400/10 px-4 py-4 text-center font-mono text-[10px] uppercase tracking-micro text-cream-mute/60">
-        built for near hackathon · nfts that do something · hyperliquid testnet · max 100 · one mint /
-        wallet
+      <footer className="border-t border-brown-400/10 px-4 py-4 text-center font-mono text-[10px] tracking-micro text-cream-mute/60">
+        Built For NEAR Hackathon · NFTs That Do Something · Hyperliquid Testnet · Max 100 · One Mint /
+        Wallet
       </footer>
 
       <ToastStack items={toasts} onDismiss={(id) => setToasts((t) => t.filter((x) => x.id !== id))} />

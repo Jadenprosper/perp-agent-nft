@@ -56,14 +56,14 @@ export function AgentDesk({
           <Bot size={28} />
         </div>
         <h3 className="relative font-display text-lg font-semibold">
-          {caller ? "no agent on this wallet" : "connect to unlock the desk"}
+          {caller ? "No Agent On This Wallet" : "Connect To Unlock The Desk"}
         </h3>
         <p className="relative mt-2 max-w-sm text-sm text-cream-mute">
           {caller
-            ? "mint your one-per-wallet agent to open the trading desk. no NFT = locked out (on purpose)."
-            : "Wallet Selector first (Meteor / MyNearWallet). then mint. then degen — testnet only."}
+            ? "Mint Your One-Per-Wallet Agent To Open The Trading Desk. No NFT = Locked Out (On Purpose)."
+            : "Wallet Selector First (Meteor / MyNearWallet). Then Mint. Then Degen — Testnet Only."}
         </p>
-        <p className="relative mt-4 chip">token-gated · 1 NFT / wallet · max 100</p>
+        <p className="relative mt-4 chip">Token-Gated · 1 NFT / Wallet · Max 100</p>
       </div>
     );
   }
@@ -82,10 +82,10 @@ export function AgentDesk({
       onUpdated(res.nft);
       setParsed((res.parsed as Record<string, unknown>) || null);
       setParseErr(res.parse_error);
-      if (res.parse_error) onToast(`saved, but parser side-eyed it: ${res.parse_error}`, "info");
-      else onToast("rules etched into the NFT. agent is locked in.");
+      if (res.parse_error) onToast(`Saved, But Parser Side-Eyed It: ${res.parse_error}`, "info");
+      else onToast("Rules Etched Into The NFT. Agent Is Locked In.");
     } catch (e) {
-      onError(e instanceof Error ? e.message : "save failed");
+      onError(e instanceof Error ? e.message : "Save Failed");
     } finally {
       setWorking(false);
     }
@@ -96,10 +96,10 @@ export function AgentDesk({
       const res = await api.parse(rules);
       setParsed(res.order);
       setParseErr(null);
-      onToast("parser understood that. scary how literate this thing is.", "info");
+      onToast("Parser Understood That. Scary How Literate This Thing Is.", "info");
     } catch (e) {
       setParsed(null);
-      setParseErr(e instanceof Error ? e.message : "parse failed");
+      setParseErr(e instanceof Error ? e.message : "Parse Failed");
     }
   }
 
@@ -108,10 +108,10 @@ export function AgentDesk({
     try {
       const res = await api.execute(nft!.token_id, { caller, dry_run: dryRun });
       onUpdated(res.nft);
-      onToast(res.toast || (dryRun ? "dry run stamped" : "order sent to testnet"));
+      onToast(res.toast || (dryRun ? "Dry Run Stamped" : "Order Sent To Testnet"));
       setTab("share");
     } catch (e) {
-      onError(e instanceof Error ? e.message : "execute failed");
+      onError(e instanceof Error ? e.message : "Execute Failed");
     } finally {
       setWorking(false);
     }
@@ -129,7 +129,7 @@ export function AgentDesk({
       onToast(res.toast);
       setReceiver("");
     } catch (e) {
-      onError(e instanceof Error ? e.message : "transfer failed");
+      onError(e instanceof Error ? e.message : "Transfer Failed");
     } finally {
       setWorking(false);
     }
@@ -149,24 +149,24 @@ export function AgentDesk({
         <div className="flex min-w-0 items-start gap-3">
           <AgentPortrait nft={nft} size={64} className="hidden sm:block" />
           <div className="min-w-0">
-            <div className="chip mb-1.5">agent #{nft.token_id}</div>
+            <div className="chip mb-1.5">Agent #{nft.token_id}</div>
             <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">
               {nft.title}
             </h2>
             <p className="mt-1 text-sm text-cream-mute">
-              {STATUS_FLAVOR[nft.config.status] || "mysterious aura"}
+              {STATUS_FLAVOR[nft.config.status] || "Mysterious Aura"}
             </p>
             {nft.config.traits && (
               <p className="mt-1 truncate font-mono text-[10px] text-cream-mute/60">
                 {(nft.config.traits as Record<string, string>).helm} ·{" "}
-                {(nft.config.traits as Record<string, string>).gear} · mood{" "}
+                {(nft.config.traits as Record<string, string>).gear} · Mood{" "}
                 {(nft.config.traits as Record<string, string>).mood}
               </p>
             )}
           </div>
         </div>
         <div className="rounded-md border border-brown-400/15 bg-ink-900 px-3 py-2 text-right">
-          <p className="label-micro">owner</p>
+          <p className="label-micro">Owner</p>
           <p className="mt-0.5 font-mono text-xs text-brown-300">{nft.owner_id}</p>
         </div>
       </div>
@@ -174,7 +174,7 @@ export function AgentDesk({
       {!isOwner && (
         <div className="mx-3.5 mt-3 flex items-start gap-2 rounded-md border border-rust/35 bg-rust/10 px-3 py-2.5 text-sm text-rust-soft sm:mx-4">
           <ShieldAlert size={15} className="mt-0.5 shrink-0" />
-          you don&apos;t hold this NFT. look, don&apos;t touch — transfer it to yourself first.
+          You Don&apos;t Hold This NFT. Look, Don&apos;t Touch — Transfer It To Yourself First.
         </div>
       )}
 
@@ -182,16 +182,16 @@ export function AgentDesk({
       <div className="flex gap-1 overflow-x-auto border-b border-brown-400/10 px-3 pt-3 sm:px-4">
         {(
           [
-            ["trade", "trade"],
-            ["share", "pnl card"],
-            ["transfer", "transfer"],
-            ["lore", "lore"],
+            ["trade", "Trade"],
+            ["share", "PnL Card"],
+            ["transfer", "Transfer"],
+            ["lore", "Lore"],
           ] as const
         ).map(([id, label]) => (
           <button
             key={id}
             onClick={() => setTab(id)}
-            className={`whitespace-nowrap border-b-2 px-3 pb-2.5 font-mono text-[11px] uppercase tracking-micro transition ${
+            className={`whitespace-nowrap border-b-2 px-3 pb-2.5 font-mono text-[11px] tracking-micro transition ${
               tab === id
                 ? "border-brown-400 text-brown-200"
                 : "border-transparent text-cream-mute hover:text-cream-dim"
@@ -215,7 +215,7 @@ export function AgentDesk({
               <div className="grid gap-3 lg:grid-cols-5">
                 <div className="space-y-3 lg:col-span-3">
                   <label className="block space-y-1.5">
-                    <span className="label-micro">plain-language rules</span>
+                    <span className="label-micro">Plain-Language Rules</span>
                     <textarea
                       className="input min-h-[110px]"
                       disabled={disabled}
@@ -225,7 +225,7 @@ export function AgentDesk({
                   </label>
                   <div className="grid grid-cols-2 gap-2.5">
                     <label className="block space-y-1.5">
-                      <span className="label-micro">max size</span>
+                      <span className="label-micro">Max Size</span>
                       <input
                         className="input"
                         disabled={disabled}
@@ -234,40 +234,40 @@ export function AgentDesk({
                       />
                     </label>
                     <div className="rounded-md border border-brown-400/15 bg-ink-900 px-3 py-2">
-                      <p className="label-micro">status</p>
+                      <p className="label-micro">Status</p>
                       <p className="mt-1 text-sm font-semibold text-brown-300">
-                        {nft.config.status}
+                        {String(nft.config.status || "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
                       </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-2 lg:col-span-2">
-                  <p className="label-micro">ticket</p>
+                  <p className="label-micro">Ticket</p>
                   <button className="btn-ghost w-full justify-start" disabled={disabled} onClick={saveRules}>
-                    <RefreshCw size={13} /> save to NFT
+                    <RefreshCw size={13} /> Save To NFT
                   </button>
                   <button className="btn-ghost w-full justify-start" disabled={!rules.trim()} onClick={preview}>
-                    <Crosshair size={13} /> preview parse
+                    <Crosshair size={13} /> Preview Parse
                   </button>
                   <button
                     className="btn-primary w-full"
                     disabled={disabled}
                     onClick={() => fire(true)}
                   >
-                    <Play size={13} /> dry-run ticket
+                    <Play size={13} /> Dry-Run Ticket
                   </button>
                   <button
                     className="btn-bracket w-full"
                     disabled={disabled}
                     onClick={() => fire(false)}
-                    title="Needs HL_PRIVATE_KEY + DRY_RUN=false on the server"
+                    title="Needs HL_PRIVATE_KEY + DRY_RUN=False On The Server"
                   >
-                    <Play size={13} /> fire testnet
+                    <Play size={13} /> Fire Testnet
                   </button>
                   <p className="text-[10px] leading-relaxed text-cream-mute/60">
-                    default is dry-run. live Hyperliquid testnet only when the backend has a testnet
-                    key. mainnet is banned in code.
+                    Default Is Dry-Run. Live Hyperliquid Testnet Only When The Backend Has A Testnet
+                    Key. Mainnet Is Banned In Code.
                   </p>
                 </div>
               </div>
@@ -308,8 +308,8 @@ export function AgentDesk({
               className="space-y-3"
             >
               <p className="text-sm text-cream-mute">
-                sell the NFT, sell the agent. rules, history, and desk rights move together. old owner
-                gets the boot — no take-backsies.
+                Sell The NFT, Sell The Agent. Rules, History, And Desk Rights Move Together. Old Owner
+                Gets The Boot — No Take-Backsies.
               </p>
               <input
                 className="input"
@@ -319,7 +319,7 @@ export function AgentDesk({
                 onChange={(e) => setReceiver(e.target.value)}
               />
               <button className="btn-primary w-full" disabled={disabled || !receiver} onClick={transfer}>
-                <ArrowRightLeft size={14} /> [ transfer agent NFT ]
+                <ArrowRightLeft size={14} /> [ Transfer Agent NFT ]
               </button>
             </motion.div>
           )}
@@ -335,44 +335,44 @@ export function AgentDesk({
               <div className="flex flex-col gap-3 sm:flex-row">
                 <AgentPortrait nft={nft} size={132} className="mx-auto sm:mx-0" />
                 <div className="flex-1 space-y-2 rounded-md border border-brown-400/15 bg-ink-900 p-3 text-sm">
-                  <p className="label-micro">robot sheet</p>
+                  <p className="label-micro">Robot Sheet</p>
                   {nft.config.traits ? (
                     <ul className="space-y-1 text-cream-dim">
                       <li>
-                        <span className="text-cream-mute">catchphrase · </span>
+                        <span className="text-cream-mute">Catchphrase · </span>
                         &ldquo;{(nft.config.traits as Record<string, string>).catchphrase}&rdquo;
                       </li>
                       <li>
-                        <span className="text-cream-mute">helm · </span>
+                        <span className="text-cream-mute">Helm · </span>
                         {(nft.config.traits as Record<string, string>).helm}
                       </li>
                       <li>
-                        <span className="text-cream-mute">body · </span>
+                        <span className="text-cream-mute">Body · </span>
                         {(nft.config.traits as Record<string, string>).body}
                       </li>
                       <li>
-                        <span className="text-cream-mute">gear · </span>
+                        <span className="text-cream-mute">Gear · </span>
                         {(nft.config.traits as Record<string, string>).gear}
                       </li>
                       <li>
-                        <span className="text-cream-mute">aura · </span>
+                        <span className="text-cream-mute">Aura · </span>
                         {(nft.config.traits as Record<string, string>).aura}
                       </li>
                       <li>
-                        <span className="text-cream-mute">mood · </span>
+                        <span className="text-cream-mute">Mood · </span>
                         {(nft.config.traits as Record<string, string>).mood} (
-                        {(nft.config.traits as Record<string, number>).performance_bps} bps vibes)
+                        {(nft.config.traits as Record<string, number>).performance_bps} Bps Vibes)
                       </li>
                     </ul>
                   ) : (
-                    <p className="text-cream-mute">classic blank agent — traits arrive on fresh mints.</p>
+                    <p className="text-cream-mute">Classic Blank Agent — Traits Arrive On Fresh Mints.</p>
                   )}
                   <p className="text-xs text-cream-mute/70">{nft.description}</p>
                 </div>
               </div>
               {nft.config.last_action && (
                 <div className="rounded-md border border-brown-400/25 bg-brown-500/10 p-3 text-sm">
-                  <p className="label-micro text-brown-300">last action</p>
+                  <p className="label-micro text-brown-300">Last Action</p>
                   <p className="mt-1 font-mono text-xs text-cream-dim">{nft.config.last_action}</p>
                 </div>
               )}

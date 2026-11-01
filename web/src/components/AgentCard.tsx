@@ -48,15 +48,15 @@ export function AgentCard({
             <h3 className="truncate text-sm font-semibold tracking-tight">{nft.title}</h3>
             <span className={`chip ${statusColor[st] || statusColor.idle}`}>
               <Zap size={9} />
-              {st}
+              {st.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
             </span>
           </div>
           <p className="mt-1 line-clamp-2 text-[11px] text-cream-mute">
             {traits.catchphrase
               ? `"${traits.catchphrase}"`
-              : nft.config.rules || STATUS_FLAVOR[st] || "untitled degen"}
+              : nft.config.rules || STATUS_FLAVOR[st] || "Untitled Degen"}
           </p>
-          <p className="mt-1.5 font-mono text-[9px] uppercase tracking-micro text-cream-mute/55">
+          <p className="mt-1.5 font-mono text-[9px] tracking-micro text-cream-mute/55">
             #{nft.token_id} · {nft.owner_id}
           </p>
         </div>

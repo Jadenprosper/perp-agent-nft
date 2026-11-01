@@ -20,12 +20,12 @@ const display = IBM_Plex_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Perp Agent NFT — an NFT that trades",
+  title: "Perp Agent NFT — An NFT That Trades",
   description:
-    "NEP-171 agent NFTs for Hyperliquid perps (testnet). Own the NFT, own the bot. Built for NEAR HACKATHON.",
+    "NEP-171 Agent NFTs For Hyperliquid Perps (Testnet). Own The NFT, Own The Bot. Built For NEAR Hackathon.",
   openGraph: {
     title: "Perp Agent NFT",
-    description: "The JPEG finally got a job: trading perps on testnet.",
+    description: "The JPEG Finally Got A Job: Trading Perps On Testnet.",
   },
 };
 

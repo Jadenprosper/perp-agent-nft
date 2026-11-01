@@ -30,7 +30,7 @@ export async function getModal(): Promise<WalletSelectorModal> {
   if (!modal) {
     modal = setupModal(selector, {
       contractId: CONTRACT_ID,
-      description: "connect to mint / run your one-per-wallet perp agent (testnet)",
+      description: "Connect To Mint / Run Your One-Per-Wallet Perp Agent (Testnet)",
     });
   }
   return modal;

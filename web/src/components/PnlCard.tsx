@@ -46,7 +46,7 @@ export const PnlCard = forwardRef<
         <div className="flex items-start justify-between gap-3">
           <div>
             <p
-              className="text-[10px] font-bold uppercase tracking-[0.22em]"
+              className="text-[10px] font-bold tracking-[0.22em]"
               style={{ color: scene.accent }}
             >
               {scene.label}
@@ -63,18 +63,18 @@ export const PnlCard = forwardRef<
               background: "rgba(0,0,0,0.45)",
             }}
           >
-            <p className="text-[9px] uppercase tracking-wider text-white/55">side</p>
-            <p className="text-sm font-bold uppercase text-white">{snapshot.side}</p>
+            <p className="text-[9px] tracking-wider text-white/55">Side</p>
+            <p className="text-sm font-bold text-white">{snapshot.side.replace(/\b\w/g, (c) => c.toUpperCase())}</p>
             <p className="font-mono text-[11px] text-white/75">{snapshot.leverage}x</p>
           </div>
         </div>
 
         <div className="space-y-3">
           <div className="grid grid-cols-3 gap-2 rounded-md border border-white/10 bg-black/45 p-3 backdrop-blur-md">
-            <Stat label="market" value={snapshot.market} />
-            <Stat label="entry" value={fmtPx(snapshot.entry)} />
+            <Stat label="Market" value={snapshot.market} />
+            <Stat label="Entry" value={fmtPx(snapshot.entry)} />
             <Stat
-              label={snapshot.liquidated ? "liqd" : "exit"}
+              label={snapshot.liquidated ? "Liqd" : "Exit"}
               value={fmtPx(snapshot.exit)}
             />
           </div>
@@ -89,10 +89,10 @@ export const PnlCard = forwardRef<
 
           <div className="flex items-end justify-between gap-2 px-0.5">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">
+              <p className="text-[10px] font-semibold tracking-[0.18em] text-white/55">
                 Perp Agent NFT
               </p>
-              <p className="text-[10px] text-white/40">NEAR HACKATHON · testnet vibes</p>
+              <p className="text-[10px] text-white/40">NEAR Hackathon · Testnet Vibes</p>
             </div>
             <p className="font-mono text-[9px] text-white/35">github.com/Jadenprosper/perp-agent-nft</p>
           </div>
@@ -105,7 +105,7 @@ export const PnlCard = forwardRef<
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[9px] uppercase tracking-wider text-white/45">{label}</p>
+      <p className="text-[9px] tracking-wider text-white/45">{label}</p>
       <p className="truncate font-mono text-xs font-semibold text-white sm:text-sm">{value}</p>
     </div>
   );

@@ -35,7 +35,7 @@ body {
     border-color: var(--panel-border);
   }
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-md border border-brown-400/20 bg-brown-500/10 px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-micro text-brown-300;
+    @apply inline-flex items-center gap-1.5 rounded-md border border-brown-400/20 bg-brown-500/10 px-2 py-0.5 font-mono text-[10px] font-medium tracking-micro text-brown-300;
   }
   .chip-live {
     @apply border-brown-400/40 bg-brown-500/20 text-brown-200;
@@ -47,13 +47,13 @@ body {
     @apply inline-flex items-center justify-center gap-2 rounded-md border border-brown-400/25 bg-ink-800/60 px-4 py-2.5 text-sm font-semibold text-cream-dim transition hover:border-brown-400/45 hover:bg-ink-700 active:scale-[0.98] disabled:opacity-45;
   }
   .btn-bracket {
-    @apply inline-flex items-center justify-center gap-2 rounded-sm border border-dashed border-brown-400/45 bg-transparent px-3 py-2 font-mono text-xs uppercase tracking-micro text-brown-300 transition hover:border-brown-300 hover:bg-brown-500/10 hover:text-cream;
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border border-dashed border-brown-400/45 bg-transparent px-3 py-2 font-mono text-xs tracking-micro text-brown-300 transition hover:border-brown-300 hover:bg-brown-500/10 hover:text-cream;
   }
   .input {
     @apply w-full rounded-md border border-brown-400/20 bg-ink-900/90 px-3 py-2.5 font-mono text-sm text-cream placeholder:text-cream-mute/50 outline-none transition focus:border-brown-400/55 focus:ring-1 focus:ring-brown-400/30;
   }
   .label-micro {
-    @apply font-mono text-[10px] font-medium uppercase tracking-micro text-cream-mute;
+    @apply font-mono text-[10px] font-medium tracking-micro text-cream-mute;
   }
   .hairline {
     border-color: var(--panel-border);

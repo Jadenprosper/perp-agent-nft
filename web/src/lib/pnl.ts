@@ -23,50 +23,50 @@ export type PnlSnapshot = {
 export const TIER_SCENES: Record<PnlTier, { src: string; label: string; accent: string }> = {
   moon: {
     src: "/pnl-scenes/moon.jpg",
-    label: "TO THE MOON",
+    label: "To The Moon",
     accent: "#b8ff3c",
   },
   win: {
     src: "/pnl-scenes/win.jpg",
-    label: "BIG WIN",
+    label: "Big Win",
     accent: "#00d4aa",
   },
   small_loss: {
     src: "/pnl-scenes/small-loss.jpg",
-    label: "THIS IS FINE",
+    label: "This Is Fine",
     accent: "#ffb020",
   },
   liquidated: {
     src: "/pnl-scenes/liquidated.jpg",
-    label: "LIQUIDATED",
+    label: "Liquidated",
     accent: "#ff4d9a",
   },
 };
 
 const ONE_LINERS: Record<PnlTier, string[]> = {
   moon: [
-    "houston, we printed the bag.",
-    "leverage said yes and so did the charts.",
-    "the NFT just paid rent on the moon.",
-    "funding rates filed a missing persons report.",
+    "Houston, We Printed The Bag.",
+    "Leverage Said Yes And So Did The Charts.",
+    "The NFT Just Paid Rent On The Moon.",
+    "Funding Rates Filed A Missing Persons Report.",
   ],
   win: [
-    "stop-loss never even got invited.",
-    "paper hands hate to see it.",
-    "the agent ate. the bag stayed crowned.",
-    "green candles, gold chain energy.",
+    "Stop-Loss Never Even Got Invited.",
+    "Paper Hands Hate To See It.",
+    "The Agent Ate. The Bag Stayed Crowned.",
+    "Green Candles, Gold Chain Energy.",
   ],
   small_loss: [
-    "this is fine. the dumpster is a vibe.",
-    "down bad, still HODLing the mug.",
-    "character development, not a drawdown.",
-    "tiny scar. big narrative arc.",
+    "This Is Fine. The Dumpster Is A Vibe.",
+    "Down Bad, Still HODLing The Mug.",
+    "Character Development, Not A Drawdown.",
+    "Tiny Scar. Big Narrative Arc.",
   ],
   liquidated: [
-    "rekt note stuck to the bag. classic.",
-    "the exchange said goodbye first.",
-    "margin called. dignity declined the call.",
-    "zeroed with style. see you at the faucet.",
+    "Rekt Note Stuck To The Bag. Classic.",
+    "The Exchange Said Goodbye First.",
+    "Margin Called. Dignity Declined The Call.",
+    "Zeroed With Style. See You At The Faucet.",
   ],
 };
 
@@ -146,7 +146,7 @@ export function buildShareText(s: PnlSnapshot, tier: PnlTier, line: string): str
     `${formatPct(s.pnlPct)} · ${formatUsd(s.pnlUsd)}`,
     `"${line}"`,
     "",
-    "Perp Agent NFT — an NFT that trades (NEAR HACKATHON, testnet)",
+    "Perp Agent NFT — An NFT That Trades (NEAR Hackathon, Testnet)",
     "https://github.com/Jadenprosper/perp-agent-nft",
   ].join("\n");
 }
