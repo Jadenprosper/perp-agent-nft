@@ -56,7 +56,7 @@ async function req<T>(path: string, init?: RequestInit): Promise<T> {
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(data.detail || data.message || `request failed (${res.status})`);
+    throw new Error(data.detail || data.message || `Request Failed (${res.status})`);
   }
   return data as T;
 }
