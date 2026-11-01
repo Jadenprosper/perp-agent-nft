@@ -72,6 +72,14 @@ Key methods:
 - `nft_transfer` — moves control; receiver cannot already hold an agent on this drop
 - `set_agent_config` — owner-only rules / leash updates
 
+## Shareable PnL cards
+
+In the agent desk → **PnL card** tab:
+
+- Four scene backgrounds (`web/public/pnl-scenes/`): **moon** (≥100%), **win**, **small loss / this is fine**, **liquidated**
+- Overlay: agent name + token id, market, side, leverage, entry, exit/mark, PnL % + $, funny one-liner, branding
+- **Download PNG** (client-side via `html-to-image`) and **Share on X** via `x.com/intent/post` (no auto-posting)
+
 ## API highlights
 
 - `GET /api/mint-stats` — live `x/100`

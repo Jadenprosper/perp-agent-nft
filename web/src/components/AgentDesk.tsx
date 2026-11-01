@@ -15,6 +15,7 @@ import { api } from "@/lib/api";
 import { STATUS_FLAVOR } from "@/lib/copy";
 import { History } from "./History";
 import { AgentPortrait } from "./AgentPortrait";
+import { PnlSharePanel } from "./PnlSharePanel";
 
 export function AgentDesk({
   nft,
@@ -36,7 +37,7 @@ export function AgentDesk({
   const [receiver, setReceiver] = useState("");
   const [parsed, setParsed] = useState<Record<string, unknown> | null>(null);
   const [parseErr, setParseErr] = useState<string | null>(null);
-  const [tab, setTab] = useState<"trade" | "transfer" | "lore">("trade");
+  const [tab, setTab] = useState<"trade" | "share" | "transfer" | "lore">("trade");
   const [working, setWorking] = useState(false);
 
   useEffect(() => {
@@ -108,6 +109,7 @@ export function AgentDesk({
       const res = await api.execute(nft!.token_id, { caller, dry_run: dryRun });
       onUpdated(res.nft);
       onToast(res.toast || (dryRun ? "dry run stamped" : "order sent to testnet"));
+      setTab("share");
     } catch (e) {
       onError(e instanceof Error ? e.message : "execute failed");
     } finally {
@@ -177,6 +179,7 @@ export function AgentDesk({
         {(
           [
             ["trade", "trade desk"],
+            ["share", "PnL card"],
             ["transfer", "yeet ownership"],
             ["lore", "agent lore"],
           ] as const
@@ -273,6 +276,17 @@ export function AgentDesk({
               default is dry-run. live Hyperliquid testnet only when the backend has a testnet key.
               mainnet is banned in code — we&apos;re degens, not reckless.
             </p>
+          </motion.div>
+        )}
+
+        {tab === "share" && (
+          <motion.div
+            key="share"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+          >
+            <PnlSharePanel nft={nft} onToast={onToast} onError={onError} />
           </motion.div>
         )}
 
