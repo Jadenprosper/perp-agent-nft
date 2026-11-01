@@ -14,7 +14,9 @@ export const NETWORK_ID = (process.env.NEXT_PUBLIC_NEAR_NETWORK || "testnet") as
 export const CONTRACT_ID =
   process.env.NEXT_PUBLIC_NFT_CONTRACT || "perp-agent-nft.testnet";
 
-export const WC_PROJECT_ID = (process.env.NEXT_PUBLIC_WC_PROJECT_ID || "").trim();
+export const WC_PROJECT_ID = (
+  process.env.NEXT_PUBLIC_WC_PROJECT_ID || "4313f4a6fd453f6be60baa5c554e8971"
+).trim();
 
 let selectorPromise: Promise<WalletSelector> | null = null;
 let modal: WalletSelectorModal | null = null;
@@ -92,10 +94,7 @@ function buildModules(): WalletModuleFactory[] {
         metadata: {
           name: "Perp Agent NFT",
           description: "NEAR Hackathon — NFT That Trades Perps (Testnet)",
-          url:
-            typeof window !== "undefined"
-              ? window.location.origin
-              : "https://jadenprosper.github.io/perp-agent-nft",
+          url: "https://jadenprosper.github.io/perp-agent-nft/",
           icons: [
             "https://jadenprosper.github.io/perp-agent-nft/agents/1.jpg",
           ],
@@ -129,7 +128,7 @@ export async function getModal(): Promise<WalletSelectorModal> {
       contractId: CONTRACT_ID,
       description: isMobileUa()
         ? WC_PROJECT_ID
-          ? "Mobile: Pick WalletConnect / Meteor Wallet App. Desktop Options Stay Available."
+          ? "Mobile: Prefer WalletConnect → Meteor. Desktop Options Stay Available."
           : "Mobile: Open This Site Inside The Meteor App Browser, Or Use Meteor Wallet / MyNearWallet."
         : "Connect To Mint / Run Your One-Per-Wallet Perp Agent (Testnet)",
     });

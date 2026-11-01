@@ -188,7 +188,7 @@ export function WalletButton({
               <div>
                 <h3 className="font-display text-base text-brown-100">Connect Meteor App</h3>
                 <p className="mt-1 text-xs leading-relaxed text-brown-300/80">
-                  Phone Connect Hands Off To The Meteor Wallet App — Not The Website.
+                  Phone Connect Uses WalletConnect → Meteor For One-Tap App Handoff — Not The Website.
                 </p>
               </div>
               <button
@@ -201,14 +201,9 @@ export function WalletButton({
             </div>
 
             <div className="flex flex-col gap-2">
-              <button className="btn-primary w-full justify-center py-3 text-sm" onClick={openMeteorApp}>
-                <Smartphone size={15} />
-                Open Meteor App
-              </button>
-
               {WC_PROJECT_ID ? (
                 <button
-                  className="btn-ghost w-full justify-center border border-brown-700/40 py-3 text-sm"
+                  className="btn-primary w-full justify-center py-3 text-sm"
                   onClick={connectViaWalletConnect}
                   disabled={busy}
                 >
@@ -223,6 +218,14 @@ export function WalletButton({
                   Redeploy For One-Tap App Handoff.
                 </p>
               )}
+
+              <button
+                className="btn-ghost w-full justify-center border border-brown-700/40 py-3 text-sm"
+                onClick={openMeteorApp}
+              >
+                <Smartphone size={15} />
+                Open Meteor App
+              </button>
 
               <button
                 className="btn-ghost w-full justify-center py-2.5 text-xs text-brown-300"
@@ -242,8 +245,8 @@ export function WalletButton({
             )}
 
             <p className="mt-3 text-[10px] leading-relaxed text-brown-400/80">
-              Best Path Today: In Meteor, Open The Built-In Browser → Paste This Site → Tap Connect.
-              The Injected Meteor Wallet App Module Auto-Hooks There.
+              Primary Path: Tap WalletConnect → Meteor For One-Tap Handoff Into The App. Backup: Open
+              Meteor App → Built-In Browser → Paste This Site → Connect (Injected Module Auto-Hooks).
             </p>
           </div>
         </div>
