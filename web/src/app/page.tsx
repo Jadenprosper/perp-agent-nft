@@ -78,7 +78,11 @@ export default function HomePage() {
     } catch (e) {
       // Static / undeployed: gallery still browsable; treat nothing as taken.
       setMintedIds([]);
-      onError(e instanceof Error ? e.message : "Backend Ghosted Us");
+      const msg = e instanceof Error ? e.message : "Backend Ghosted Us";
+      // Don't spam toasts when the demo API isn't hosted on gh-pages.
+      if (!/failed \(404\)|failed to fetch|networkerror/i.test(msg)) {
+        onError(msg);
+      }
     } finally {
       setLoading(false);
     }
