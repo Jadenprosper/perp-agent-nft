@@ -44,6 +44,7 @@ export type MintStats = {
   max_supply: number;
   remaining: number;
   sold_out: boolean;
+  minted_ids?: string[];
 };
 
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
@@ -65,12 +66,23 @@ export const api = {
   health: () =>
     req<{ ok: boolean; mode: string; vibe: string; mint: MintStats }>("/api/health"),
   mintStats: () => req<MintStats>("/api/mint-stats"),
+  mintedIds: () =>
+    req<{ minted_ids: string[] } & MintStats>("/api/minted-ids").catch(async () => {
+      const s = await req<MintStats>("/api/mint-stats");
+      return { ...s, minted_ids: s.minted_ids || [] };
+    }),
   list: (owner?: string) =>
     req<{ nfts: Nft[]; mint: MintStats }>(
       owner ? `/api/nfts?owner=${encodeURIComponent(owner)}` : "/api/nfts"
     ),
   get: (id: string) => req<Nft>(`/api/nfts/${id}`),
-  mint: (body: { owner_id: string; title?: string; rules?: string; max_size?: string }) =>
+  mint: (body: {
+    owner_id: string;
+    title?: string;
+    rules?: string;
+    max_size?: string;
+    token_id?: number;
+  }) =>
     req<{ ok: boolean; nft: Nft; toast: string; mint: MintStats }>("/api/nfts/mint", {
       method: "POST",
       body: JSON.stringify(body),

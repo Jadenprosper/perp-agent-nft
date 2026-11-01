@@ -122,6 +122,16 @@ _CATALOG_PATH = _Path(__file__).resolve().parents[2] / "web" / "public" / "agent
 _CATALOG: dict[int, dict] | None = None
 
 
+def _catalog_items(raw) -> list:
+    if isinstance(raw, list):
+        return raw
+    if isinstance(raw, dict):
+        for key in ("agents", "items", "nfts", "collection"):
+            if isinstance(raw.get(key), list):
+                return raw[key]
+    return []
+
+
 def load_agent_catalog() -> dict[int, dict]:
     global _CATALOG
     if _CATALOG is not None:
@@ -129,25 +139,47 @@ def load_agent_catalog() -> dict[int, dict]:
     _CATALOG = {}
     if _CATALOG_PATH.exists():
         raw = _json.loads(_CATALOG_PATH.read_text())
-        for item in raw.get("agents", []):
-            _CATALOG[int(item["id"])] = item
+        for item in _catalog_items(raw):
+            if not isinstance(item, dict):
+                continue
+            tid = item.get("id", item.get("token_id"))
+            try:
+                _CATALOG[int(tid)] = item
+            except (TypeError, ValueError):
+                continue
     return _CATALOG
 
 
 def traits_for_token(token_num: int, seed: int | None = None) -> AgentTraits:
-    """Prefer curated PFP catalog entry for token N; fall back to random."""
+    """Prefer curated PFP catalog entry for token N; fall back to random.
+
+    Trait key names in metadata.json may change (eyewear/accessory/held/…).
+    Map generically onto the on-chain-shaped AgentTraits fields.
+    """
     catalog = load_agent_catalog()
     entry = catalog.get(token_num)
-    base = generate_traits(seed=seed)
+    base = generate_traits(seed=seed if seed is not None else token_num * 7919)
     if not entry:
         return base
     t = entry.get("traits") or {}
     base.name = entry.get("name") or base.name
-    base.helm = t.get("headgear") or base.helm
-    base.body = t.get("outfit") or base.body
-    base.gear = t.get("glasses") or base.gear
-    base.aura = t.get("background") or base.aura
-    # stash bag marking + image path in catchphrase-adjacent fields via dict merge later
+    # Prefer whatever the catalog currently uses; fall back across aliases.
+    base.helm = (
+        t.get("eyewear")
+        or t.get("headgear")
+        or t.get("glasses")
+        or t.get("helm")
+        or base.helm
+    )
+    base.body = t.get("outfit") or t.get("body") or t.get("fit") or base.body
+    base.gear = (
+        t.get("accessory")
+        or t.get("held")
+        or t.get("gear")
+        or t.get("glasses")
+        or base.gear
+    )
+    base.aura = t.get("background") or t.get("aura") or t.get("bag") or base.aura
     return base
 
 

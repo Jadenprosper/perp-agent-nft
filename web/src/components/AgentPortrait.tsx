@@ -1,6 +1,7 @@
 "use client";
 
 import type { Nft } from "@/lib/api";
+import { withBase } from "@/lib/basePath";
 
 const moodRing: Record<string, string> = {
   hyped: "from-brown-400/35 to-brown-700/20",
@@ -22,10 +23,11 @@ export function AgentPortrait({
   const traits = (nft.config.traits || {}) as Record<string, unknown>;
   const mood = String(traits.mood || "zen");
   const svg = nft.portrait_svg;
-  const portraitUrl =
+  const rawPortrait =
     (nft as { portrait_url?: string }).portrait_url ||
     (typeof traits.image === "string" ? traits.image : null) ||
     (nft.token_id ? `/agents/${nft.token_id}.jpg` : null);
+  const portraitUrl = rawPortrait ? withBase(rawPortrait) : null;
 
   return (
     <div
@@ -58,7 +60,7 @@ export function AgentPortrait({
       ) : !portraitUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={`/api/nfts/${nft.token_id}/portrait.svg`}
+          src={withBase(`/api/nfts/${nft.token_id}/portrait.svg`)}
           alt={nft.title}
           className="h-full w-full object-cover"
         />

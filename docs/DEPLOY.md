@@ -6,6 +6,6 @@
 4. Deploy with near-cli / cargo-near to `<you>.testnet`.
 5. Init: call `new` with owner if required by the contract ABI.
 6. Set `NEXT_PUBLIC_NFT_CONTRACT` in the web app to that account.
-7. Mint via `mint_agent` (one per wallet, max 100) or use the demo API store for UI-only demos.
+7. Mint via `mint_agent(token_id, rules?, max_size?)` — user picks id `1..=100` (one per wallet, max 100). View `get_minted_ids` / `get_mint_stats` for the picker. Or use the demo API store for UI-only demos.
 
 Do **not** submit the hackathon entry or post on X until Didi approves.

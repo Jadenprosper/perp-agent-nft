@@ -80,3 +80,28 @@ def test_sold_out_at_100():
     assert r.status_code == 409
     assert "sold out" in r.json()["detail"].lower()
     assert client.get("/api/mint-stats").json()["sold_out"] is True
+
+
+def test_mint_chosen_token_id():
+    r = client.post(
+        "/api/nfts/mint",
+        json={"owner_id": "picker.testnet", "token_id": 42, "rules": "long SOL"},
+    )
+    assert r.status_code == 200
+    assert r.json()["nft"]["token_id"] == "42"
+    # taken
+    r2 = client.post(
+        "/api/nfts/mint",
+        json={"owner_id": "other.testnet", "token_id": 42},
+    )
+    assert r2.status_code == 409
+    # out of range
+    r3 = client.post(
+        "/api/nfts/mint",
+        json={"owner_id": "other.testnet", "token_id": 101},
+    )
+    assert r3.status_code == 400
+    ids = client.get("/api/minted-ids").json()
+    assert "42" in ids["minted_ids"]
+    stats = client.get("/api/mint-stats").json()
+    assert "42" in stats.get("minted_ids", [])

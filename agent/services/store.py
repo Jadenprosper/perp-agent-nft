@@ -128,12 +128,16 @@ class LocalStore:
             return held[0]
         return None
 
+    def minted_ids(self) -> list[str]:
+        return sorted(self._nfts.keys(), key=lambda x: int(x) if str(x).isdigit() else 0)
+
     def mint(
         self,
         owner_id: str,
         rules: str = "",
         max_size: str = "0.01",
-        title: Optional[str] = None,  # ignored — traits name wins
+        title: Optional[str] = None,  # ignored — catalog / traits name wins
+        token_id: Optional[str | int] = None,
     ) -> LocalNFT:
         with self._lock:
             stats = self.mint_stats()
@@ -151,19 +155,43 @@ class LocalStore:
                     "you already hold an agent NFT — one desk per wallet. transfer first if you're swapping mains."
                 )
 
-            token_num = len(self._nfts) + 1  # 1..100 maps to /agents/{n}.jpg
-            token_id = str(token_num)
+            if token_id is None:
+                # legacy auto-pick: lowest free id in 1..max_supply
+                taken = set(self._nfts.keys())
+                token_num = next(
+                    (i for i in range(1, self.max_supply + 1) if str(i) not in taken),
+                    None,
+                )
+                if token_num is None:
+                    raise RuntimeError(
+                        "sold out — the first 100 agents already clocked in. catch a transfer if you can."
+                    )
+            else:
+                try:
+                    token_num = int(token_id)
+                except (TypeError, ValueError) as e:
+                    raise ValueError("token_id must be an integer 1..100") from e
+                if token_num < 1 or token_num > self.max_supply:
+                    raise ValueError("token_id out of range — pick an agent from 1 to 100")
+                if str(token_num) in self._nfts:
+                    raise RuntimeError(
+                        "taken — that agent already clocked in for someone else. pick another."
+                    )
+
+            token_id_str = str(token_num)
             now = int(time.time() * 1000)
             traits = traits_for_token(token_num, seed=now ^ (token_num * 7919))
             catalog = load_agent_catalog().get(token_num) or {}
-            bag = (catalog.get("traits") or {}).get("bag", "")
+            cat_traits = catalog.get("traits") or {}
             tdict = traits.to_dict()
-            tdict["bag"] = bag
-            tdict["image"] = catalog_image_path(token_num)
-            tdict["headgear"] = (catalog.get("traits") or {}).get("headgear", traits.helm)
-            tdict["glasses"] = (catalog.get("traits") or {}).get("glasses", traits.gear)
-            tdict["outfit"] = (catalog.get("traits") or {}).get("outfit", traits.body)
-            tdict["background"] = (catalog.get("traits") or {}).get("background", traits.aura)
+            # Merge catalog traits generically (whatever keys metadata currently has).
+            for k, v in cat_traits.items():
+                if v is not None and str(v).strip():
+                    tdict[str(k)] = v
+            if catalog.get("name"):
+                traits.name = str(catalog["name"])
+                tdict["name"] = traits.name
+            tdict["image"] = catalog.get("image") or catalog_image_path(token_num)
             cfg = AgentConfig(
                 rules=rules,
                 status="armed" if rules else "idle",
@@ -172,7 +200,7 @@ class LocalStore:
                 traits=tdict,
             )
             nft = LocalNFT(
-                token_id=token_id,
+                token_id=token_id_str,
                 owner_id=owner_id,
                 minter_id=owner_id,
                 title=traits.name,
@@ -182,13 +210,13 @@ class LocalStore:
                     AgentEvent(
                         at=now,
                         kind="mint",
-                        detail=f"{traits.name} hired by {owner_id}",
+                        detail=f"{traits.name} (#{token_num}) hired by {owner_id}",
                         by=owner_id,
                     )
                 ],
             )
-            self._nfts[token_id] = nft
-            self._minted_by[owner_id] = token_id
+            self._nfts[token_id_str] = nft
+            self._minted_by[owner_id] = token_id_str
             self._save()
             return nft
 

@@ -191,7 +191,6 @@ pub struct Contract {
     agent_history: LookupMap<TokenId, Vec<AgentEvent>>,
     /// Enforces one mint per wallet for the first drop.
     minted_by_owner: UnorderedMap<AccountId, TokenId>,
-    next_id: u64,
     max_supply: u64,
 }
 
@@ -206,7 +205,7 @@ impl Contract {
                 name: "Perp Agent NFT".to_string(),
                 symbol: "PAGENT".to_string(),
                 icon: Some(DATA_IMAGE_SVG.to_string()),
-                base_uri: None,
+                base_uri: Some("https://jadenprosper.github.io/perp-agent-nft/".to_string()),
                 reference: None,
                 reference_hash: None,
             },
@@ -229,13 +228,12 @@ impl Contract {
             agent_config_by_id: LookupMap::new(StorageKey::AgentConfig),
             agent_history: LookupMap::new(StorageKey::AgentHistory),
             minted_by_owner: UnorderedMap::new(StorageKey::OwnerMint),
-            next_id: 0,
             max_supply: MAX_SUPPLY,
         }
     }
 
     pub fn get_mint_stats(&self) -> MintStats {
-        let minted = self.next_id;
+        let minted = self.tokens.nft_total_supply().0 as u64;
         let remaining = self.max_supply.saturating_sub(minted);
         MintStats {
             minted,
@@ -254,28 +252,60 @@ impl Contract {
         self.minted_by_owner.get(&account_id)
     }
 
-    /// Mint YOUR agent NFT in-app. One per wallet. Caps at max_supply (100).
+    /// All token ids that have been minted (1..100 strings).
+    pub fn get_minted_ids(&self) -> Vec<TokenId> {
+        self.tokens
+            .nft_tokens(None, Some(self.max_supply))
+            .into_iter()
+            .map(|t| t.token_id)
+            .collect()
+    }
+
+    /// Mint a CHOSEN agent NFT (token_id 1..=100). One per wallet. Caps at max_supply.
+    /// Image for token N lives at agents/N.jpg (see contract base_uri + metadata.json).
     /// Receiver is always the predecessor (connected wallet).
     #[payable]
-    pub fn mint_agent(&mut self, rules: Option<String>, max_size: Option<String>) -> Token {
+    pub fn mint_agent(
+        &mut self,
+        token_id: u64,
+        rules: Option<String>,
+        max_size: Option<String>,
+    ) -> Token {
         let owner = env::predecessor_account_id();
         require!(
-            self.next_id < self.max_supply,
+            (1..=self.max_supply).contains(&token_id),
+            "token_id out of range — pick an agent from 1 to 100"
+        );
+        let stats = self.get_mint_stats();
+        require!(
+            !stats.sold_out,
             "sold out — the first 100 agents already clocked in. try the secondary desk (transfer)."
         );
         require!(
             self.minted_by_owner.get(&owner).is_none(),
             "one agent per wallet — you already hired yours. transfer it if you want a different vibe."
         );
+        require!(
+            self.tokens.nft_supply_for_owner(owner.clone()).0 == 0,
+            "you already hold an agent NFT — one desk per wallet. transfer first if you're swapping mains."
+        );
 
-        let token_id = self.next_id.to_string();
-        self.next_id += 1;
+        let token_id_str = token_id.to_string();
+        require!(
+            self.tokens.nft_token(token_id_str.clone()).is_none(),
+            "taken — that agent already clocked in for someone else. pick another."
+        );
 
         let now = env::block_timestamp_ms();
-        let seed = env::block_height()
+        // Deterministic look from chosen id (catalog art is agents/{id}.jpg off-chain).
+        let seed = token_id
             .wrapping_mul(9973)
-            .wrapping_add(self.next_id.wrapping_mul(7919));
-        let traits = generate_traits(seed);
+            .wrapping_add(env::block_height().wrapping_mul(13));
+        let mut traits = generate_traits(seed);
+        // Prefer stable display name slot from titles list indexed by id.
+        let title_idx = ((token_id - 1) as usize) % TITLES.len();
+        traits.name = TITLES[title_idx].to_string();
+        traits.seed = token_id;
 
         let mut config = AgentConfig::default();
         config.traits = traits.clone();
@@ -287,13 +317,17 @@ impl Contract {
         }
 
         let extra = near_sdk::serde_json::to_string(&config).unwrap_or_else(|_| "{}".to_string());
+        let media = format!(
+            "https://jadenprosper.github.io/perp-agent-nft/agents/{}.jpg",
+            token_id
+        );
         let token_metadata = TokenMetadata {
             title: Some(traits.name.clone()),
             description: Some(format!(
-                "Perp trading agent NFT. \"{}\" — ownership = control. Hyperliquid testnet.",
-                traits.catchphrase
+                "Perp trading agent NFT #{}. \"{}\" — ownership = control. Hyperliquid testnet. Art: agents/{}.jpg",
+                token_id, traits.catchphrase, token_id
             )),
-            media: Some(svg_data_uri(&traits)),
+            media: Some(media),
             media_hash: None,
             copies: Some(1),
             issued_at: Some(now.to_string()),
@@ -307,20 +341,20 @@ impl Contract {
 
         let token = self
             .tokens
-            .internal_mint(token_id.clone(), owner.clone(), Some(token_metadata));
+            .internal_mint(token_id_str.clone(), owner.clone(), Some(token_metadata));
 
-        self.agent_config_by_id.insert(&token_id, &config);
-        self.minted_by_owner.insert(&owner, &token_id);
+        self.agent_config_by_id.insert(&token_id_str, &config);
+        self.minted_by_owner.insert(&owner, &token_id_str);
         self.push_event(
-            &token_id,
+            &token_id_str,
             "mint",
-            &format!("{} hired by {}", traits.name, owner),
+            &format!("{} (# {}) hired by {}", traits.name, token_id, owner),
             owner,
         );
         token
     }
 
-    #[payable]
+        #[payable]
     pub fn set_agent_rules(
         &mut self,
         token_id: TokenId,
@@ -444,7 +478,12 @@ impl Contract {
                 meta.extra =
                     Some(near_sdk::serde_json::to_string(config).unwrap_or_else(|_| "{}".into()));
                 meta.updated_at = Some(env::block_timestamp_ms().to_string());
-                meta.media = Some(svg_data_uri(&config.traits));
+                // Keep catalog JPG when present; fall back to mood SVG.
+                if meta.media.as_ref().map(|m| m.contains("/agents/")).unwrap_or(false) {
+                    // leave catalog art
+                } else {
+                    meta.media = Some(svg_data_uri(&config.traits));
+                }
                 meta.title = Some(config.traits.name.clone());
                 meta_map.insert(token_id, &meta);
             }
@@ -683,7 +722,7 @@ mod tests {
     }
 
     #[test]
-    fn mint_one_per_wallet_and_stats() {
+    fn mint_chosen_id_one_per_wallet_and_stats() {
         let mut context = ctx(accounts(1));
         testing_env!(context.build());
         let mut c = Contract::new_default_meta(accounts(0));
@@ -692,16 +731,39 @@ mod tests {
             .attached_deposit(MINT_STORAGE)
             .predecessor_account_id(accounts(1))
             .build());
-        let token = c.mint_agent(Some("long ETH at 3200, TP 3500, SL 3100".into()), None);
-        assert_eq!(token.token_id, "0");
+        let token = c.mint_agent(
+            7,
+            Some("long ETH at 3200, TP 3500, SL 3100".into()),
+            None,
+        );
+        assert_eq!(token.token_id, "7");
         assert_eq!(token.owner_id, accounts(1));
-        assert!(!c.get_agent_config("0".into()).unwrap().traits.name.is_empty());
+        assert!(!c.get_agent_config("7".into()).unwrap().traits.name.is_empty());
+        assert!(c
+            .nft_token("7".into())
+            .unwrap()
+            .metadata
+            .unwrap()
+            .media
+            .unwrap()
+            .contains("/agents/7.jpg"));
 
         let stats = c.get_mint_stats();
         assert_eq!(stats.minted, 1);
         assert_eq!(stats.max_supply, 100);
         assert_eq!(stats.remaining, 99);
         assert!(!stats.sold_out);
+        assert_eq!(c.get_minted_ids(), vec!["7".to_string()]);
+
+        // same id taken
+        testing_env!(context
+            .attached_deposit(MINT_STORAGE)
+            .predecessor_account_id(accounts(2))
+            .build());
+        let boom = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            c.mint_agent(7, None, None);
+        }));
+        assert!(boom.is_err());
 
         // second mint same wallet fails
         testing_env!(context
@@ -709,7 +771,26 @@ mod tests {
             .predecessor_account_id(accounts(1))
             .build());
         let boom = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            c.mint_agent(None, None);
+            c.mint_agent(8, None, None);
+        }));
+        assert!(boom.is_err());
+    }
+
+    #[test]
+    fn out_of_range_rejected() {
+        let mut context = ctx(accounts(1));
+        testing_env!(context.build());
+        let mut c = Contract::new_default_meta(accounts(0));
+        testing_env!(context
+            .attached_deposit(MINT_STORAGE)
+            .predecessor_account_id(accounts(1))
+            .build());
+        let boom = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            c.mint_agent(0, None, None);
+        }));
+        assert!(boom.is_err());
+        let boom = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            c.mint_agent(101, None, None);
         }));
         assert!(boom.is_err());
     }
@@ -724,15 +805,15 @@ mod tests {
             .attached_deposit(MINT_STORAGE)
             .predecessor_account_id(accounts(1))
             .build());
-        c.mint_agent(Some("long ETH at 1".into()), None);
+        c.mint_agent(3, Some("long ETH at 1".into()), None);
 
         testing_env!(context
             .attached_deposit(NearToken::from_yoctonear(1))
             .predecessor_account_id(accounts(1))
             .build());
-        c.nft_transfer(accounts(2), "0".into(), None, None);
+        c.nft_transfer(accounts(2), "3".into(), None, None);
 
-        let t = c.nft_token("0".into()).unwrap();
+        let t = c.nft_token("3".into()).unwrap();
         assert_eq!(t.owner_id, accounts(2));
 
         // old owner cannot set rules
@@ -741,7 +822,7 @@ mod tests {
             .predecessor_account_id(accounts(1))
             .build());
         let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            c.set_agent_rules("0".into(), "hacked".into(), None, None);
+            c.set_agent_rules("3".into(), "hacked".into(), None, None);
         }));
         assert!(result.is_err());
 
@@ -751,7 +832,17 @@ mod tests {
             .predecessor_account_id(accounts(1))
             .build());
         let boom = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            c.mint_agent(None, None);
+            c.mint_agent(4, None, None);
+        }));
+        assert!(boom.is_err());
+
+        // receiver already holds one — cannot mint another
+        testing_env!(context
+            .attached_deposit(MINT_STORAGE)
+            .predecessor_account_id(accounts(2))
+            .build());
+        let boom = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            c.mint_agent(5, None, None);
         }));
         assert!(boom.is_err());
     }
@@ -767,22 +858,25 @@ mod tests {
             .attached_deposit(MINT_STORAGE)
             .predecessor_account_id(accounts(1))
             .build());
-        c.mint_agent(None, None);
+        c.mint_agent(1, None, None);
 
         testing_env!(context
             .attached_deposit(MINT_STORAGE)
             .predecessor_account_id(accounts(2))
             .build());
-        c.mint_agent(None, None);
+        c.mint_agent(2, None, None);
 
         assert!(c.get_mint_stats().sold_out);
+        let mut ids = c.get_minted_ids();
+        ids.sort();
+        assert_eq!(ids, vec!["1".to_string(), "2".to_string()]);
 
         testing_env!(context
             .attached_deposit(MINT_STORAGE)
             .predecessor_account_id(accounts(3))
             .build());
         let boom = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-            c.mint_agent(None, None);
+            c.mint_agent(1, None, None); // even a "free" id fails when sold out / taken
         }));
         assert!(boom.is_err());
     }

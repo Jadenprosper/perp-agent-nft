@@ -48,6 +48,7 @@ class MintBody(BaseModel):
     title: Optional[str] = None
     rules: str = ""
     max_size: str = "0.01"
+    token_id: Optional[int] = Field(default=None, ge=1, le=100)
 
 
 class RulesBody(BaseModel):
@@ -88,7 +89,15 @@ def health() -> dict[str, Any]:
 @app.get("/api/mint-stats")
 def mint_stats() -> dict[str, Any]:
     """Live first-drop counter: minted / 100."""
-    return STORE.mint_stats()
+    stats = STORE.mint_stats()
+    stats["minted_ids"] = STORE.minted_ids()
+    return stats
+
+
+@app.get("/api/minted-ids")
+def minted_ids() -> dict[str, Any]:
+    """Token ids already hired (for the picker Taken badges)."""
+    return {"minted_ids": STORE.minted_ids(), **STORE.mint_stats()}
 
 
 @app.post("/api/parse")
@@ -142,9 +151,12 @@ def mint_nft(body: MintBody) -> dict[str, Any]:
             rules=body.rules,
             max_size=body.max_size,
             title=body.title,
+            token_id=body.token_id,
         )
     except PermissionError as e:
         raise HTTPException(403, detail=str(e)) from e
+    except ValueError as e:
+        raise HTTPException(400, detail=str(e)) from e
     except RuntimeError as e:
         raise HTTPException(409, detail=str(e)) from e
     return {

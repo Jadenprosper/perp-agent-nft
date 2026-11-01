@@ -30,6 +30,7 @@ export default function HomePage() {
   const [gallery, setGallery] = useState<Nft[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [stats, setStats] = useState<MintStats | null>(null);
+  const [mintedIds, setMintedIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [mode, setMode] = useState("dry_run");
@@ -54,7 +55,11 @@ export default function HomePage() {
     try {
       const [all, health] = await Promise.all([api.list(), api.health()]);
       setGallery(all.nfts);
-      setStats(all.mint || health.mint);
+      const mint = all.mint || health.mint;
+      setStats(mint);
+      const fromStats = (mint as MintStats).minted_ids || [];
+      const fromGallery = all.nfts.map((n) => String(n.token_id));
+      setMintedIds(Array.from(new Set([...fromStats, ...fromGallery])));
       setMode(health.mode);
       setVibe(String(health.vibe || "").replace(/\b\w/g, (c) => c.toUpperCase()) || "Online");
       const owned = accountId
@@ -67,6 +72,8 @@ export default function HomePage() {
         return null;
       });
     } catch (e) {
+      // Static / undeployed: gallery still browsable; treat nothing as taken.
+      setMintedIds([]);
       onError(e instanceof Error ? e.message : "Backend Ghosted Us");
     } finally {
       setLoading(false);
@@ -77,7 +84,13 @@ export default function HomePage() {
     setLoading(true);
     void refresh();
     const t = setInterval(() => {
-      void api.mintStats().then(setStats).catch(() => undefined);
+      void api
+        .mintStats()
+        .then((s) => {
+          setStats(s);
+          if (s.minted_ids) setMintedIds(s.minted_ids.map(String));
+        })
+        .catch(() => undefined);
     }, 8000);
     return () => clearInterval(t);
   }, [refresh]);
@@ -87,7 +100,7 @@ export default function HomePage() {
     [mine, selectedId]
   );
 
-  async function onMint(payload: { rules: string; max_size: string }) {
+  async function onMint(payload: { rules: string; max_size: string; token_id: number }) {
     if (!accountId) return;
     setBusy(true);
     try {
@@ -95,6 +108,7 @@ export default function HomePage() {
         owner_id: accountId,
         rules: payload.rules,
         max_size: payload.max_size,
+        token_id: payload.token_id,
       });
       pushToast(res.toast);
       setStats(res.mint);
@@ -222,20 +236,20 @@ export default function HomePage() {
         </div>
       </div>
 
-      <main className="mx-auto grid max-w-[1400px] gap-0 lg:grid-cols-12">
-        {/* left rail */}
-        <aside
-          className={`terminal-scroll border-brown-400/10 lg:col-span-4 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto lg:border-r ${
-            view === "mint" ? "block" : "hidden lg:block"
-          }`}
-        >
-          <div className="space-y-0 p-3 sm:p-4">
-            <div className="mb-3 flex items-end justify-between px-0.5">
+      {view === "mint" ? (
+        <main className="mx-auto max-w-[1400px]">
+          <div className="terminal-scroll p-3 sm:p-4 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto">
+            <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
               <div>
                 <p className="label-micro">Hire Desk</p>
-                <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-cream">
+                <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-cream sm:text-3xl">
                   The NFT Got A Job
                 </h1>
+                <p className="mt-2 max-w-2xl text-xs leading-relaxed text-cream-mute sm:text-sm">
+                  Mint One Of <span className="text-brown-300">100</span> Unique Agents. Pick The Face
+                  You Want On The Desk. Write Trades In Plain English. Transfer The NFT — The Bot
+                  Clocks In For The New Owner.
+                </p>
               </div>
               <button
                 className="chip hover:bg-brown-500/20"
@@ -248,112 +262,145 @@ export default function HomePage() {
               </button>
             </div>
 
-            <p className="mb-4 text-xs leading-relaxed text-cream-mute">
-              Mint One Of <span className="text-brown-300">100</span> Unique Agents. Write Trades In
-              Plain English. Place Hyperliquid Testnet TP/SL. Transfer The NFT — The Desk Clocks In
-              For The New Owner.
-            </p>
-
             <MintPanel
               owner={accountId}
               busy={busy}
               stats={stats}
               alreadyMinted={mine.length > 0}
+              mintedIds={mintedIds}
               onMint={onMint}
               onConnect={onConnect}
+              expanded
             />
-
-            <section className="mt-4">
-              <div className="mb-2 flex items-center justify-between px-0.5">
-                <h2 className="label-micro text-cream-dim">
-                  {accountId ? "Your Agent" : "Connect To See Your Agent"}
-                </h2>
+          </div>
+        </main>
+      ) : (
+        <main className="mx-auto grid max-w-[1400px] gap-0 lg:grid-cols-12">
+          {/* left rail */}
+          <aside className="terminal-scroll border-brown-400/10 lg:col-span-4 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto lg:border-r">
+            <div className="space-y-0 p-3 sm:p-4">
+              <div className="mb-3 flex items-end justify-between px-0.5">
+                <div>
+                  <p className="label-micro">Your Roster</p>
+                  <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-cream">
+                    Agent Desk
+                  </h1>
+                </div>
+                <button
+                  className="chip hover:bg-brown-500/20"
+                  onClick={() => setView("mint")}
+                >
+                  <LayoutGrid size={11} /> Mint
+                </button>
               </div>
 
-              {loading ? (
-                <div className="panel rounded-md border-dashed p-6 text-center text-sm text-cream-mute">
-                  {loadingLine}
-                </div>
-              ) : !accountId ? (
-                <div className="rounded-md border border-dashed border-brown-400/25 bg-ink-900/40 p-6 text-center text-sm text-cream-mute">
-                  Wallet First — Meteor Or MyNearWallet On Testnet.
-                </div>
-              ) : mine.length === 0 ? (
-                <div className="rounded-md border border-dashed border-brown-400/25 bg-ink-900/40 p-6 text-center text-sm text-cream-mute">
-                  {stats?.sold_out
-                    ? "Sold Out And You Missed The Drop. Catch A Transfer If You Can."
-                    : emptyLine}
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {mine.map((n) => (
-                    <AgentCard
-                      key={n.token_id}
-                      nft={n}
-                      selected={n.token_id === selectedId}
-                      onSelect={() => {
-                        setSelectedId(n.token_id);
-                        setView("desk");
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
-            </section>
+              <p className="mb-4 text-xs leading-relaxed text-cream-mute">
+                Own The NFT, Own The Bot. No JPEG, No Desk. One Agent Per Wallet On This Drop.
+              </p>
 
-            {gallery.length > 0 && (
-              <section className="mt-5">
-                <h2 className="label-micro mb-2 px-0.5">
-                  Floor Gallery · {gallery.length} Hired
-                </h2>
-                <div className="flex gap-2 overflow-x-auto pb-1">
-                  {gallery.slice(0, 12).map((n) => (
-                    <div
-                      key={n.token_id}
-                      className="panel-tight w-24 shrink-0 rounded-md p-1.5"
-                      title={n.title}
-                    >
-                      <div
-                        className="aspect-square overflow-hidden rounded-sm bg-ink-800 [&>svg]:h-full [&>svg]:w-full"
-                        dangerouslySetInnerHTML={{ __html: n.portrait_svg || "" }}
+              <section className="mt-1">
+                <div className="mb-2 flex items-center justify-between px-0.5">
+                  <h2 className="label-micro text-cream-dim">
+                    {accountId ? "Your Agent" : "Connect To See Your Agent"}
+                  </h2>
+                </div>
+
+                {loading ? (
+                  <div className="panel rounded-md border-dashed p-6 text-center text-sm text-cream-mute">
+                    {loadingLine}
+                  </div>
+                ) : !accountId ? (
+                  <div className="rounded-md border border-dashed border-brown-400/25 bg-ink-900/40 p-6 text-center text-sm text-cream-mute">
+                    Wallet First — Meteor Or MyNearWallet On Testnet.{" "}
+                    <button className="text-brown-300 underline" onClick={() => setView("mint")}>
+                      Browse The Drop
+                    </button>
+                  </div>
+                ) : mine.length === 0 ? (
+                  <div className="rounded-md border border-dashed border-brown-400/25 bg-ink-900/40 p-6 text-center text-sm text-cream-mute">
+                    {stats?.sold_out ? (
+                      "Sold Out And You Missed The Drop. Catch A Transfer If You Can."
+                    ) : (
+                      <>
+                        {emptyLine}{" "}
+                        <button
+                          className="text-brown-300 underline"
+                          onClick={() => setView("mint")}
+                        >
+                          Pick An Agent
+                        </button>
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {mine.map((n) => (
+                      <AgentCard
+                        key={n.token_id}
+                        nft={n}
+                        selected={n.token_id === selectedId}
+                        onSelect={() => {
+                          setSelectedId(n.token_id);
+                          setView("desk");
+                        }}
                       />
-                      <p className="mt-1 truncate font-mono text-[9px] text-cream-mute">{n.title}</p>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </section>
-            )}
-          </div>
-        </aside>
 
-        {/* main desk */}
-        <section
-          className={`terminal-scroll lg:col-span-8 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto ${
-            view === "desk" ? "block" : "hidden lg:block"
-          }`}
-        >
-          <div className="p-3 sm:p-4">
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <p className="label-micro">Agent Terminal</p>
-                <p className="text-sm text-cream-mute">
-                  NFT-Gated · No JPEG, No Desk · Dry-Run By Default
-                </p>
-              </div>
-              <SupplyCounter stats={stats} />
+              {gallery.length > 0 && (
+                <section className="mt-5">
+                  <h2 className="label-micro mb-2 px-0.5">
+                    Floor Gallery · {gallery.length} Hired
+                  </h2>
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {gallery.slice(0, 12).map((n) => (
+                      <div
+                        key={n.token_id}
+                        className="panel-tight w-24 shrink-0 rounded-md p-1.5"
+                        title={n.title}
+                      >
+                        <div
+                          className="aspect-square overflow-hidden rounded-sm bg-ink-800 [&>svg]:h-full [&>svg]:w-full"
+                          dangerouslySetInnerHTML={{ __html: n.portrait_svg || "" }}
+                        />
+                        <p className="mt-1 truncate font-mono text-[9px] text-cream-mute">
+                          {n.title}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
             </div>
+          </aside>
 
-            <AgentDesk
-              nft={selected}
-              caller={accountId || ""}
-              busy={busy}
-              onUpdated={onUpdated}
-              onToast={pushToast}
-              onError={onError}
-            />
-          </div>
-        </section>
-      </main>
+          {/* main desk */}
+          <section className="terminal-scroll lg:col-span-8 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto">
+            <div className="p-3 sm:p-4">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <p className="label-micro">Agent Terminal</p>
+                  <p className="text-sm text-cream-mute">
+                    NFT-Gated · No JPEG, No Desk · Dry-Run By Default
+                  </p>
+                </div>
+                <SupplyCounter stats={stats} />
+              </div>
+
+              <AgentDesk
+                nft={selected}
+                caller={accountId || ""}
+                busy={busy}
+                onUpdated={onUpdated}
+                onToast={pushToast}
+                onError={onError}
+              />
+            </div>
+          </section>
+        </main>
+      )}
 
       <footer className="border-t border-brown-400/10 px-4 py-4 text-center font-mono text-[10px] tracking-micro text-cream-mute/60">
         Built For NEAR Hackathon · NFTs That Do Something · Hyperliquid Testnet · Max 100 · One Mint /
