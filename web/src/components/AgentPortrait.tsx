@@ -3,11 +3,11 @@
 import type { Nft } from "@/lib/api";
 
 const moodRing: Record<string, string> = {
-  hyped: "from-neon-mint/40 to-neon-lime/20",
-  locked_in: "from-neon-lime/35 to-neon-mint/15",
-  tilt: "from-neon-amber/40 to-neon-pink/15",
-  rugged: "from-neon-pink/45 to-neon-violet/20",
-  zen: "from-neon-violet/40 to-neon-mint/10",
+  hyped: "from-brown-400/35 to-brown-700/20",
+  locked_in: "from-brown-300/30 to-brown-800/25",
+  tilt: "from-rust/35 to-brown-700/20",
+  rugged: "from-rust/40 to-brown-950/30",
+  zen: "from-brown-500/30 to-ink-800/40",
 };
 
 export function AgentPortrait({
@@ -29,7 +29,7 @@ export function AgentPortrait({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${
+      className={`relative overflow-hidden rounded-md border border-brown-400/20 bg-gradient-to-br ${
         moodRing[mood] || moodRing.zen
       } ${className}`}
       style={{ width: size, height: size }}

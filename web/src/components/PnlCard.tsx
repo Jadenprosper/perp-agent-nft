@@ -26,8 +26,8 @@ export const PnlCard = forwardRef<
   return (
     <div
       ref={ref}
-      className={`relative aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-3xl border border-white/15 shadow-[0_20px_60px_rgba(0,0,0,0.55)] ${className}`}
-      style={{ backgroundColor: "#05070b" }}
+      className={`relative aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-md border border-white/15 shadow-[0_20px_60px_rgba(0,0,0,0.55)] ${className}`}
+      style={{ backgroundColor: "#0a0908" }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -57,7 +57,7 @@ export const PnlCard = forwardRef<
             <p className="mt-0.5 font-mono text-[11px] text-white/70">#{snapshot.tokenId}</p>
           </div>
           <div
-            className="rounded-2xl border px-2.5 py-1.5 text-right backdrop-blur-md"
+            className="rounded-md border px-2.5 py-1.5 text-right backdrop-blur-md"
             style={{
               borderColor: `${scene.accent}55`,
               background: "rgba(0,0,0,0.45)",
@@ -70,7 +70,7 @@ export const PnlCard = forwardRef<
         </div>
 
         <div className="space-y-3">
-          <div className="grid grid-cols-3 gap-2 rounded-2xl border border-white/10 bg-black/45 p-3 backdrop-blur-md">
+          <div className="grid grid-cols-3 gap-2 rounded-md border border-white/10 bg-black/45 p-3 backdrop-blur-md">
             <Stat label="market" value={snapshot.market} />
             <Stat label="entry" value={fmtPx(snapshot.entry)} />
             <Stat
@@ -79,7 +79,7 @@ export const PnlCard = forwardRef<
             />
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-black/50 p-3 backdrop-blur-md">
+          <div className="rounded-md border border-white/10 bg-black/50 p-3 backdrop-blur-md">
             <p className={`font-mono text-3xl font-bold tracking-tight sm:text-4xl ${pnlColor}`}>
               {formatPct(snapshot.pnlPct)}
             </p>

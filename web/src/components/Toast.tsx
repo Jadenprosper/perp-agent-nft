@@ -18,21 +18,21 @@ export function ToastStack({
         {items.map((t) => (
           <motion.div
             key={t.id}
-            initial={{ y: 24, opacity: 0, scale: 0.96 }}
+            initial={{ y: 20, opacity: 0, scale: 0.97 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 12, opacity: 0 }}
-            className={`pointer-events-auto flex max-w-md items-start gap-3 rounded-2xl border px-4 py-3 shadow-glow backdrop-blur-xl ${
+            exit={{ y: 10, opacity: 0 }}
+            className={`pointer-events-auto flex max-w-md items-start gap-3 rounded-md border px-3.5 py-2.5 shadow-panel backdrop-blur-xl ${
               t.kind === "err"
-                ? "border-neon-pink/40 bg-ink-900/90 text-neon-pink"
+                ? "border-rust/40 bg-ink-900/95 text-rust-soft"
                 : t.kind === "info"
-                  ? "border-neon-violet/40 bg-ink-900/90 text-white"
-                  : "border-neon-mint/40 bg-ink-900/90 text-neon-mint"
+                  ? "border-brown-400/30 bg-ink-900/95 text-cream"
+                  : "border-brown-400/40 bg-ink-900/95 text-brown-200"
             }`}
           >
-            <p className="flex-1 text-sm font-medium text-white/95">{t.text}</p>
+            <p className="flex-1 text-sm font-medium text-cream">{t.text}</p>
             <button
               aria-label="dismiss"
-              className="rounded-lg p-1 text-white/50 hover:bg-white/10 hover:text-white"
+              className="rounded p-1 text-cream-mute hover:bg-ink-700 hover:text-cream"
               onClick={() => onDismiss(t.id)}
             >
               <X size={14} />

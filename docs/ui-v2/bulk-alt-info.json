@@ -1,0 +1,15 @@
+{
+  "title": "Just a moment...",
+  "bg": "rgba(0, 0, 0, 0)",
+  "color": "rgb(49, 49, 49)",
+  "font": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+  "colors": [
+    "rgb(49, 49, 49)",
+    "rgb(0, 0, 0)",
+    "rgb(49, 49, 49) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0)",
+    "rgb(217, 217, 217) rgb(49, 49, 49) rgb(49, 49, 49)",
+    "rgb(0, 0, 238)",
+    "rgb(217, 217, 217)"
+  ],
+  "textSample": "bulk-trade.app\nPerforming security verification\n\nThis website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot.\n\nRay ID: a53ae88a6b33fc83\nPerformance and Security by Cloudflare\nPrivacy"
+}

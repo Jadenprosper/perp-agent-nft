@@ -50,20 +50,20 @@ export function AgentDesk({
 
   if (!nft) {
     return (
-      <div className="glass relative flex min-h-[420px] flex-col items-center justify-center overflow-hidden rounded-3xl p-8 text-center">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(139,92,255,0.12),transparent_55%)]" />
-        <div className="floaty relative mb-4 flex h-16 w-16 items-center justify-center rounded-3xl border border-white/10 bg-white/5 text-white/40">
-          <Bot size={32} />
+      <div className="panel relative flex min-h-[440px] flex-col items-center justify-center overflow-hidden rounded-md p-8 text-center">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(166,124,82,0.12),transparent_55%)]" />
+        <div className="floaty relative mb-4 flex h-14 w-14 items-center justify-center rounded-md border border-brown-400/25 bg-ink-800 text-brown-400/80">
+          <Bot size={28} />
         </div>
-        <h3 className="relative text-lg font-semibold">
+        <h3 className="relative font-display text-lg font-semibold">
           {caller ? "no agent on this wallet" : "connect to unlock the desk"}
         </h3>
-        <p className="relative mt-2 max-w-sm text-sm text-white/50">
+        <p className="relative mt-2 max-w-sm text-sm text-cream-mute">
           {caller
             ? "mint your one-per-wallet agent to open the trading desk. no NFT = locked out (on purpose)."
             : "Wallet Selector first (Meteor / MyNearWallet). then mint. then degen — testnet only."}
         </p>
-        <p className="relative mt-4 chip border-neon-violet/30 text-neon-violet">token-gated · 1 NFT / wallet · max 100</p>
+        <p className="relative mt-4 chip">token-gated · 1 NFT / wallet · max 100</p>
       </div>
     );
   }
@@ -140,21 +140,24 @@ export function AgentDesk({
   return (
     <motion.section
       key={nft.token_id}
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass rounded-3xl p-4 sm:p-5"
+      className="panel rounded-md"
     >
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      {/* header strip */}
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-brown-400/10 p-3.5 sm:p-4">
         <div className="flex min-w-0 items-start gap-3">
-          <AgentPortrait nft={nft} size={72} className="hidden sm:block" />
+          <AgentPortrait nft={nft} size={64} className="hidden sm:block" />
           <div className="min-w-0">
-            <div className="chip mb-2 border-neon-mint/25 text-neon-mint">agent #{nft.token_id}</div>
-            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">{nft.title}</h2>
-            <p className="mt-1 text-sm text-white/55">
+            <div className="chip mb-1.5">agent #{nft.token_id}</div>
+            <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">
+              {nft.title}
+            </h2>
+            <p className="mt-1 text-sm text-cream-mute">
               {STATUS_FLAVOR[nft.config.status] || "mysterious aura"}
             </p>
             {nft.config.traits && (
-              <p className="mt-1 truncate text-xs text-white/40">
+              <p className="mt-1 truncate font-mono text-[10px] text-cream-mute/60">
                 {(nft.config.traits as Record<string, string>).helm} ·{" "}
                 {(nft.config.traits as Record<string, string>).gear} · mood{" "}
                 {(nft.config.traits as Record<string, string>).mood}
@@ -162,35 +165,36 @@ export function AgentDesk({
             )}
           </div>
         </div>
-        <div className="rounded-2xl border border-white/10 bg-ink-800/60 px-3 py-2 text-right">
-          <p className="text-[10px] uppercase tracking-wider text-white/40">owner</p>
-          <p className="font-mono text-xs text-neon-mint">{nft.owner_id}</p>
+        <div className="rounded-md border border-brown-400/15 bg-ink-900 px-3 py-2 text-right">
+          <p className="label-micro">owner</p>
+          <p className="mt-0.5 font-mono text-xs text-brown-300">{nft.owner_id}</p>
         </div>
       </div>
 
       {!isOwner && (
-        <div className="mt-4 flex items-start gap-2 rounded-2xl border border-neon-pink/30 bg-neon-pink/10 px-3 py-2.5 text-sm text-neon-pink">
-          <ShieldAlert size={16} className="mt-0.5 shrink-0" />
+        <div className="mx-3.5 mt-3 flex items-start gap-2 rounded-md border border-rust/35 bg-rust/10 px-3 py-2.5 text-sm text-rust-soft sm:mx-4">
+          <ShieldAlert size={15} className="mt-0.5 shrink-0" />
           you don&apos;t hold this NFT. look, don&apos;t touch — transfer it to yourself first.
         </div>
       )}
 
-      <div className="mt-5 flex gap-2 overflow-x-auto pb-1">
+      {/* tabs */}
+      <div className="flex gap-1 overflow-x-auto border-b border-brown-400/10 px-3 pt-3 sm:px-4">
         {(
           [
-            ["trade", "trade desk"],
-            ["share", "PnL card"],
-            ["transfer", "yeet ownership"],
-            ["lore", "agent lore"],
+            ["trade", "trade"],
+            ["share", "pnl card"],
+            ["transfer", "transfer"],
+            ["lore", "lore"],
           ] as const
         ).map(([id, label]) => (
           <button
             key={id}
             onClick={() => setTab(id)}
-            className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
+            className={`whitespace-nowrap border-b-2 px-3 pb-2.5 font-mono text-[11px] uppercase tracking-micro transition ${
               tab === id
-                ? "bg-neon-mint text-ink-950"
-                : "bg-white/5 text-white/60 hover:bg-white/10"
+                ? "border-brown-400 text-brown-200"
+                : "border-transparent text-cream-mute hover:text-cream-dim"
             }`}
           >
             {label}
@@ -198,179 +202,185 @@ export function AgentDesk({
         ))}
       </div>
 
-      <AnimatePresence mode="wait">
-        {tab === "trade" && (
-          <motion.div
-            key="trade"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            className="mt-4 space-y-3"
-          >
-            <label className="block space-y-1.5">
-              <span className="text-xs font-medium text-white/60">plain-language rules</span>
-              <textarea
-                className="input min-h-[100px]"
+      <div className="p-3.5 sm:p-4">
+        <AnimatePresence mode="wait">
+          {tab === "trade" && (
+            <motion.div
+              key="trade"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              className="space-y-3"
+            >
+              <div className="grid gap-3 lg:grid-cols-5">
+                <div className="space-y-3 lg:col-span-3">
+                  <label className="block space-y-1.5">
+                    <span className="label-micro">plain-language rules</span>
+                    <textarea
+                      className="input min-h-[110px]"
+                      disabled={disabled}
+                      value={rules}
+                      onChange={(e) => setRules(e.target.value)}
+                    />
+                  </label>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <label className="block space-y-1.5">
+                      <span className="label-micro">max size</span>
+                      <input
+                        className="input"
+                        disabled={disabled}
+                        value={maxSize}
+                        onChange={(e) => setMaxSize(e.target.value)}
+                      />
+                    </label>
+                    <div className="rounded-md border border-brown-400/15 bg-ink-900 px-3 py-2">
+                      <p className="label-micro">status</p>
+                      <p className="mt-1 text-sm font-semibold text-brown-300">
+                        {nft.config.status}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2 lg:col-span-2">
+                  <p className="label-micro">ticket</p>
+                  <button className="btn-ghost w-full justify-start" disabled={disabled} onClick={saveRules}>
+                    <RefreshCw size={13} /> save to NFT
+                  </button>
+                  <button className="btn-ghost w-full justify-start" disabled={!rules.trim()} onClick={preview}>
+                    <Crosshair size={13} /> preview parse
+                  </button>
+                  <button
+                    className="btn-primary w-full"
+                    disabled={disabled}
+                    onClick={() => fire(true)}
+                  >
+                    <Play size={13} /> dry-run ticket
+                  </button>
+                  <button
+                    className="btn-bracket w-full"
+                    disabled={disabled}
+                    onClick={() => fire(false)}
+                    title="Needs HL_PRIVATE_KEY + DRY_RUN=false on the server"
+                  >
+                    <Play size={13} /> fire testnet
+                  </button>
+                  <p className="text-[10px] leading-relaxed text-cream-mute/60">
+                    default is dry-run. live Hyperliquid testnet only when the backend has a testnet
+                    key. mainnet is banned in code.
+                  </p>
+                </div>
+              </div>
+
+              {(parsed || parseErr) && (
+                <div
+                  className={`rounded-md border p-3 font-mono text-xs ${
+                    parseErr
+                      ? "border-rust/35 bg-rust/10 text-rust-soft"
+                      : "border-brown-400/30 bg-brown-500/10 text-brown-200"
+                  }`}
+                >
+                  <pre className="whitespace-pre-wrap break-all">
+                    {parseErr || JSON.stringify(parsed, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {tab === "share" && (
+            <motion.div
+              key="share"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+            >
+              <PnlSharePanel nft={nft} onToast={onToast} onError={onError} />
+            </motion.div>
+          )}
+
+          {tab === "transfer" && (
+            <motion.div
+              key="transfer"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              className="space-y-3"
+            >
+              <p className="text-sm text-cream-mute">
+                sell the NFT, sell the agent. rules, history, and desk rights move together. old owner
+                gets the boot — no take-backsies.
+              </p>
+              <input
+                className="input"
+                placeholder="receiver.near / bob.testnet"
                 disabled={disabled}
-                value={rules}
-                onChange={(e) => setRules(e.target.value)}
+                value={receiver}
+                onChange={(e) => setReceiver(e.target.value)}
               />
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              <label className="block space-y-1.5">
-                <span className="text-xs font-medium text-white/60">max size</span>
-                <input
-                  className="input font-mono"
-                  disabled={disabled}
-                  value={maxSize}
-                  onChange={(e) => setMaxSize(e.target.value)}
-                />
-              </label>
-              <div className="rounded-2xl border border-white/10 bg-ink-800/50 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-wider text-white/40">status</p>
-                <p className="mt-1 text-sm font-semibold text-neon-amber">{nft.config.status}</p>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <button className="btn-ghost flex-1" disabled={disabled} onClick={saveRules}>
-                <RefreshCw size={14} /> save to NFT
+              <button className="btn-primary w-full" disabled={disabled || !receiver} onClick={transfer}>
+                <ArrowRightLeft size={14} /> [ transfer agent NFT ]
               </button>
-              <button className="btn-ghost flex-1" disabled={!rules.trim()} onClick={preview}>
-                <Crosshair size={14} /> preview parse
-              </button>
-            </div>
+            </motion.div>
+          )}
 
-            {(parsed || parseErr) && (
-              <div
-                className={`rounded-2xl border p-3 font-mono text-xs ${
-                  parseErr
-                    ? "border-neon-pink/30 bg-neon-pink/10 text-neon-pink"
-                    : "border-neon-mint/30 bg-neon-mint/10 text-neon-mint"
-                }`}
-              >
-                <pre className="whitespace-pre-wrap break-all">
-                  {parseErr || JSON.stringify(parsed, null, 2)}
-                </pre>
+          {tab === "lore" && (
+            <motion.div
+              key="lore"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              className="space-y-3"
+            >
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <AgentPortrait nft={nft} size={132} className="mx-auto sm:mx-0" />
+                <div className="flex-1 space-y-2 rounded-md border border-brown-400/15 bg-ink-900 p-3 text-sm">
+                  <p className="label-micro">robot sheet</p>
+                  {nft.config.traits ? (
+                    <ul className="space-y-1 text-cream-dim">
+                      <li>
+                        <span className="text-cream-mute">catchphrase · </span>
+                        &ldquo;{(nft.config.traits as Record<string, string>).catchphrase}&rdquo;
+                      </li>
+                      <li>
+                        <span className="text-cream-mute">helm · </span>
+                        {(nft.config.traits as Record<string, string>).helm}
+                      </li>
+                      <li>
+                        <span className="text-cream-mute">body · </span>
+                        {(nft.config.traits as Record<string, string>).body}
+                      </li>
+                      <li>
+                        <span className="text-cream-mute">gear · </span>
+                        {(nft.config.traits as Record<string, string>).gear}
+                      </li>
+                      <li>
+                        <span className="text-cream-mute">aura · </span>
+                        {(nft.config.traits as Record<string, string>).aura}
+                      </li>
+                      <li>
+                        <span className="text-cream-mute">mood · </span>
+                        {(nft.config.traits as Record<string, string>).mood} (
+                        {(nft.config.traits as Record<string, number>).performance_bps} bps vibes)
+                      </li>
+                    </ul>
+                  ) : (
+                    <p className="text-cream-mute">classic blank agent — traits arrive on fresh mints.</p>
+                  )}
+                  <p className="text-xs text-cream-mute/70">{nft.description}</p>
+                </div>
               </div>
-            )}
-
-            <div className="grid gap-2 sm:grid-cols-2">
-              <button
-                className="btn-primary"
-                disabled={disabled}
-                onClick={() => fire(true)}
-              >
-                <Play size={14} /> dry-run ticket
-              </button>
-              <button
-                className="btn-ghost border-neon-amber/30 text-neon-amber"
-                disabled={disabled}
-                onClick={() => fire(false)}
-                title="Needs HL_PRIVATE_KEY + DRY_RUN=false on the server"
-              >
-                <Play size={14} /> fire testnet (if armed)
-              </button>
-            </div>
-            <p className="text-[11px] text-white/40">
-              default is dry-run. live Hyperliquid testnet only when the backend has a testnet key.
-              mainnet is banned in code — we&apos;re degens, not reckless.
-            </p>
-          </motion.div>
-        )}
-
-        {tab === "share" && (
-          <motion.div
-            key="share"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-          >
-            <PnlSharePanel nft={nft} onToast={onToast} onError={onError} />
-          </motion.div>
-        )}
-
-        {tab === "transfer" && (
-          <motion.div
-            key="transfer"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            className="mt-4 space-y-3"
-          >
-            <p className="text-sm text-white/60">
-              sell the NFT, sell the agent. rules, history, and desk rights move together. old owner
-              gets the boot — no take-backsies.
-            </p>
-            <input
-              className="input font-mono"
-              placeholder="receiver.near / bob.testnet"
-              disabled={disabled}
-              value={receiver}
-              onChange={(e) => setReceiver(e.target.value)}
-            />
-            <button className="btn-primary w-full" disabled={disabled || !receiver} onClick={transfer}>
-              <ArrowRightLeft size={14} /> transfer agent NFT
-            </button>
-          </motion.div>
-        )}
-
-        {tab === "lore" && (
-          <motion.div
-            key="lore"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            className="mt-4 space-y-3"
-          >
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <AgentPortrait nft={nft} size={140} className="mx-auto sm:mx-0" />
-              <div className="flex-1 space-y-2 rounded-2xl border border-white/10 bg-ink-800/50 p-3 text-sm">
-                <p className="text-[10px] uppercase tracking-wider text-white/40">robot sheet</p>
-                {nft.config.traits ? (
-                  <ul className="space-y-1 text-white/70">
-                    <li>
-                      <span className="text-white/40">catchphrase · </span>
-                      &ldquo;{(nft.config.traits as Record<string, string>).catchphrase}&rdquo;
-                    </li>
-                    <li>
-                      <span className="text-white/40">helm · </span>
-                      {(nft.config.traits as Record<string, string>).helm}
-                    </li>
-                    <li>
-                      <span className="text-white/40">body · </span>
-                      {(nft.config.traits as Record<string, string>).body}
-                    </li>
-                    <li>
-                      <span className="text-white/40">gear · </span>
-                      {(nft.config.traits as Record<string, string>).gear}
-                    </li>
-                    <li>
-                      <span className="text-white/40">aura · </span>
-                      {(nft.config.traits as Record<string, string>).aura}
-                    </li>
-                    <li>
-                      <span className="text-white/40">mood · </span>
-                      {(nft.config.traits as Record<string, string>).mood} (
-                      {(nft.config.traits as Record<string, number>).performance_bps} bps vibes)
-                    </li>
-                  </ul>
-                ) : (
-                  <p className="text-white/50">classic blank agent — traits arrive on fresh mints.</p>
-                )}
-                <p className="text-xs text-white/40">{nft.description}</p>
-              </div>
-            </div>
-            {nft.config.last_action && (
-              <div className="rounded-2xl border border-neon-violet/25 bg-neon-violet/10 p-3 text-sm">
-                <p className="text-[10px] uppercase tracking-wider text-neon-violet">last action</p>
-                <p className="mt-1 font-mono text-xs text-white/80">{nft.config.last_action}</p>
-              </div>
-            )}
-            <History events={nft.history} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+              {nft.config.last_action && (
+                <div className="rounded-md border border-brown-400/25 bg-brown-500/10 p-3 text-sm">
+                  <p className="label-micro text-brown-300">last action</p>
+                  <p className="mt-1 font-mono text-xs text-cream-dim">{nft.config.last_action}</p>
+                </div>
+              )}
+              <History events={nft.history} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.section>
   );
 }

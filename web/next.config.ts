@@ -9,10 +9,12 @@ const nextConfig: NextConfig = {
     "@near-wallet-selector/my-near-wallet",
   ],
   async rewrites() {
-    const api = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8787";
-    return [
-      { source: "/api/:path*", destination: `${api}/api/:path*` },
-    ];
+    const api = process.env.NEXT_PUBLIC_API_URL;
+    // Only proxy when a real remote API is configured. Skip localhost on hosted deploys.
+    if (!api || /127\.0\.0\.1|localhost/.test(api)) {
+      return [];
+    }
+    return [{ source: "/api/:path*", destination: `${api}/api/:path*` }];
   },
 };
 

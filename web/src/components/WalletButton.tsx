@@ -48,27 +48,27 @@ export function WalletButton({
   }, [onChange]);
 
   if (!ready) {
-    return <button className="btn-ghost text-xs opacity-60">warming wallets…</button>;
+    return <button className="btn-ghost px-3 py-2 text-xs opacity-60">warming…</button>;
   }
 
   if (accountId) {
     return (
-      <div className="flex items-center gap-2">
-        <span className="chip max-w-[160px] truncate font-mono text-neon-mint">
-          <Wallet size={12} />
+      <div className="flex items-center gap-1.5">
+        <span className="chip max-w-[140px] truncate normal-case tracking-normal text-brown-200 sm:max-w-[180px]">
+          <Wallet size={11} />
           {accountId}
         </span>
-        <button className="btn-ghost px-3 py-2 text-xs" onClick={disconnect} title="sign out">
-          <LogOut size={14} />
+        <button className="btn-ghost px-2.5 py-2 text-xs" onClick={disconnect} title="sign out">
+          <LogOut size={13} />
         </button>
       </div>
     );
   }
 
   return (
-    <button className="btn-primary text-xs sm:text-sm" onClick={connect}>
-      <Wallet size={16} />
-      connect NEAR
+    <button className="btn-primary px-3 py-2 text-xs sm:text-sm" onClick={connect}>
+      <Wallet size={14} />
+      connect
     </button>
   );
 }

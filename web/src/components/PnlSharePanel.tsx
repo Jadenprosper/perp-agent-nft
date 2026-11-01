@@ -81,12 +81,11 @@ export function PnlSharePanel({
     if (!cardRef.current) return;
     setBusy(true);
     try {
-      // wait a tick so fonts/images settle
       await new Promise((r) => setTimeout(r, 50));
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         pixelRatio: 2,
-        backgroundColor: "#05070b",
+        backgroundColor: "#0a0908",
       });
       const a = document.createElement("a");
       a.href = dataUrl;
@@ -107,10 +106,10 @@ export function PnlSharePanel({
   }
 
   return (
-    <div className="mt-4 grid gap-4 lg:grid-cols-2">
+    <div className="grid gap-4 lg:grid-cols-2">
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-sm font-semibold text-white/85">shareable PnL card</h3>
+          <h3 className="text-sm font-semibold text-cream-dim">shareable PnL card</h3>
           <span className="chip" style={{ borderColor: `${TIER_SCENES[tier].accent}66` }}>
             {TIER_SCENES[tier].label}
           </span>
@@ -118,7 +117,7 @@ export function PnlSharePanel({
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           <Field label="market">
-            <input className="input py-2 font-mono" value={market} onChange={(e) => setMarket(e.target.value.toUpperCase())} />
+            <input className="input py-2" value={market} onChange={(e) => setMarket(e.target.value.toUpperCase())} />
           </Field>
           <Field label="side">
             <select
@@ -132,7 +131,7 @@ export function PnlSharePanel({
           </Field>
           <Field label="leverage">
             <input
-              className="input py-2 font-mono"
+              className="input py-2"
               type="number"
               min={1}
               max={50}
@@ -142,7 +141,7 @@ export function PnlSharePanel({
           </Field>
           <Field label="entry">
             <input
-              className="input py-2 font-mono"
+              className="input py-2"
               type="number"
               value={entry}
               onChange={(e) => setEntry(Number(e.target.value) || 0)}
@@ -150,7 +149,7 @@ export function PnlSharePanel({
           </Field>
           <Field label="exit / mark">
             <input
-              className="input py-2 font-mono"
+              className="input py-2"
               type="number"
               value={exit}
               onChange={(e) => setExit(Number(e.target.value) || 0)}
@@ -158,7 +157,7 @@ export function PnlSharePanel({
           </Field>
           <Field label="size">
             <input
-              className="input py-2 font-mono"
+              className="input py-2"
               type="number"
               step="0.001"
               value={size}
@@ -168,7 +167,7 @@ export function PnlSharePanel({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <label className="chip cursor-pointer gap-2">
+          <label className="chip cursor-pointer gap-2 normal-case tracking-normal">
             <input
               type="checkbox"
               checked={liquidated}
@@ -178,25 +177,25 @@ export function PnlSharePanel({
           </label>
           <button
             type="button"
-            className="chip hover:bg-white/10"
+            className="chip hover:bg-brown-500/20"
             onClick={() => setTierOverride("auto")}
           >
-            <RefreshCw size={12} /> auto tier ({autoTier})
+            <RefreshCw size={11} /> auto ({autoTier})
           </button>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {TIERS.map((t) => (
             <button
               key={t}
               type="button"
               onClick={() => setTierOverride(t)}
-              className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
+              className={`rounded-md px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-micro transition ${
                 tier === t && tierOverride !== "auto"
-                  ? "bg-neon-mint text-ink-950"
+                  ? "bg-brown-500 text-ink-950"
                   : tier === t
-                    ? "border border-neon-mint/40 bg-neon-mint/15 text-neon-mint"
-                    : "bg-white/5 text-white/60 hover:bg-white/10"
+                    ? "border border-brown-400/40 bg-brown-500/15 text-brown-200"
+                    : "bg-ink-800 text-cream-mute hover:bg-ink-700"
               }`}
             >
               {TIER_SCENES[t].label}
@@ -206,15 +205,15 @@ export function PnlSharePanel({
 
         <div className="flex flex-col gap-2 sm:flex-row">
           <button className="btn-primary flex-1" disabled={busy} onClick={downloadPng}>
-            <Download size={16} />
+            <Download size={15} />
             {busy ? "rendering…" : "download PNG"}
           </button>
           <button className="btn-ghost flex-1" onClick={shareOnX}>
-            <Share2 size={16} />
+            <Share2 size={15} />
             share on X
           </button>
         </div>
-        <p className="text-[11px] text-white/40">
+        <p className="text-[11px] text-cream-mute/55">
           opens x.com/intent/post with caption prefilled — no auto-posting. PNG is rendered in your
           browser from the card preview.
         </p>
@@ -230,7 +229,7 @@ export function PnlSharePanel({
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block space-y-1">
-      <span className="text-[10px] font-medium uppercase tracking-wider text-white/45">{label}</span>
+      <span className="label-micro">{label}</span>
       {children}
     </label>
   );
