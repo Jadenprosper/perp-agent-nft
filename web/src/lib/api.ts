@@ -36,6 +36,7 @@ export type Nft = {
   config: AgentConfig;
   history: AgentEvent[];
   portrait_svg?: string;
+  portrait_url?: string;
 };
 
 export type MintStats = {

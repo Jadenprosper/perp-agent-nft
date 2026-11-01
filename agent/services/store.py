@@ -14,7 +14,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Optional
 
-from .traits import AgentTraits, generate_traits, mood_from_perf, svg_portrait
+from .traits import AgentTraits, generate_traits, mood_from_perf, svg_portrait, traits_for_token, catalog_image_path, load_agent_catalog
 
 DATA_PATH = Path(__file__).resolve().parents[2] / "demo" / "local_nfts.json"
 MAX_SUPPLY = 100
@@ -151,15 +151,25 @@ class LocalStore:
                     "you already hold an agent NFT — one desk per wallet. transfer first if you're swapping mains."
                 )
 
-            token_id = str(len(self._nfts))
+            token_num = len(self._nfts) + 1  # 1..100 maps to /agents/{n}.jpg
+            token_id = str(token_num)
             now = int(time.time() * 1000)
-            traits = generate_traits(seed=now ^ (len(self._nfts) * 7919))
+            traits = traits_for_token(token_num, seed=now ^ (token_num * 7919))
+            catalog = load_agent_catalog().get(token_num) or {}
+            bag = (catalog.get("traits") or {}).get("bag", "")
+            tdict = traits.to_dict()
+            tdict["bag"] = bag
+            tdict["image"] = catalog_image_path(token_num)
+            tdict["headgear"] = (catalog.get("traits") or {}).get("headgear", traits.helm)
+            tdict["glasses"] = (catalog.get("traits") or {}).get("glasses", traits.gear)
+            tdict["outfit"] = (catalog.get("traits") or {}).get("outfit", traits.body)
+            tdict["background"] = (catalog.get("traits") or {}).get("background", traits.aura)
             cfg = AgentConfig(
                 rules=rules,
                 status="armed" if rules else "idle",
                 max_size=max_size,
                 updated_at=now,
-                traits=traits.to_dict(),
+                traits=tdict,
             )
             nft = LocalNFT(
                 token_id=token_id,
@@ -277,6 +287,13 @@ class LocalStore:
             mood=traits.get("mood", "zen"),
             performance_bps=int(traits.get("performance_bps") or 0),
         )
+        try:
+            token_num = int(nft.token_id)
+        except ValueError:
+            token_num = 0
+        portrait_url = (traits.get("image") if isinstance(traits, dict) else None) or (
+            catalog_image_path(token_num) if token_num else None
+        )
         return {
             "token_id": nft.token_id,
             "owner_id": nft.owner_id,
@@ -286,6 +303,7 @@ class LocalStore:
             "config": asdict(nft.config),
             "history": [asdict(h) for h in nft.history],
             "portrait_svg": svg_portrait(t_obj),
+            "portrait_url": portrait_url,
         }
 
 

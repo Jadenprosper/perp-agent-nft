@@ -22,6 +22,10 @@ export function AgentPortrait({
   const traits = (nft.config.traits || {}) as Record<string, unknown>;
   const mood = String(traits.mood || "zen");
   const svg = nft.portrait_svg;
+  const portraitUrl =
+    (nft as { portrait_url?: string }).portrait_url ||
+    (typeof traits.image === "string" ? traits.image : null) ||
+    (nft.token_id ? `/agents/${nft.token_id}.jpg` : null);
 
   return (
     <div
@@ -31,19 +35,34 @@ export function AgentPortrait({
       style={{ width: size, height: size }}
       title={`${nft.title} · ${mood}`}
     >
+      {portraitUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={portraitUrl}
+          alt={nft.title}
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            const el = e.currentTarget;
+            el.style.display = "none";
+            const sib = el.nextElementSibling as HTMLElement | null;
+            if (sib) sib.style.display = "block";
+          }}
+        />
+      ) : null}
       {svg ? (
         <div
           className="h-full w-full [&>svg]:h-full [&>svg]:w-full"
+          style={{ display: portraitUrl ? "none" : undefined }}
           dangerouslySetInnerHTML={{ __html: svg }}
         />
-      ) : (
+      ) : !portraitUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={`/api/nfts/${nft.token_id}/portrait.svg`}
           alt={nft.title}
           className="h-full w-full object-cover"
         />
-      )}
+      ) : null}
     </div>
   );
 }

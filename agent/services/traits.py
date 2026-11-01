@@ -112,3 +112,44 @@ def svg_portrait(t: AgentTraits) -> str:
   <text x="200" y="330" text-anchor="middle" font-family="ui-monospace,monospace" font-size="18" fill="{c}">{t.name}</text>
   <text x="200" y="358" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#ffffff99">{t.mood} · {t.helm}</text>
 </svg>"""
+
+
+# Paper-bag PFP catalog (token id 1..100 -> /agents/{id}.jpg)
+from pathlib import Path as _Path
+import json as _json
+
+_CATALOG_PATH = _Path(__file__).resolve().parents[2] / "web" / "public" / "agents" / "metadata.json"
+_CATALOG: dict[int, dict] | None = None
+
+
+def load_agent_catalog() -> dict[int, dict]:
+    global _CATALOG
+    if _CATALOG is not None:
+        return _CATALOG
+    _CATALOG = {}
+    if _CATALOG_PATH.exists():
+        raw = _json.loads(_CATALOG_PATH.read_text())
+        for item in raw.get("agents", []):
+            _CATALOG[int(item["id"])] = item
+    return _CATALOG
+
+
+def traits_for_token(token_num: int, seed: int | None = None) -> AgentTraits:
+    """Prefer curated PFP catalog entry for token N; fall back to random."""
+    catalog = load_agent_catalog()
+    entry = catalog.get(token_num)
+    base = generate_traits(seed=seed)
+    if not entry:
+        return base
+    t = entry.get("traits") or {}
+    base.name = entry.get("name") or base.name
+    base.helm = t.get("headgear") or base.helm
+    base.body = t.get("outfit") or base.body
+    base.gear = t.get("glasses") or base.gear
+    base.aura = t.get("background") or base.aura
+    # stash bag marking + image path in catchphrase-adjacent fields via dict merge later
+    return base
+
+
+def catalog_image_path(token_num: int) -> str:
+    return f"/agents/{token_num}.jpg"
