@@ -6,7 +6,9 @@ const nextConfig: NextConfig = {
     "@near-wallet-selector/core",
     "@near-wallet-selector/modal-ui",
     "@near-wallet-selector/meteor-wallet",
+    "@near-wallet-selector/meteor-wallet-app",
     "@near-wallet-selector/my-near-wallet",
+    "@near-wallet-selector/wallet-connect",
   ],
   async rewrites() {
     const api = process.env.NEXT_PUBLIC_API_URL;
