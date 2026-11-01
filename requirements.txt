@@ -1,0 +1,16 @@
+eth-account==0.13.7
+eth-hash==0.8.0
+eth-keyfile==0.8.1
+eth-keys==0.8.0
+eth-rlp==3.0.0
+eth-typing==6.0.0
+eth-utils==5.3.1
+eth_abi==6.0.0
+fastapi==0.162.0
+httpx==0.28.1
+hyperliquid-python-sdk==0.24.0
+pydantic==2.14.2
+pydantic_core==2.50.2
+pytest==9.2.0
+requests==2.34.2
+uvicorn==0.54.0
