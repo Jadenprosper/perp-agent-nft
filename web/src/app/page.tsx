@@ -38,7 +38,11 @@ export default function HomePage() {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [emptyLine] = useState(() => pick(EMPTY_LINES));
   const [loadingLine] = useState(() => pick(LOADING_LINES));
-  const [view, setView] = useState<"desk" | "mint">("desk");
+  const [view, setView] = useState<"desk" | "mint">(() => {
+    if (typeof window === "undefined") return "desk";
+    const q = new URLSearchParams(window.location.search).get("view");
+    return q === "mint" || q === "desk" ? q : "desk";
+  });
 
   const pushToast = useCallback((text: string, kind: ToastItem["kind"] = "ok") => {
     const id = `${Date.now()}-${Math.random()}`;
