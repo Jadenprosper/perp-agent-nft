@@ -31,7 +31,7 @@ export const PnlCard = forwardRef<
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={scene.src}
+        src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${scene.src}`}
         alt=""
         crossOrigin="anonymous"
         className="absolute inset-0 h-full w-full object-cover"
