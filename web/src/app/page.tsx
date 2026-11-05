@@ -42,18 +42,20 @@ export default function HomePage() {
   const [mode, setMode] = useState("dry_run");
   const [vibe, setVibe] = useState("Booting…");
   const [toasts, setToasts] = useState<ToastItem[]>([]);
-  const [emptyLine] = useState(() => pick(EMPTY_LINES));
-  const [loadingLine] = useState(() => pick(LOADING_LINES));
-  const [view, setViewRaw] = useState<"desk" | "mint" | "trade">(() => {
-    if (typeof window === "undefined") return "desk";
-    const q = new URLSearchParams(window.location.search).get("view");
-    return q === "mint" || q === "desk" || q === "trade" ? q : "desk";
-  });
-  const [tradeId, setTradeId] = useState<number>(() => {
-    if (typeof window === "undefined") return 1;
-    const n = Number(new URLSearchParams(window.location.search).get("agent"));
-    return n >= 1 && n <= 100 ? Math.trunc(n) : 1;
-  });
+  const [emptyLine, setEmptyLine] = useState(EMPTY_LINES[0]);
+  const [loadingLine, setLoadingLine] = useState(LOADING_LINES[0]);
+  const [view, setViewRaw] = useState<"desk" | "mint" | "trade">("desk");
+  const [tradeId, setTradeId] = useState<number>(1);
+  useEffect(() => {
+    // Read URL and random lines after mount so static HTML hydrates cleanly.
+    setEmptyLine(pick(EMPTY_LINES));
+    setLoadingLine(pick(LOADING_LINES));
+    const sp = new URLSearchParams(window.location.search);
+    const q = sp.get("view");
+    if (q === "mint" || q === "desk" || q === "trade") setViewRaw(q);
+    const n = Number(sp.get("agent"));
+    if (n >= 1 && n <= 100) setTradeId(Math.trunc(n));
+  }, []);
   const setView = useCallback((v: "desk" | "mint" | "trade", agent?: number) => {
     setViewRaw(v);
     if (agent) setTradeId(agent);

@@ -55,4 +55,4 @@ export function parseIntent(raw: string): Intent {
   return { kind: "unknown" };
 }
 
-export const CHAT_EXAMPLES = ["Trade For Me For 2h", "Long BTC 100 SL 2% TP 4%", "Set Stop Loss At 1.5%", "Status", "Close All", "Pause", "Set Max Daily Loss 200", "Set Leverage 50x", "Help"];
+export const CHAT_EXAMPLES = ["Trade For Me For 2h", "Long BTC 100 SL 2% TP 4%", "Confirm", "Cancel", "Set Stop Loss At 1.5%", "Status", "Close All", "Pause", "Set Max Daily Loss 200", "Set Leverage 50x", "Help"];
