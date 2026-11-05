@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { withBase } from "@/lib/basePath";
 import { agentEvents, type AgentEvent } from "@/lib/agentEvents";
 
 type Mood = "idle" | "entry" | "win" | "loss" | "sleep";
@@ -47,7 +48,7 @@ export function AgentAvatar({ image, name, running }: { image: string; name: str
       )}
       <div className={`agent-av agent-${mood} relative h-28 w-28 sm:h-32 sm:w-32`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image} alt={name} className="h-full w-full rounded-xl border border-brown-400/30 object-cover" />
+        <img src={mood === "sleep" ? withBase("/agent-sleep.webp") : image} alt={mood === "sleep" ? `${name} Sleeping` : name} className={`h-full w-full rounded-xl border border-brown-400/30 object-cover ${mood === "sleep" ? "agent-breathe" : ""}`} />
         {mood === "sleep" && (
           <span className="agent-zzz pointer-events-none absolute -right-3 -top-2 font-mono text-sm font-bold text-brown-300">Zzz</span>
         )}

@@ -46,7 +46,7 @@ export function normalizeAgentCatalog(raw: unknown): AgentCatalogEntry[] {
     const idNum = Number(row.id ?? row.token_id ?? row.tokenId);
     if (!Number.isFinite(idNum) || idNum < 1) continue;
     const id = Math.trunc(idNum);
-    const name = String(row.name ?? row.title ?? `Agent #${id}`);
+    const name = String(row.name ?? row.title ?? `Bag Worker #${id}`);
     const image = String(
       row.image ?? row.image_url ?? row.media ?? `/agents/${id}.jpg`
     );

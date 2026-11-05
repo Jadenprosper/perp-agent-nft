@@ -90,7 +90,7 @@ export const PnlCard = forwardRef<
           <div className="flex items-end justify-between gap-2 px-0.5">
             <div>
               <p className="text-[10px] font-semibold tracking-[0.18em] text-white/55">
-                Perp Agent NFT
+                Bag Worker
               </p>
               <p className="text-[10px] text-white/40">NEAR Hackathon · Testnet Vibes</p>
             </div>

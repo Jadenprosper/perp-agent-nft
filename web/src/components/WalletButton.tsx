@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Globe, LogOut, Puzzle, Smartphone, Wallet, X } from "lucide-react";
 import {
   connectMeteorBrowser,
@@ -25,6 +26,13 @@ export function WalletButton({
 }) {
   const [ready, setReady] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
+  // Lock page scroll behind the connect sheet.
+  useEffect(() => {
+    if (!sheetOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, [sheetOpen]);
   const [busy, setBusy] = useState(false);
   const [hint, setHint] = useState<string | null>(null);
   const [inMeteor, setInMeteor] = useState(false);
@@ -195,13 +203,15 @@ export function WalletButton({
         {busy ? "Connecting…" : inMeteor ? "Connect Meteor" : "Connect"}
       </button>
 
-      {sheetOpen && (
+      {sheetOpen && typeof document !== "undefined" && createPortal(
         <div
-          className="fixed inset-0 z-[80] flex items-end justify-center bg-black/70 p-3 sm:items-center"
+          className="connect-overlay fixed inset-0 z-[200] flex items-end justify-center bg-black/75 sm:items-center sm:p-4"
+          role="dialog"
+          aria-modal="true"
           onClick={() => setSheetOpen(false)}
         >
           <div
-            className="panel w-full max-w-md border border-brown-700/50 bg-[#0b0d12] p-4 shadow-2xl"
+            className="connect-sheet panel w-full max-w-md border border-brown-700/50 bg-ink-900 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-3 flex items-start justify-between gap-3">
@@ -292,7 +302,8 @@ export function WalletButton({
               Tip: Already Inside The Meteor App Browser? Tap Connect And It Hooks In Automatically.
             </p>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

@@ -1,1 +1,1 @@
-"""Perp Agent NFT backend."""
+"""Bag Worker backend."""

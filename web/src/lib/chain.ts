@@ -41,7 +41,7 @@ export async function viewCall<T>(method: string, args: Record<string, unknown> 
 type ChainToken = { token_id: string; owner_id: string; metadata?: { title?: string; description?: string } | null };
 
 const toNft = (t: ChainToken): Nft => ({
-  token_id: String(t.token_id), owner_id: t.owner_id, title: t.metadata?.title || `Agent #${t.token_id}`,
+  token_id: String(t.token_id), owner_id: t.owner_id, title: t.metadata?.title || `Bag Worker #${t.token_id}`,
   description: t.metadata?.description || "",
   config: { rules: "", status: "idle", hl_account: null, max_size: "0.01", last_action: null, updated_at: 0 },
   history: [],
@@ -81,7 +81,7 @@ export async function mintAgentTx(p: { token_id: number; rules?: string; max_siz
       methodName: "mint_agent",
       args: { token_id: p.token_id, rules: p.rules || null, max_size: p.max_size || null },
       gas: "100000000000000", // 100 Tgas
-      deposit: "100000000000000000000000", // 0.1 NEAR; unused storage is refunded by the contract
+      deposit: "0", // Free mint: the contract pays storage; signer only pays gas
     } }],
   } as Parameters<typeof wallet.signAndSendTransaction>[0]);
 }

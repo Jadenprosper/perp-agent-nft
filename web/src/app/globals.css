@@ -108,7 +108,7 @@ body {
 .agent-entry { animation: agent-lean 0.6s ease-out forwards; }
 .agent-win { animation: agent-bounce 0.7s ease-in-out 3; filter: drop-shadow(0 0 14px rgba(74, 222, 128, 0.7)); }
 .agent-loss { animation: agent-shake 0.5s ease-in-out 2, agent-droop 0.6s ease-out 1s forwards; filter: sepia(0.4) saturate(2) hue-rotate(-40deg) brightness(0.85) drop-shadow(0 0 10px rgba(239, 68, 68, 0.6)); }
-.agent-sleep { animation: agent-breathe 4.5s ease-in-out infinite; filter: brightness(0.7) grayscale(0.3); transform: rotate(-6deg); }
+.agent-sleep { }
 .agent-zzz { animation: agent-zzz 2.4s ease-in-out infinite; }
 .agent-bubble { animation: agent-pop 0.25s ease-out; }
 .agent-confetti { position: absolute; left: 50%; top: 40%; width: 6px; height: 10px; border-radius: 1px; animation: agent-confetti 1.1s ease-out forwards; }
@@ -136,3 +136,45 @@ body {
 @keyframes run-bob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
 @keyframes run-scroll { to { background-position: -28px 0; } }
 @keyframes run-lines { to { background-position: -120px 30%, -160px 60%; } }
+
+/* ---------- Mobile-safe connect sheets (ours + wallet-selector) ---------- */
+.connect-sheet {
+  max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px);
+  overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom));
+}
+@media (max-width: 639px) {
+  .connect-sheet { max-width: 100%; border-radius: 16px 16px 0 0; border-bottom: 0;
+    max-height: calc(100dvh - env(safe-area-inset-top) - 12px); }
+}
+.nws-modal-wrapper .nws-modal { max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px) !important;
+  overflow-y: auto !important; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.nws-modal-wrapper { --wallet-selector-content-bg: #0f0d0b; --wallet-selector-heading-color: #fffeef;
+  --wallet-selector-text-color: #d4b896; --wallet-selector-sidebar-border-color: rgba(196,165,116,.2);
+  --wallet-selector-selected-wallet-bg: rgba(196,165,116,.18); --wallet-selector-wallet-option-bg-hover: rgba(196,165,116,.12);
+  --wallet-selector-home-button-bg: rgba(196,165,116,.15); --wallet-selector-mobile-bottom-section: #0a0908;
+  --wallet-selector-backdrop-bg: rgba(0,0,0,.75); --wallet-selector-close-button-bg-color: rgba(196,165,116,.15);
+  --wallet-selector-close-button-fill-icon-color: #d4b896; }
+@media (max-width: 639px) {
+  .nws-modal-wrapper .nws-modal { width: 100% !important; max-width: 100% !important; height: auto !important;
+    left: 0 !important; transform: none !important; bottom: 0 !important; top: auto !important; display: block !important;
+    border-radius: 16px 16px 0 0 !important; max-height: calc(100dvh - env(safe-area-inset-top) - 12px) !important;
+    padding-bottom: env(safe-area-inset-bottom) !important; }
+  .nws-modal-wrapper .nws-modal .modal-left, .nws-modal-wrapper .nws-modal .modal-right { width: 100% !important; height: auto !important; max-height: none !important; }
+  .nws-modal-wrapper .nws-modal .modal-left .modal-left-title { position: sticky !important; top: 0; width: 100% !important;
+    background: var(--wallet-selector-content-bg) !important; z-index: 2 !important; padding: 20px 12px 8px !important; }
+  .nws-modal-wrapper .nws-modal .wallet-options-wrapper { margin-top: 12px !important; }
+  .nws-modal-wrapper .nws-modal .modal-left { padding-top: 0 !important; }
+}
+
+/* ---------- Mobile: never overflow horizontally ---------- */
+html, body { max-width: 100%; overflow-x: clip; }
+.grid > *, .flex > * { min-width: 0; }
+canvas { max-width: 100%; }
+@media (max-width: 430px) {
+  .grid-cols-3 > * { overflow-wrap: anywhere; }
+  .font-mono { overflow-wrap: anywhere; }
+}
+.agent-breathe { animation: sleep-breathe 4.2s ease-in-out infinite; transform-origin: 50% 80%; }
+@keyframes sleep-breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+@media (prefers-reduced-motion: reduce) { .agent-breathe { animation: none; } }

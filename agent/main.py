@@ -1,4 +1,4 @@
-"""Perp Agent NFT — FastAPI backend.
+"""Bag Worker — FastAPI backend.
 
 Serves the trading agent that is gated by NFT ownership.
 Default mode: local demo store + Hyperliquid TESTNET dry-run.
@@ -27,7 +27,7 @@ from agent.services.store import STORE  # noqa: E402
 from agent.services.traits import AgentTraits, svg_portrait  # noqa: E402
 
 app = FastAPI(
-    title="Perp Agent NFT",
+    title="Bag Worker",
     description="An NFT that IS a Hyperliquid perp trading agent. Testnet only. First drop: 100.",
     version="0.2.0",
 )

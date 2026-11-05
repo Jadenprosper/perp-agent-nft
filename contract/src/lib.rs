@@ -1,4 +1,4 @@
-//! Perp Agent NFT — NEP-171 token that IS a Hyperliquid trading agent.
+//! Bag Worker — NEP-171 token that IS a Hyperliquid trading agent.
 //!
 //! First drop: max supply 100. One unique agent NFT per wallet.
 //! Mint in-app on NEAR testnet (not a marketplace). Own the NFT = own the agent.
@@ -202,8 +202,8 @@ impl Contract {
             owner_id,
             NFTContractMetadata {
                 spec: NFT_METADATA_SPEC.to_string(),
-                name: "Perp Agent NFT".to_string(),
-                symbol: "PAGENT".to_string(),
+                name: "Bag Worker".to_string(),
+                symbol: "BAGW".to_string(),
                 icon: Some(DATA_IMAGE_SVG.to_string()),
                 base_uri: Some("https://jadenprosper.github.io/perp-agent-nft/".to_string()),
                 reference: None,
@@ -230,6 +230,34 @@ impl Contract {
             minted_by_owner: UnorderedMap::new(StorageKey::OwnerMint),
             max_supply: MAX_SUPPLY,
         }
+    }
+
+    /// Owner-only migration: rename the collection and existing token titles to Bag Worker.
+    pub fn rebrand(&mut self) -> u32 {
+        require!(
+            env::predecessor_account_id() == self.tokens.owner_id,
+            "owner only"
+        );
+        let mut meta = self.metadata.get().unwrap();
+        meta.name = "Bag Worker".to_string();
+        meta.symbol = "BAGW".to_string();
+        self.metadata.set(&meta);
+        let mut n = 0u32;
+        let ids = self.get_minted_ids();
+        if let Some(map) = &mut self.tokens.token_metadata_by_id {
+            for id in ids {
+                if let Some(mut tm) = map.get(&id) {
+                    tm.title = Some(format!("Bag Worker #{}", id));
+                    tm.reference = Some(format!(
+                        "https://jadenprosper.github.io/perp-agent-nft/metadata/{}.json",
+                        id
+                    ));
+                    map.insert(&id, &tm);
+                    n += 1;
+                }
+            }
+        }
+        n
     }
 
     pub fn get_mint_stats(&self) -> MintStats {
@@ -272,7 +300,6 @@ impl Contract {
         max_size: Option<String>,
     ) -> Token {
         let owner = env::predecessor_account_id();
-        let storage_before = env::storage_usage();
         require!(
             (1..=self.max_supply).contains(&token_id),
             "token_id out of range — pick an agent from 1 to 100"
@@ -323,7 +350,7 @@ impl Contract {
             token_id
         );
         let token_metadata = TokenMetadata {
-            title: Some(traits.name.clone()),
+            title: Some(format!("Bag Worker #{}", token_id)),
             description: Some(format!(
                 "Perp trading agent NFT #{}. \"{}\" — ownership = control. Hyperliquid testnet. Art: agents/{}.jpg",
                 token_id, traits.catchphrase, token_id
@@ -345,7 +372,7 @@ impl Contract {
 
         let token = self
             .tokens
-            .internal_mint(token_id_str.clone(), owner.clone(), Some(token_metadata));
+            .internal_mint_with_refund(token_id_str.clone(), owner.clone(), Some(token_metadata), None);
 
         self.agent_config_by_id.insert(&token_id_str, &config);
         self.minted_by_owner.insert(&owner, &token_id_str);
@@ -355,17 +382,11 @@ impl Contract {
             &format!("{} (# {}) hired by {}", traits.name, token_id, owner),
             owner.clone(),
         );
-        // Minter pays their own storage; any excess deposit is refunded.
-        let used = env::storage_usage().saturating_sub(storage_before);
-        let cost = env::storage_byte_cost().saturating_mul(used as u128);
+        // Free mint: the contract covers storage from its own balance.
+        // Any deposit attached anyway is refunded in full.
         let attached = env::attached_deposit();
-        require!(
-            attached >= cost,
-            format!("attach at least {} yoctoNEAR for storage", cost.as_yoctonear())
-        );
-        let refund = attached.saturating_sub(cost);
-        if refund.as_yoctonear() > 1 {
-            let _ = near_sdk::Promise::new(owner).transfer(refund);
+        if attached.as_yoctonear() > 0 {
+            let _ = near_sdk::Promise::new(owner).transfer(attached);
         }
         token
     }
@@ -727,7 +748,7 @@ mod tests {
     use near_sdk::test_utils::{accounts, VMContextBuilder};
     use near_sdk::{testing_env, NearToken};
 
-    const MINT_STORAGE: NearToken = NearToken::from_millinear(50);
+    const MINT_STORAGE: NearToken = NearToken::from_yoctonear(0); // free mint
 
     fn ctx(pred: AccountId) -> VMContextBuilder {
         let mut b = VMContextBuilder::new();

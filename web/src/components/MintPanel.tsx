@@ -326,7 +326,7 @@ export function MintPanel({
               {selected.name}
             </p>
             <p className="font-mono text-[10px] text-cream-mute">
-              Agent #{selected.id}
+              Bag Worker #{selected.id}
               {selectedTaken ? " · Already Taken" : " · Ready To Hire"}
             </p>
           </div>
@@ -527,7 +527,7 @@ export function MintPanel({
               <Wand2 size={16} />
             </div>
             <div>
-              <h2 className="text-sm font-semibold">Mint Your Agent NFT</h2>
+              <h2 className="text-sm font-semibold">Mint Your Bag Worker</h2>
               <p className="text-[11px] text-cream-mute">
                 Pick One · Unique Traits · One / Wallet · In-App Only
               </p>

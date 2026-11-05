@@ -80,7 +80,7 @@ class LocalStore:
             nft = LocalNFT(
                 token_id=item["token_id"],
                 owner_id=item["owner_id"],
-                title=item.get("title", f"Perp Agent #{item['token_id']}"),
+                title=item.get("title", f"Bag Worker #{item['token_id']}"),
                 description=item.get("description", ""),
                 config=cfg,
                 history=hist,

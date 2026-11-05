@@ -35,7 +35,7 @@ export const SOLD_OUT_LINES = [
 export const LOCKED_LINES = [
   "This Desk Is Token-Gated. No NFT, No Orders — Just Vibes And FOMO.",
   "Wallet Connected, But Your Agent Called In Sick (You Don't Own One Yet).",
-  "Mint Your One-Per-Wallet Agent To Unlock The Trading Desk.",
+  "Mint Your One-Per-Wallet Bag Worker To Unlock The Trading Desk.",
 ];
 
 export function pick<T>(arr: T[]): T {

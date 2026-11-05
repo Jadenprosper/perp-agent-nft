@@ -153,7 +153,7 @@ export default function HomePage() {
     try {
       // Direct on-chain mint through the connected wallet (Meteor etc.). No API.
       await mintAgentTx(payload);
-      pushToast(`Agent #${payload.token_id} Minted On-Chain`);
+      pushToast(`Bag Worker #${payload.token_id} Minted On-Chain`);
       await afterMint(String(payload.token_id));
     } catch (e) {
       const msg = chainError(e);
@@ -224,10 +224,10 @@ export default function HomePage() {
 
       {/* top nav — bulk density */}
       <header className="sticky top-0 z-40 border-b border-brown-400/15 bg-ink-950/92 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[1400px] items-center gap-3 px-3 py-2.5 sm:px-4">
+        <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2.5 sm:px-4">
           <a href="#" className="group flex shrink-0 items-baseline gap-0.5">
             <span className="font-display text-lg font-semibold tracking-tight text-cream sm:text-xl">
-              Perp Agent
+              Bag Worker
             </span>
             <span className="cursor-blink font-mono text-brown-400">_</span>
           </a>
@@ -255,7 +255,7 @@ export default function HomePage() {
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-2">
             <span className="chip chip-live hidden sm:inline-flex">
               <span className="h-1.5 w-1.5 rounded-full bg-brown-400" />
               Live · Testnet

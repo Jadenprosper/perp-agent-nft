@@ -92,7 +92,7 @@ function buildModules(): WalletModuleFactory[] {
       setupWalletConnect({
         projectId: WC_PROJECT_ID,
         metadata: {
-          name: "Perp Agent NFT",
+          name: "Bag Worker",
           description: "NEAR Hackathon — NFT That Trades Perps (Testnet)",
           url: "https://jadenprosper.github.io/perp-agent-nft/",
           icons: [
@@ -130,7 +130,7 @@ export async function getModal(): Promise<WalletSelectorModal> {
         ? WC_PROJECT_ID
           ? "Mobile: Prefer WalletConnect → Meteor. Desktop Options Stay Available."
           : "Mobile: Open This Site Inside The Meteor App Browser, Or Use Meteor Wallet / MyNearWallet."
-        : "Connect To Mint / Run Your One-Per-Wallet Perp Agent (Testnet)",
+        : "Connect To Mint / Run Your One-Per-Wallet Bag Worker (Testnet)",
     });
   }
   return modal;

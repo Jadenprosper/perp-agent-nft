@@ -146,7 +146,7 @@ export function buildShareText(s: PnlSnapshot, tier: PnlTier, line: string): str
     `${formatPct(s.pnlPct)} · ${formatUsd(s.pnlUsd)}`,
     `"${line}"`,
     "",
-    "Perp Agent NFT — An NFT That Trades (NEAR Hackathon, Testnet)",
+    "Bag Worker — An NFT That Trades (NEAR Hackathon, Testnet)",
     "https://github.com/Jadenprosper/perp-agent-nft",
   ].join("\n");
 }

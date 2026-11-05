@@ -60,7 +60,7 @@ export function AgentDesk({
         </h3>
         <p className="relative mt-2 max-w-sm text-sm text-cream-mute">
           {caller
-            ? "Mint Your One-Per-Wallet Agent To Open The Trading Desk. No NFT = Locked Out (On Purpose)."
+            ? "Mint Your One-Per-Wallet Bag Worker To Open The Trading Desk. No NFT = Locked Out (On Purpose)."
             : "Wallet Selector First (Meteor / MyNearWallet). Then Mint. Then Degen — Testnet Only."}
         </p>
         <p className="relative mt-4 chip">Token-Gated · 1 NFT / Wallet · Max 100</p>
@@ -149,7 +149,7 @@ export function AgentDesk({
         <div className="flex min-w-0 items-start gap-3">
           <AgentPortrait nft={nft} size={64} className="hidden sm:block" />
           <div className="min-w-0">
-            <div className="chip mb-1.5">Agent #{nft.token_id}</div>
+            <div className="chip mb-1.5">Bag Worker #{nft.token_id}</div>
             <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">
               {nft.title}
             </h2>

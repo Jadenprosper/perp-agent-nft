@@ -1,4 +1,4 @@
-# Perp Agent NFT
+# Bag Worker
 
 > An NFT that **is** a Hyperliquid perp trading agent. Own the NFT → own the desk.
 
@@ -67,7 +67,8 @@ near contract deploy <account.testnet> use-file res/perp_agent_nft.wasm \
 
 Key methods:
 
-- `mint_agent(rules?, max_size?)` — fails if wallet already minted or supply exhausted
+- `mint_agent(token_id)` — **free** (0 deposit; contract pays storage, minter pays gas only); fails if wallet already minted or supply exhausted
+- `rebrand()` — owner-only migration: collection name "Bag Worker", symbol BAGW, token titles "Bag Worker #N"
 - `get_mint_stats()` → `{ minted, max_supply, remaining, sold_out }`
 - `nft_transfer` — moves control; receiver cannot already hold an agent on this drop
 - `set_agent_config` — owner-only rules / leash updates

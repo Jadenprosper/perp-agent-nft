@@ -46,7 +46,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
   const [limit, setLimit] = useState("");
   const [tp, setTp] = useState("");
   const [sl, setSl] = useState("");
-  const [name, setName] = useState(`Agent #${tokenId}`);
+  const [name, setName] = useState(`Bag Worker #${tokenId}`);
   const candlesRef = useRef<Candle[]>([]);
   const lastEvalRef = useRef(0);
   const chartEl = useRef<HTMLDivElement>(null);
@@ -280,7 +280,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
       <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
         <div>
           <button className="btn-bracket mb-2 px-2 py-1" onClick={onBack}>← Back To Gallery</button>
-          <p className="label-micro">Agent #{tokenId} · Trade Desk</p>
+          <p className="label-micro">Bag Worker #{tokenId} · Trade Desk</p>
           <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-cream sm:text-3xl">{name} Trades {coin}-PERP</h1>
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -301,7 +301,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
         </div>
       )}
 
-      <div className="grid gap-3 lg:grid-cols-12">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-12">
         <section className="panel rounded-md p-2 lg:col-span-8">
           <div className="flex items-center justify-between px-1 pb-2">
             <span className="font-mono text-xs text-brown-200">{coin}-PERP · 1m</span>
