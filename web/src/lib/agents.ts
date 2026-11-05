@@ -53,9 +53,10 @@ export function normalizeAgentCatalog(raw: unknown): AgentCatalogEntry[] {
     out.push({
       id,
       name,
-      image: image.startsWith("http") || image.startsWith("/")
+      image: (image.startsWith("http") || image.startsWith("/")
         ? image
-        : `/agents/${image}`,
+        : `/agents/${image}`)
+        + (image.includes("?") ? "" : "?v=std2"),
       traits: coerceTraits(row.traits ?? row.attributes ?? {}),
     });
   }

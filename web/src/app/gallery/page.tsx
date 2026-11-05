@@ -26,7 +26,7 @@ export default function GalleryPage() {
         {items.map((it) => (
           <li key={it.id} className="panel min-w-0 overflow-hidden rounded-xl">
             <img
-              src={`${BASE}/${it.img}`}
+              src={`${BASE}/${it.img}?v=std2`}
               alt={it.name}
               width={512}
               height={512}
