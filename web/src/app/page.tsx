@@ -213,10 +213,10 @@ export default function HomePage() {
     <div className="relative min-h-screen">
       <LoadingScreen dataReady={!loading} />
       {/* ticker — papertrade energy */}
-      <div className="overflow-hidden border-b border-brown-400/15 bg-ink-900/95">
-        <div className="ticker-track flex whitespace-nowrap py-1.5 font-mono text-[10px] tracking-micro text-brown-300/80">
-          <span className="px-4">{tickerText}</span>
-          <span className="px-4" aria-hidden>
+      <div className="ticker-bar border-b border-brown-400/15 bg-ink-900/95">
+        <div className="ticker-track font-mono text-[10px] tracking-micro text-brown-300/80">
+          <span className="ticker-item">{tickerText}</span>
+          <span className="ticker-item" aria-hidden>
             {tickerText}
           </span>
         </div>
@@ -225,11 +225,12 @@ export default function HomePage() {
       {/* top nav — bulk density */}
       <header className="sticky top-0 z-40 border-b border-brown-400/15 bg-ink-950/92 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2.5 sm:px-4">
-          <a href="#" className="group flex shrink-0 items-baseline gap-0.5">
+          <a href="#" className="group relative flex shrink-0 items-baseline gap-0.5 pb-1.5">
             <span className="font-display text-lg font-semibold tracking-tight text-cream sm:text-xl">
               Bag Worker
             </span>
             <span className="cursor-blink font-mono text-brown-400">_</span>
+            <span className="brand-line" aria-hidden />
           </a>
 
           <nav className="ml-2 hidden items-center gap-1 md:flex">

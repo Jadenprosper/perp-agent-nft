@@ -72,9 +72,29 @@ body {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+.ticker-bar { overflow: hidden; height: 26px; position: relative; contain: paint; }
 .ticker-track {
-  animation: ticker 42s linear infinite;
+  display: flex !important; flex-wrap: nowrap; width: max-content; min-width: max-content;
+  height: 26px; line-height: 26px; white-space: nowrap;
+  animation: ticker 42s linear infinite; will-change: transform;
 }
+.ticker-track > .ticker-item {
+  flex: 0 0 auto !important; min-width: max-content !important; display: block;
+  position: static; height: 26px; line-height: 26px; white-space: nowrap; padding: 0 1rem;
+}
+@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+
+/* breathing kraft line under the brand title */
+.brand-line {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, rgba(185,138,90,0) 0%, #b98a5a 22%, #d4a875 50%, #b98a5a 78%, rgba(185,138,90,0) 100%);
+  box-shadow: 0 0 6px rgba(185,138,90,.45);
+  transform-origin: center; transform: scaleX(.55);
+  animation: brand-breathe 2.8s cubic-bezier(.34,1.56,.64,1) infinite alternate;
+  will-change: transform; pointer-events: none;
+}
+@keyframes brand-breathe { from { transform: scaleX(.55); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .brand-line { animation: none; transform: scaleX(.85); } }
 
 @keyframes floaty {
   0%, 100% { transform: translateY(0); }
