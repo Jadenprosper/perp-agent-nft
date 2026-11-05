@@ -75,3 +75,13 @@ export function subscribeMarket(
     ws?.close();
   };
 }
+
+/** Mid prices for every perp in one call. */
+export async function fetchMids(): Promise<Record<string, number>> {
+  const res = await fetch(HL_INFO, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type: "allMids" }) });
+  if (!res.ok) throw new Error(`Mids Failed (${res.status})`);
+  const raw = (await res.json()) as Record<string, string>;
+  const out: Record<string, number> = {};
+  for (const [k, v] of Object.entries(raw)) if (!k.startsWith("@")) out[k] = Number(v);
+  return out;
+}

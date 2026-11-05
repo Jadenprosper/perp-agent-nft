@@ -26,4 +26,13 @@ for (const q of qs) {
   if (/—/.test(out) || /NaN|undefined|Infinity/.test(out)) bad++;
   console.log(`Q: ${q}\nA: ${out}\n`);
 }
+for (const coin of ["SOL", "ETH", "HYPE", "DOGE", "SUI"]) {
+  const r2 = await fetch("https://api.hyperliquid.xyz/info", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type: "candleSnapshot", req: { coin, interval: "1m", startTime: end - 300 * 60000, endTime: end } }) });
+  const c2 = (await r2.json()).map((x: any) => ({ time: x.t / 1000, open: +x.o, high: +x.h, low: +x.l, close: +x.c, volume: +x.v }));
+  for (const q of [`how's ${coin.toLowerCase()} looking?`, `what setup on ${coin}?`, `should i long ${coin.toLowerCase()} now?`]) {
+    const rep = converse(q, { ...ctx, coin, closed: c2.slice(0, -1), price: c2[c2.length - 1].close, positions: [] });
+    n++; const out = rep ? `[${rep.topic}] ${rep.text}` : "null"; if (!rep || /—|NaN|undefined|Infinity/.test(out) || !out.includes(coin)) bad++;
+    console.log(`Q: ${q}\nA: ${out}\n`);
+  }
+}
 console.log(`${n} Questions, ${bad} Bad`);

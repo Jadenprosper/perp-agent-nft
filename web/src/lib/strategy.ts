@@ -4,9 +4,9 @@ import type { StrategyConfig } from "@/lib/agentConfig";
 /** Paper position (agent or manual). Mirrors agent/ rule shape: side + entry + TP/SL. */
 /** "agent-auto" = opened by the strategy loop; "you"/"manual" = the holder. "agent" is legacy (pre split). */
 export type Owner = "agent-auto" | "you" | "manual" | "agent";
-export type Position = { id: string; side: "long" | "short"; size: number; entry: number; tp?: number; sl?: number; openedAt: number; by: Owner; lev?: number };
-export type PendingOrder = { id: string; side: "long" | "short"; size: number; limit: number; tp?: number; sl?: number; createdAt: number; lev?: number };
-export type Fill = { id: string; side: "long" | "short"; size: number; entry: number; exit: number; pnl: number; openedAt: number; closedAt: number; by: Owner; reason: string; lev?: number };
+export type Position = { id: string; side: "long" | "short"; size: number; entry: number; tp?: number; sl?: number; openedAt: number; by: Owner; lev?: number; coin?: string };
+export type PendingOrder = { id: string; side: "long" | "short"; size: number; limit: number; tp?: number; sl?: number; createdAt: number; lev?: number; coin?: string };
+export type Fill = { id: string; side: "long" | "short"; size: number; entry: number; exit: number; pnl: number; openedAt: number; closedAt: number; by: Owner; reason: string; lev?: number; coin?: string };
 export type Decision = { time: number; text: string };
 
 export function ema(vals: number[], p: number): number[] {

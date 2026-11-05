@@ -7,7 +7,7 @@ export type TalkCtx = {
   name: string; coin: string; strategy: StrategyConfig; closed: Candle[]; price: number | null;
   running: boolean; until: number | null; lastNote?: string; lastCheckAt?: number;
   positions: Position[]; fills: Fill[]; cash: number; lev: number; maxSize: number; maxLoss: number; today: number;
-  lastTopic?: string; seed?: number;
+  lastTopic?: string; seed?: number; priceOf?: (coin: string) => number | null; defaultCoin?: string;
 };
 export type TalkReply = { text: string; topic: string };
 
@@ -71,6 +71,13 @@ export function setupRead(c: TalkCtx) {
 }
 
 const T = (re: RegExp, q: string) => re.test(q);
+const COIN_WORDS: Record<string, string> = { btc: "BTC", bitcoin: "BTC", eth: "ETH", ether: "ETH", ethereum: "ETH", sol: "SOL", solana: "SOL", hype: "HYPE", hyperliquid: "HYPE",
+  xrp: "XRP", ripple: "XRP", doge: "DOGE", dogecoin: "DOGE", sui: "SUI", avax: "AVAX", avalanche: "AVAX", link: "LINK", chainlink: "LINK", bnb: "BNB", near: "NEAR", aave: "AAVE" };
+/** First coin named in a message, if any. */
+export function coinMentioned(raw: string): string | null {
+  for (const w of raw.split(/[^A-Za-z]+/)) { const l = w.toLowerCase(); if ((l === "near" || l === "link") && w !== w.toUpperCase()) continue; if (COIN_WORDS[l]) return COIN_WORDS[l]; }
+  return null;
+}
 
 export function converse(raw: string, c: TalkCtx): TalkReply | null {
   const q = ` ${raw.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9%$.?\s/]/g, " ").replace(/\s+/g, " ").trim()} `;
@@ -127,28 +134,26 @@ export function converse(raw: string, c: TalkCtx): TalkReply | null {
     return say(`${c.lastNote && /skip/i.test(c.lastNote) ? `I did skip one: ${c.lastNote}. ` : ""}${c.running ? "" : "First thing, I'm paused, so I'm not taking trades. "}${agentFills.length ? `I've made ${agentFills.length} trade${agentFills.length === 1 ? "" : "s"} so far. ` : ""}${sr.text}`, "skip");
   }
 
-  // market
-  const coinAsked = q.match(/\b(btc|bitcoin|eth|ether|ethereum|sol|solana|hype|xrp|doge|sui|avax|link|bnb|near|aave)\b/);
-  if (T(/\b(how.?s|how is|hows|looking|market|price|chart|trend|vol|volatil\w*|moving|pumping|dumping|up or down|direction|what.?s .* (at|doing))\b/, q) || (coinAsked && T(/\?/, q))) {
-    const askedOther = coinAsked && !new RegExp(c.coin.toLowerCase()).test(coinAsked[1]) && !(c.coin === "BTC" && coinAsked[1] === "bitcoin") && !(c.coin === "ETH" && /ether/.test(coinAsked[1])) && !(c.coin === "SOL" && coinAsked[1] === "solana");
-    if (askedOther) return say(`I only watch ${c.coin}. ${mood()}`, "market");
-    if (!m) return say(mood(), "market");
-    const range = `Last hour range ${px(m.lo)} to ${px(m.hi)}.`;
-    const vibe = m.trend === "up" ? pick(["Bulls have the wheel for now.", "Grinding higher."], c.seed) : m.trend === "down" ? pick(["Sellers are leaning on it.", "Drifting lower."], c.seed) : pick(["Chopping sideways.", "Going nowhere fast."], c.seed);
-    return say(`${mood()} ${range} ${vibe}`, "market");
-  }
-
   // opinion
   if (T(/\b(should i|would you|do you think|is it (a )?good|good time|buy now|long now|short now|go long|go short|ape|worth it|bullish|bearish|your (view|take|opinion)|what would you do|prediction|where.*going)\b/, q)) {
     if (!m) return say(`Not enough data for a view yet.${disc}`, "opinion");
     const sr = setupRead(c);
     const lean = m.trend === "up" ? "the short term trend is up" : m.trend === "down" ? "the short term trend is down" : "there's no clear short term trend";
     const wantShort = /\b(short|sell|bearish|down)\b/.test(q) && !/\b(long|buy|bullish|up)\b/.test(q);
-    const wantLong = /\b(long|buy|bullish|up)\b/.test(q) && !wantShort;
+    const wantLong = /\b(long|buy|bullish|up)\b/.test(q) && !/\b(short|sell|bearish|down)\b/.test(q);
     const fit = wantLong ? (m.trend === "up" ? "A long goes with the short term trend." : m.trend === "down" ? "A long fights the short term trend." : "A long has no trend behind it.")
       : wantShort ? (m.trend === "down" ? "A short goes with the short term trend." : m.trend === "up" ? "A short fights the short term trend." : "A short has no trend behind it.") : "";
     const verdict = `${fit} ${sr.ready ? "My strategy actually has a setup right now." : "My own strategy doesn't have a setup yet, so I'd be waiting."}`.trim();
-    return say(`Honest read: ${lean}, ${m.ch60 != null ? `${pct(m.ch60)} in the last hour,` : ""} volatility is ${m.vol}, RSI 14 ${m.rsi14.toFixed(1)}. ${verdict}${m.rsi14 > 70 ? " RSI is hot, chasing a long here is risky." : m.rsi14 < 30 ? " RSI is washed out, shorting here is risky." : ""} If you do trade, size small and set a stop.${disc}`, "opinion");
+    return say(`Honest read on ${c.coin}: ${lean}, ${m.ch60 != null ? `${pct(m.ch60)} in the last hour,` : ""} volatility is ${m.vol}, RSI 14 ${m.rsi14.toFixed(1)}. ${verdict}${m.rsi14 > 70 ? " RSI is hot, chasing a long here is risky." : m.rsi14 < 30 ? " RSI is washed out, shorting here is risky." : ""} If you do trade, size small and set a stop.${disc}`, "opinion");
+  }
+
+  // market
+  const coinAsked = q.match(/\b(btc|bitcoin|eth|ether|ethereum|sol|solana|hype|xrp|doge|sui|avax|link|bnb|near|aave)\b/);
+  if (T(/\b(how.?s|how is|hows|looking|market|price|chart|trend|vol|volatil\w*|moving|pumping|dumping|up or down|direction|what.?s .* (at|doing))\b/, q) || (coinAsked && T(/\?/, q))) {
+    if (!m) return say(mood(), "market");
+    const range = `Last hour range ${px(m.lo)} to ${px(m.hi)}.`;
+    const vibe = m.trend === "up" ? pick(["Bulls have the wheel for now.", "Grinding higher."], c.seed) : m.trend === "down" ? pick(["Sellers are leaning on it.", "Drifting lower."], c.seed) : pick(["Chopping sideways.", "Going nowhere fast."], c.seed);
+    return say(`${mood()} ${range} ${vibe}`, "market");
   }
 
   // pnl / positions / session
@@ -157,8 +162,9 @@ export function converse(raw: string, c: TalkCtx): TalkReply | null {
   if (T(/\b(position|positions|open trades|whats open|exposure|risk|in a trade|holding|my trade)\b/, q)) {
     if (!c.positions.length) return say(`Nothing open. ${sess}.`, "positions");
     const lines = c.positions.map((p) => {
-      const u = c.price != null ? Math.max(-p.entry * p.size, (p.side === "long" ? c.price - p.entry : p.entry - c.price) * p.size * (p.lev ?? 1)) : 0;
-      return `${p.side} ${p.size} @ ${px(p.entry)} ${p.lev ?? 1}x (${p.by === "agent-auto" ? "mine" : "yours"}), uPnL ${usd(u)}, SL ${p.sl != null ? px(p.sl) : "none"}, TP ${p.tp != null ? px(p.tp) : "none"}`;
+      const pcn = p.coin ?? c.defaultCoin ?? c.coin; const lp = pcn === c.coin ? c.price : c.priceOf?.(pcn) ?? null;
+      const u = lp != null ? Math.max(-p.entry * p.size, (p.side === "long" ? lp - p.entry : p.entry - lp) * p.size * (p.lev ?? 1)) : 0;
+      return `${pcn} ${p.side} ${p.size} @ ${px(p.entry)} ${p.lev ?? 1}x (${p.by === "agent-auto" ? "mine" : "yours"}), uPnL ${usd(u)}, SL ${p.sl != null ? px(p.sl) : "none"}, TP ${p.tp != null ? px(p.tp) : "none"}`;
     });
     return say(`Open: ${lines.join(" | ")}.${c.positions.some((p) => p.sl == null) ? " One has no stop loss, that's risky at this leverage." : ""}`, "positions");
   }

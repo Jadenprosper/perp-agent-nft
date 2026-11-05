@@ -6,22 +6,22 @@ import { toPng } from "html-to-image";
 import { PnlCard } from "@/components/PnlCard";
 import { buildShareText, computePnl, pickOneLiner, tierFromPnl, xIntentUrl, type PnlSnapshot } from "@/lib/pnl";
 import { createChart, LineStyle, type IChartApi, type IPriceLine, type ISeriesApi, type SeriesMarker, type Time, type UTCTimestamp } from "lightweight-charts";
-import { agentConfig, strategyParams } from "@/lib/agentConfig";
-import { fetchCandles, subscribeMarket, type Book, type Candle, type Trade } from "@/lib/hl";
+import { agentConfig, strategyParams, PERPS } from "@/lib/agentConfig";
+import { fetchCandles, fetchMids, subscribeMarket, type Book, type Candle, type Trade } from "@/lib/hl";
 import { evaluate, atr, fmtPx, upnl, liqPx, isLiquidated, type Decision, type Fill, type PendingOrder, type Position } from "@/lib/strategy";
 import { agentEvents } from "@/lib/agentEvents";
 import { withBase } from "@/lib/basePath";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { CHAT_EXAMPLES, parseIntent, type Level } from "@/lib/intent";
-import { ASK_CHIPS, converse, type TalkCtx } from "@/lib/talk";
+import { ASK_CHIPS, coinMentioned, converse, type TalkCtx } from "@/lib/talk";
 import { clampLeverage, DEFAULT_LEVERAGE, MAX_LEVERAGE, writeLeverage } from "@/lib/leverage";
 
 const START_EQUITY = 10_000;
 type ChatMsg = { role: "you" | "agent"; text: string; time: number };
 /** Pending chat order. sl/tp: undefined = not answered yet, null = explicitly skipped. */
-type Draft = { side: "long" | "short"; usd?: number; sl?: Level | null; tp?: Level | null };
+type Draft = { side: "long" | "short"; coin?: string; usd?: number; sl?: Level | null; tp?: Level | null };
 type Saved = { cash: number; positions: Position[]; orders: PendingOrder[]; fills: Fill[]; log: Decision[]; running: boolean;
-  until: number | null; chat: ChatMsg[]; maxSize: number; maxLoss: number; defSl: Level | null; defTp: Level | null; lev: number; draft?: Draft | null; lossResetAt?: number; lastEvalAt?: number; lastCheckAt?: number; lastNote?: string };
+  until: number | null; chat: ChatMsg[]; maxSize: number; maxLoss: number; defSl: Level | null; defTp: Level | null; lev: number; draft?: Draft | null; lossResetAt?: number; lastEvalAt?: number; lastCheckAt?: number; lastNote?: string; market?: string };
 const empty = (): Saved => ({ cash: START_EQUITY, positions: [], orders: [], fills: [], log: [], running: false,
   until: null, chat: [], maxSize: 1000, maxLoss: 200, defSl: null, defTp: null, lev: DEFAULT_LEVERAGE, draft: null });
 /** Strategy entry sizing: risk % of cash, capped at max size (floored so the guard never trips on rounding). */
@@ -59,12 +59,17 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
   tokenId: number; accountId: string | null; isHolder: boolean; onConnect: () => void; onBack: () => void;
 }) {
   const cfg = useMemo(() => agentConfig(tokenId), [tokenId]);
-  const coin = cfg.market;
+  const [stMarket, setStMarket] = useState<string | undefined>(undefined);
+  const coin = stMarket && (PERPS as readonly string[]).includes(stMarket) ? stMarket : cfg.market;
+  const pc = useCallback((p: { coin?: string }) => p.coin ?? cfg.market, [cfg.market]);
   const key = accountId ? `pa:trade:${accountId}:${tokenId}` : null;
   const [st, setSt] = useState<Saved>(empty);
   const stRef = useRef(st); stRef.current = st;
+  useEffect(() => { setStMarket(st.market); }, [st.market]);
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const [price, setPrice] = useState<number | null>(null);
+  const [mids, setMids] = useState<Record<string, number>>({});
+  const midsRef = useRef(mids); midsRef.current = mids;
   const [book, setBook] = useState<Book>({ bids: [], asks: [] });
   const [trades, setTrades] = useState<Trade[]>([]);
   const [status, setStatus] = useState("Connecting");
@@ -83,6 +88,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
   const priceLinesRef = useRef<IPriceLine[]>([]);
   const [chartGen, setChartGen] = useState(0);
   const canTrade = isHolder && !!accountId;
+  const pxOf = (c: string) => (c === coin ? price : midsRef.current[c] ?? null);
 
   // name from catalog
   useEffect(() => {
@@ -131,7 +137,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     const pnl = upnl(p, px);
     setSt((s) => ({
       ...s, cash: s.cash + pnl, positions: s.positions.filter((x) => x.id !== p.id),
-      fills: [{ id: p.id, side: p.side, size: p.size, entry: p.entry, exit: px, pnl, openedAt: p.openedAt, closedAt: Date.now(), by: p.by, reason, lev: p.lev }, ...s.fills].slice(0, 300),
+      fills: [{ id: p.id, side: p.side, size: p.size, entry: p.entry, exit: px, pnl, openedAt: p.openedAt, closedAt: Date.now(), by: p.by, reason, lev: p.lev, coin: p.coin ?? cfg.market }, ...s.fills].slice(0, 300),
     }));
     if (reason === "Liquidated") {
       log(`Liquidated · ${p.side === "long" ? "Long" : "Short"} ${p.lev ?? 1}x Wiped At ${fmtPx(px)} · ${usd(pnl)} (100% Of Margin)`);
@@ -140,12 +146,13 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
       log(`${reason} · ${p.side === "long" ? "Long" : "Short"} Closed At ${fmtPx(px)} · ${pnl >= 0 ? "+" : ""}${usd(pnl)}`);
       agentEvents.emit(pnl >= 0 ? { type: "win", pnl, reason } : { type: "loss", pnl, reason });
     }
-  }, [log]);
+  }, [log, cfg.market]);
 
   // price tick: TP/SL + limit fills + agent eval on new closed candle
   const onTick = useCallback((px: number) => {
     const s = stRef.current;
     for (const p of s.positions) {
+      if (pc(p) !== coin) continue;
       if (isLiquidated(p, px)) { closePos(p, liqPx(p), "Liquidated"); continue; }
       const hitTp = p.tp != null && (p.side === "long" ? px >= p.tp : px <= p.tp);
       const hitSl = p.sl != null && (p.side === "long" ? px <= p.sl : px >= p.sl);
@@ -153,8 +160,9 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
       else if (hitSl) closePos(p, p.sl!, "Stop Loss Hit");
     }
     for (const o of s.orders) {
+      if (pc(o) !== coin) continue;
       if ((o.side === "long" && px <= o.limit) || (o.side === "short" && px >= o.limit)) {
-        setSt((x) => ({ ...x, orders: x.orders.filter((y) => y.id !== o.id), positions: [...x.positions, { id: o.id, side: o.side, size: o.size, entry: o.limit, tp: o.tp, sl: o.sl, openedAt: Date.now(), by: "manual", lev: clampLeverage(o.lev ?? x.lev) }] }));
+        setSt((x) => ({ ...x, orders: x.orders.filter((y) => y.id !== o.id), positions: [...x.positions, { id: o.id, side: o.side, size: o.size, entry: o.limit, tp: o.tp, sl: o.sl, openedAt: Date.now(), by: "manual", lev: clampLeverage(o.lev ?? x.lev), coin: pc(o) }] }));
       }
     }
     // agent
@@ -172,7 +180,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     const lastClosed = closed[closed.length - 1].time;
     if (lastClosed === lastEvalRef.current) return;
     lastEvalRef.current = lastClosed;
-    const mine = stRef.current.positions.find((p) => p.by === "agent-auto") || null;
+    const mine = stRef.current.positions.find((p) => p.by === "agent-auto" && pc(p) === coin) || null;
     const sig = evaluate(cfg.strategy, closed, mine?.side ?? null);
     const note = !sig.action ? (mine ? `In A ${mine.side === "long" ? "Long" : "Short"}, Waiting For Exit` : "Watching, No Setup Yet") : sig.reason;
     setSt((x) => ({ ...x, lastEvalAt: lastClosed, lastCheckAt: Date.now(), lastNote: note }));
@@ -182,13 +190,43 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
       const o = agentEntry(cfg.strategy, closed, px, sig.action, stRef.current);
       const blocked = guard(o.size * px);
       if (blocked) { log(`Skipped Signal (${sig.reason}). ${blocked}`); setSt((x) => ({ ...x, lastNote: `Skipped A Signal: ${blocked.replace(/^Blocked: /, "")}` })); return; }
-      setSt((x) => ({ ...x, positions: [...x.positions, { id: uid(), side: sig.action as "long" | "short", size: o.size, entry: px, tp: o.tp, sl: o.sl, openedAt: Date.now(), by: "agent-auto", lev: o.lev }] }));
+      setSt((x) => ({ ...x, positions: [...x.positions, { id: uid(), side: sig.action as "long" | "short", size: o.size, entry: px, tp: o.tp, sl: o.sl, openedAt: Date.now(), by: "agent-auto", lev: o.lev, coin }] }));
       log(`${sig.reason} · ${o.size} ${coin} @ ${fmtPx(px)} · ${o.lev}x · TP ${fmtPx(o.tp)} · SL ${fmtPx(o.sl)}`);
       say(`${sig.reason} · ${fmtPx(px)} · TP ${fmtPx(o.tp)} · SL ${fmtPx(o.sl)}`);
       agentEvents.emit({ type: "entry", side: sig.action, reason: sig.reason });
     }
-  }, [canTrade, cfg, closePos, coin, log, say, guard]);
+  }, [canTrade, cfg, closePos, coin, log, say, guard, pc]);
   const tickRef = useRef(onTick); tickRef.current = onTick;
+
+  // Other markets: poll mids so positions there show live uPnL and still hit TP / SL / liquidation.
+  useEffect(() => {
+    let alive = true;
+    const poll = () => fetchMids().then((m) => { if (alive) setMids(m); }).catch(() => undefined);
+    poll(); const id = setInterval(poll, 4000);
+    return () => { alive = false; clearInterval(id); };
+  }, []);
+  useEffect(() => {
+    const s = stRef.current;
+    for (const p of s.positions) {
+      const c = pc(p); if (c === coin) continue;
+      const q = mids[c]; if (q == null) continue;
+      if (isLiquidated(p, q)) { closePos(p, liqPx(p), "Liquidated"); continue; }
+      if (p.tp != null && (p.side === "long" ? q >= p.tp : q <= p.tp)) closePos(p, p.tp, "Take Profit Hit");
+      else if (p.sl != null && (p.side === "long" ? q <= p.sl : q >= p.sl)) closePos(p, p.sl, "Stop Loss Hit");
+    }
+    for (const o of s.orders) {
+      const c = pc(o); if (c === coin) continue; const q = mids[c]; if (q == null) continue;
+      if ((o.side === "long" && q <= o.limit) || (o.side === "short" && q >= o.limit))
+        setSt((x) => ({ ...x, orders: x.orders.filter((y) => y.id !== o.id), positions: [...x.positions, { id: o.id, side: o.side, size: o.size, entry: o.limit, tp: o.tp, sl: o.sl, openedAt: Date.now(), by: "manual", lev: clampLeverage(o.lev ?? x.lev), coin: c }] }));
+    }
+  }, [mids, coin, pc, closePos]);
+
+  const switchMarket = (m: string) => {
+    if (m === coin) return;
+    setPrice(null);
+    setSt((x) => ({ ...x, market: m, lastEvalAt: undefined, lastNote: x.running ? `Switched To ${m}, Warming Up` : x.lastNote }));
+    if (stRef.current.running) say(`Switched To ${m}-PERP. Same Strategy, New Market. Positions On Other Markets Keep Their TP / SL.`);
+  };
 
   /** Replay closed candles missed while the tab was closed or the phone slept, so a timed session still trades (paper). */
   const catchUp = useCallback(() => {
@@ -208,7 +246,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     const exitAt = (p: Position, px: number, at: number, reason: string) => {
       const pnl = upnl(p, px); exits++;
       s = { ...s, cash: s.cash + pnl, positions: s.positions.filter((x) => x.id !== p.id),
-        fills: [{ id: p.id, side: p.side, size: p.size, entry: p.entry, exit: px, pnl, openedAt: p.openedAt, closedAt: at, by: p.by, reason: `${reason} (Caught Up)`, lev: p.lev }, ...s.fills].slice(0, 300) };
+        fills: [{ id: p.id, side: p.side, size: p.size, entry: p.entry, exit: px, pnl, openedAt: p.openedAt, closedAt: at, by: p.by, reason: `${reason} (Caught Up)`, lev: p.lev, coin: pc(p) }, ...s.fills].slice(0, 300) };
     };
     for (let i = 0; i < closedAll.length; i++) {
       const c = closedAll[i];
@@ -217,6 +255,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
       if (c.time * 1000 > endMs) break;
       bars++; processed = c.time;
       for (const p of [...s.positions]) {
+        if (pc(p) !== coin) continue;
         const long = p.side === "long";
         if (long ? c.low <= liqPx(p) : c.high >= liqPx(p)) { exitAt(p, liqPx(p), at, "Liquidated"); continue; }
         if (p.sl != null && (long ? c.low <= p.sl : c.high >= p.sl)) { exitAt(p, p.sl, at, "Stop Loss Hit"); continue; }
@@ -224,14 +263,14 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
       }
       if (dailyPnl(s) <= -s.maxLoss) { stopped = `Daily Loss Limit Of ${usd(s.maxLoss)} Hit While You Were Away, Auto-Paused.`; break; }
       const win = closedAll.slice(Math.max(0, i - 299), i + 1);
-      const mine = s.positions.find((p) => p.by === "agent-auto") || null;
+      const mine = s.positions.find((p) => p.by === "agent-auto" && pc(p) === coin) || null;
       const sig = evaluate(cfg.strategy, win, mine?.side ?? null);
       if (sig.action === "close" && mine) exitAt(mine, c.close, at, sig.reason);
       else if ((sig.action === "long" || sig.action === "short") && !mine) {
         const o = agentEntry(cfg.strategy, win, c.close, sig.action, s);
         if (o.size > 0 && o.size * c.close <= s.maxSize + 1e-6) {
           entries++;
-          s = { ...s, positions: [...s.positions, { id: uid(), side: sig.action, size: o.size, entry: c.close, tp: o.tp, sl: o.sl, openedAt: c.time * 1000, by: "agent-auto", lev: o.lev }] };
+          s = { ...s, positions: [...s.positions, { id: uid(), side: sig.action, size: o.size, entry: c.close, tp: o.tp, sl: o.sl, openedAt: c.time * 1000, by: "agent-auto", lev: o.lev, coin }] };
         }
       }
     }
@@ -244,7 +283,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
       ...(expired && !stopped ? [{ role: "agent" as const, text: "Session Ended While You Were Away, Paused.", time: Date.now() }] : [])].slice(-200) };
     setSt(s); stRef.current = s;
     if (stopped || expired) agentEvents.emit({ type: "paused" });
-  }, [canTrade, cfg]);
+  }, [canTrade, cfg, coin, pc]);
 
   // run catch-up once the saved state and candles are both loaded, and again whenever the tab comes back
   useEffect(() => { caughtUpRef.current = false; }, [key, coin]);
@@ -316,6 +355,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
       priceLinesRef.current.push(series.createPriceLine({ price, color, title, lineStyle, lineWidth, axisLabelVisible: true }));
     };
     for (const p of st.positions) {
+      if (pc(p) !== coin) continue;
       const long = p.side === "long";
       add(p.entry, long ? "#22c55e" : "#ef4444", `${long ? "Long" : "Short"} @ ${fmtPx(p.entry)}`, LineStyle.Dashed, 2);
       add(p.tp, "#22c55e", "TP", LineStyle.Dotted, 1);
@@ -334,8 +374,9 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
         ? { time: t, position: "belowBar", shape: "arrowUp", color: "#22c55e", text: `Long @ ${fmtPx(px)}` }
         : { time: t, position: "aboveBar", shape: "arrowDown", color: "#ef4444", text: `Short @ ${fmtPx(px)}` });
     };
-    for (const p of st.positions) entry(p.side, p.openedAt, p.entry);
+    for (const p of st.positions) if (pc(p) === coin) entry(p.side, p.openedAt, p.entry);
     for (const f of st.fills) {
+      if (pc(f) !== coin) continue;
       entry(f.side, f.openedAt, f.entry);
       const t = bar(f.closedAt); if (t == null) continue;
       const pnlTxt = `${f.pnl >= 0 ? "+" : "-"}$${Math.abs(f.pnl).toFixed(2)}`;
@@ -344,7 +385,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     }
     mk.sort((a, b) => (a.time as number) - (b.time as number));
     series.setMarkers(mk);
-  }, [st.positions, st.fills, chartGen]);
+  }, [st.positions, st.fills, chartGen, coin, pc]);
 
   const place = (side: "long" | "short", kind: "market" | "limit") => {
     if (!canTrade || price == null) return;
@@ -354,9 +395,9 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     const tpN = tp ? Number(tp) : undefined, slN = sl ? Number(sl) : undefined;
     if (kind === "limit") {
       const l = Number(limit); if (!(l > 0)) return;
-      setSt((s) => ({ ...s, orders: [...s.orders, { id: uid(), side, size: sz, limit: l, tp: tpN, sl: slN, createdAt: Date.now(), lev: s.lev }] }));
+      setSt((s) => ({ ...s, orders: [...s.orders, { id: uid(), side, size: sz, limit: l, tp: tpN, sl: slN, createdAt: Date.now(), lev: s.lev, coin }] }));
     } else {
-      setSt((s) => ({ ...s, positions: [...s.positions, { id: uid(), side, size: sz, entry: price, tp: tpN, sl: slN, openedAt: Date.now(), by: "manual", lev: s.lev }] }));
+      setSt((s) => ({ ...s, positions: [...s.positions, { id: uid(), side, size: sz, entry: price, tp: tpN, sl: slN, openedAt: Date.now(), by: "manual", lev: s.lev, coin }] }));
     }
   };
 
@@ -375,7 +416,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
   const chatEnd = useRef<HTMLDivElement>(null);
   useEffect(() => { chatEnd.current?.scrollIntoView({ block: "nearest" }); }, [st.chat.length]);
 
-  const draftTxt = (d: Draft) => `${d.side === "long" ? "Long" : "Short"} ${coin} · ${d.usd != null ? usd(d.usd) + " Margin" : "Margin ?"} · ${stRef.current.lev}x · SL ${d.sl === null ? "None" : d.sl ? lvlTxt(d.sl) : "?"} · TP ${d.tp === null ? "None" : d.tp ? lvlTxt(d.tp) : "?"}`;
+  const draftTxt = (d: Draft) => `${d.side === "long" ? "Long" : "Short"} ${d.coin ?? coin} · ${d.usd != null ? usd(d.usd) + " Margin" : "Margin ?"} · ${stRef.current.lev}x · SL ${d.sl === null ? "None" : d.sl ? lvlTxt(d.sl) : "?"} · TP ${d.tp === null ? "None" : d.tp ? lvlTxt(d.tp) : "?"}`;
   const askDraft = (d: Draft) => {
     const missing: string[] = [];
     if (d.usd == null || !(d.usd > 0)) missing.push("How Much Margin?");
@@ -385,7 +426,8 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     else say(`Ready: ${draftTxt(d)}. Reply Confirm To Open, Or Cancel.`);
   };
   const confirmDraft = (d: Draft) => {
-    const px = price;
+    const dc = d.coin ?? coin;
+    const px = pxOf(dc);
     if (d.usd == null || !(d.usd > 0) || d.sl === undefined || d.tp === undefined) { askDraft(d); return; }
     if (px == null) { say("No Live Price Yet. Give The Feed A Second, Then Confirm Again."); return; }
     const notional = d.usd;
@@ -393,10 +435,10 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     const slL = d.sl ?? undefined, tpL = d.tp ?? undefined;
     const sz = +(notional / px).toPrecision(4);
     setSt((x) => ({ ...x, draft: null, positions: [...x.positions, { id: uid(), side: d.side, size: sz, entry: px,
-      sl: slL ? lvlPx(slL, px, d.side, "sl") : undefined, tp: tpL ? lvlPx(tpL, px, d.side, "tp") : undefined, openedAt: Date.now(), by: "you", lev: x.lev }] }));
-    say(`Done, Opened A ${d.side === "long" ? "Long" : "Short"} On ${coin} For ${usd(notional)} Margin At ${stRef.current.lev}x @ ${fmtPx(px)}${slL ? ` With SL At ${lvlTxt(slL)}` : ""}${tpL ? `${slL ? " And" : " With"} TP At ${lvlTxt(tpL)}` : ""}.`);
+      sl: slL ? lvlPx(slL, px, d.side, "sl") : undefined, tp: tpL ? lvlPx(tpL, px, d.side, "tp") : undefined, openedAt: Date.now(), by: "you", lev: x.lev, coin: dc }] }));
+    say(`Done, Opened A ${d.side === "long" ? "Long" : "Short"} On ${dc} For ${usd(notional)} Margin At ${stRef.current.lev}x @ ${fmtPx(px)}${slL ? ` With SL At ${lvlTxt(slL)}` : ""}${tpL ? `${slL ? " And" : " With"} TP At ${lvlTxt(tpL)}` : ""}.`);
     if (stRef.current.running) say("Heads Up: The Agent Strategy Is Running, But It Won't Touch This One. Your Position Only Closes When You Close It, Or On Your TP, SL Or Liquidation.");
-    agentEvents.emit({ type: "entry", side: d.side, reason: `${d.side === "long" ? "Long" : "Short"} ${coin} On Your Call` });
+    agentEvents.emit({ type: "entry", side: d.side, reason: `${d.side === "long" ? "Long" : "Short"} ${dc} On Your Call` });
   };
   const lvl = (raw: string): Level => { const m = raw.match(/\$?([\d.,]+)\s*(%)?/)!; return { value: Number(m[1].replace(/,/g, "")), pct: Boolean(m[2]) }; };
 
@@ -412,11 +454,21 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     const parsedOpen = parseIntent(msg);
     // Questions and casual talk go to the conversational layer, grounded in live state.
     const talkCtx = (): TalkCtx => ({ name, coin, strategy: cfg.strategy, closed: candlesRef.current.slice(0, -1), price: px, running: s.running, until: s.until,
-      lastNote: s.lastNote, lastCheckAt: s.lastCheckAt, positions: s.positions, fills: s.fills, cash: s.cash, lev: s.lev, maxSize: s.maxSize, maxLoss: s.maxLoss,
+      lastNote: s.lastNote, lastCheckAt: s.lastCheckAt, positions: s.positions, priceOf: (c: string) => midsRef.current[c] ?? null, defaultCoin: cfg.market, fills: s.fills, cash: s.cash, lev: s.lev, maxSize: s.maxSize, maxLoss: s.maxLoss,
       today: dailyPnl(s), lastTopic: topicRef.current });
     const isQuestion = /^(what|whats|why|how|hows|should|is|are|do|does|did|when|would|will|who|where|explain|tell me|any|thoughts|opinion)\b/.test(lo) || /\?\s*$/.test(lo);
     const draftReply = s.draft && ["confirm", "cancel", "set_sl", "set_tp"].includes(parsedOpen.kind);
     if (!draftReply && (parsedOpen.kind === "unknown" || (isQuestion && !/^(can|could) you\b/.test(lo)))) {
+      const other = coinMentioned(msg);
+      if (other && other !== coin && (PERPS as readonly string[]).includes(other)) {
+        fetchCandles(other).then((cs) => {
+          const rep = converse(msg, { ...talkCtx(), coin: other, closed: cs.slice(0, -1), price: midsRef.current[other] ?? cs[cs.length - 1]?.close ?? null,
+            priceOf: (c: string) => (c === coin ? px : midsRef.current[c] ?? null) });
+          if (rep) { topicRef.current = rep.topic; say(`${rep.text}${coin !== other && rep.topic !== "explain" ? ` (I'm Trading ${coin} Right Now. Tap ${other} Up Top To Switch Me.)` : ""}`); }
+          else say(`Couldn't Read ${other} Right Now. Try Again In A Second.`);
+        }).catch(() => say(`Couldn't Load ${other} Candles. Try Again In A Second.`));
+        return;
+      }
       const rep = converse(msg, talkCtx());
       if (rep && !(rep.topic === "fallback" && parsedOpen.kind !== "unknown")) { topicRef.current = rep.topic; say(rep.text); return; }
     }
@@ -449,7 +501,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
       case "help":
         say(`I Trade ${coin}-PERP With ${cfg.strategy.label}, Paper Only. Try: ${CHAT_EXAMPLES.join(" · ")}`); return;
       case "status": {
-        const u = px != null ? s.positions.reduce((a, p) => a + upnl(p, px), 0) : 0;
+        const u = s.positions.reduce((a, p) => { const q = pxOf(pc(p)); return a + (q != null ? upnl(p, q) : 0); }, 0);
         const af = s.fills.filter((f) => f.by === "agent-auto"); const w = af.filter((f) => f.pnl > 0).length;
         say(`${s.running ? "Running" : "Paused"} · ${s.positions.length} Open · uPnL ${usd(u)} · Realized ${usd(s.fills.reduce((a, f) => a + f.pnl, 0))} · Today ${usd(dailyPnl(s))} · Agent Win Rate ${af.length ? Math.round((w / af.length) * 100) + "%" : "—"} · Leverage ${s.lev}x · Max Size ${usd(s.maxSize)} · Max Daily Loss ${usd(s.maxLoss)}`); return;
       }
@@ -477,15 +529,20 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
         say(`Done, ${k === "sl" ? "Stop Loss" : "Take Profit"} Set At ${lvlTxt(it.level)} On ${s.positions.length} Open Position${s.positions.length === 1 ? "" : "s"} And Future Orders.`); return;
       }
       case "close": {
-        if (it.coin && it.coin !== coin) { say(`I Only Trade ${coin}. Nothing On ${it.coin} To Close.`); return; }
-        if (!s.positions.length || px == null) { say("Nothing Open. The Desk Is Already Clean."); return; }
-        s.positions.forEach((p) => closePos(p, px, "Closed On Your Command"));
-        say(`Done, Closed ${s.positions.length} Position${s.positions.length === 1 ? "" : "s"} On ${coin}.`); return;
+        const targets = s.positions.filter((p) => !it.coin || pc(p) === it.coin);
+        if (!targets.length) { say(it.coin ? `Nothing Open On ${it.coin}.` : "Nothing Open. The Desk Is Already Clean."); return; }
+        let n = 0; const skipped: string[] = [];
+        for (const p of targets) { const q = pxOf(pc(p)); if (q == null) { skipped.push(pc(p)); continue; } closePos(p, q, "Closed On Your Command"); n++; }
+        const mk = [...new Set(targets.map(pc))].join(", ");
+        say(`Done, Closed ${n} Position${n === 1 ? "" : "s"} On ${mk}.${skipped.length ? ` No Price Yet For ${skipped.join(", ")}, Try Again In A Second.` : ""}`); return;
       }
       case "open": {
-        if (it.coin && it.coin !== coin) { say(`This Agent Is Assigned To ${coin}-PERP, Not ${it.coin}. Pick That Agent In The Gallery To Trade It.`); return; }
-        if (px == null) { say("No Live Price Yet. Give The Feed A Second."); return; }
-        const d: Draft = { side: it.side, usd: it.usd ?? undefined, sl: it.sl ?? s.defSl ?? undefined, tp: it.tp ?? s.defTp ?? undefined };
+        const oc = it.coin && (PERPS as readonly string[]).includes(it.coin) ? it.coin : coin;
+        if (it.coin && oc !== it.coin) { say(`${it.coin} Is Not On The Desk. Markets: ${PERPS.join(", ")}.`); return; }
+        if (pxOf(oc) == null) { say(`No Live Price For ${oc} Yet. Give The Feed A Second.`); return; }
+        const d: Draft = { side: it.side, coin: oc, usd: it.usd ?? undefined, sl: it.sl ?? s.defSl ?? undefined, tp: it.tp ?? s.defTp ?? undefined };
+        if (/\bno\s*(sl|stop\s*loss|stop)\b/.test(lo)) d.sl = null;
+        if (/\bno\s*(tp|take\s*profit|target)\b/.test(lo)) d.tp = null;
         setSt((x) => ({ ...x, draft: d }));
         askDraft(d); return;
       }
@@ -519,7 +576,8 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     agentEvents.emit({ type: "paused" });
   };
 
-  const totalU = price != null ? st.positions.reduce((a, p) => a + upnl(p, price), 0) : 0;
+  const uOf = (p: Position) => { const q = pxOf(pc(p)); return q != null ? upnl(p, q) : 0; };
+  const totalU = st.positions.reduce((a, p) => a + uOf(p), 0);
   const agentFills = st.fills.filter((f) => f.by === "agent-auto");
   const wins = agentFills.filter((f) => f.pnl > 0).length;
   const realized = agentFills.reduce((a, f) => a + f.pnl, 0);
@@ -533,14 +591,14 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     const f = cardFor.fill;
     if (!p && !f) return null;
     const side = (p ?? f)!.side, entry = (p ?? f)!.entry, size = (p ?? f)!.size, lev = clampLeverage((p ?? f)!.lev ?? 1);
-    const exit = p ? (price ?? entry) : f!.exit;
+    const exit = p ? (pxOf(pc(p)) ?? entry) : f!.exit;
     const liquidated = f ? f.reason === "Liquidated" : false;
     const { pnlPct, pnlUsd } = computePnl({ side, entry, exit, leverage: lev, size });
-    const snap: PnlSnapshot = { agentName: name, tokenId: String(tokenId), market: `${coin}-PERP`, side, leverage: lev, entry, exit, pnlPct, pnlUsd: f ? f.pnl : pnlUsd, liquidated, size };
+    const snap: PnlSnapshot = { agentName: name, tokenId: String(tokenId), market: `${pc((p ?? f)!)}-PERP`, side, leverage: lev, entry, exit, pnlPct, pnlUsd: f ? f.pnl : pnlUsd, liquidated, size };
     const tier = tierFromPnl(pnlPct, liquidated);
     const seed = [...(p ?? f)!.id].reduce((a, c) => a + c.charCodeAt(0), 0);
     return { snap, tier, line: pickOneLiner(tier, seed) };
-  }, [cardFor, st.positions, price, name, tokenId, coin]);
+  }, [cardFor, st.positions, price, mids, name, tokenId, coin, pc]); // eslint-disable-line react-hooks/exhaustive-deps
   // An open position's card closes itself if the position goes away.
   useEffect(() => { if (cardFor?.posId && !st.positions.some((x) => x.id === cardFor.posId)) setCardFor(null); }, [cardFor, st.positions]);
   const downloadCard = async () => {
@@ -559,6 +617,19 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
           <button className="btn-bracket mb-2 px-2 py-1" onClick={onBack}>← Back To Gallery</button>
           <p className="label-micro">Bag Worker #{tokenId} · Trade Desk</p>
           <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-cream sm:text-3xl">{name} Trades {coin}-PERP</h1>
+        </div>
+        <div className="order-last w-full" role="group" aria-label="Market">
+          <p className="label-micro mb-1">Market{coin !== cfg.market ? ` · Default ${cfg.market}` : ""}</p>
+          <div className="terminal-scroll -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
+            {PERPS.map((m) => {
+              const open = st.positions.filter((p) => pc(p) === m).length;
+              return (
+                <button key={m} onClick={() => switchMarket(m)} aria-pressed={m === coin}
+                  className={`chip shrink-0 whitespace-nowrap ${m === coin ? "border-brown-300 bg-brown-500 text-ink-950" : "hover:bg-brown-500/25"}`}>
+                  {m}{open ? ` · ${open}` : ""}
+                </button>);
+            })}
+          </div>
         </div>
         <div className="order-first w-full rounded-md border border-brown-400/30 bg-brown-500/10 px-3 py-2 sm:order-none sm:w-auto">
           <div className="flex flex-wrap items-end gap-x-5 gap-y-2">
@@ -700,10 +771,10 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
           </div>
           {/* Mobile: stacked cards */}
           <div className="space-y-2 sm:hidden">
-            {st.positions.map((p) => { const u = price != null ? upnl(p, price) : 0; return (
+            {st.positions.map((p) => { const u = uOf(p); const q = pxOf(pc(p)); return (
               <div key={p.id} className="rounded border border-brown-400/15 bg-ink-950/50 p-2 font-mono text-[11px]">
                 <div className="flex items-center justify-between gap-2">
-                  <span><span className={p.side === "long" ? "text-green-400" : "text-red-400"}>{p.side === "long" ? "Long" : "Short"}</span> <span className="text-cream-mute">· {p.lev ?? 1}x · {ownerLabel(p.by)}</span></span>
+                  <span><span className="text-cream">{pc(p)}</span> <span className={p.side === "long" ? "text-green-400" : "text-red-400"}>{p.side === "long" ? "Long" : "Short"}</span> <span className="text-cream-mute">· {p.lev ?? 1}x · {ownerLabel(p.by)}</span></span>
                   <span className={u >= 0 ? "text-green-400" : "text-red-400"}>{usd(u)}</span>
                 </div>
                 <div className="mt-1 grid grid-cols-3 gap-x-2 text-[10px] text-cream-mute">
@@ -711,13 +782,13 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
                   <span>TP {p.tp ? fmtPx(p.tp) : "None"}</span><span>SL {p.sl ? fmtPx(p.sl) : "None"}</span>
                 </div>
                 <div className="mt-2 flex gap-2">
-                  <button className="btn-bracket flex-1 px-2 py-1" disabled={price == null} onClick={() => setCardFor({ posId: p.id })}>PnL Card</button>
-                  <button className="btn-bracket flex-1 px-2 py-1" disabled={!canTrade || price == null} onClick={() => price != null && closePos(p, price, "Closed By Owner")}>Close</button>
+                  <button className="btn-bracket flex-1 px-2 py-1" disabled={q == null} onClick={() => setCardFor({ posId: p.id })}>PnL Card</button>
+                  <button className="btn-bracket flex-1 px-2 py-1" disabled={!canTrade || q == null} onClick={() => q != null && closePos(p, q, "Closed By Owner")}>Close</button>
                 </div>
               </div>); })}
             {st.orders.map((o) => (
               <div key={o.id} className="flex items-center justify-between gap-2 rounded border border-brown-400/15 p-2 font-mono text-[11px] text-cream-mute">
-                <span>Limit {o.side === "long" ? "Buy" : "Sell"} {o.size} @ {fmtPx(o.limit)} · Pending</span>
+                <span>{pc(o)} Limit {o.side === "long" ? "Buy" : "Sell"} {o.size} @ {fmtPx(o.limit)} · Pending</span>
                 <button className="btn-bracket px-2 py-0.5" disabled={!canTrade} onClick={() => setSt((s) => ({ ...s, orders: s.orders.filter((x) => x.id !== o.id) }))}>Cancel</button>
               </div>))}
             {!st.positions.length && !st.orders.length && <p className="py-3 text-center font-mono text-[11px] text-cream-mute">No Open Positions. The Desk Is Suspiciously Calm.</p>}
@@ -725,25 +796,25 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
           {/* Desktop: table, scrolls inside the panel if tight */}
           <div className="hidden overflow-x-auto sm:block">
             <table className="w-full min-w-[640px] font-mono text-[11px]">
-              <thead className="text-left text-cream-mute"><tr><th>By</th><th>Side</th><th>Size</th><th>Lev</th><th>Entry</th><th>Liq</th><th>TP</th><th>SL</th><th>uPnL</th><th /></tr></thead>
+              <thead className="text-left text-cream-mute"><tr><th>Market</th><th>By</th><th>Side</th><th>Size</th><th>Lev</th><th>Entry</th><th>Liq</th><th>TP</th><th>SL</th><th>uPnL</th><th /></tr></thead>
               <tbody>
-                {st.positions.map((p) => { const u = price != null ? upnl(p, price) : 0; return (
+                {st.positions.map((p) => { const u = uOf(p); const q = pxOf(pc(p)); return (
                   <tr key={p.id} className="border-t border-brown-400/10">
-                    <td className="py-1 text-brown-300">{ownerLabel(p.by)}</td>
+                    <td className="py-1 text-cream">{pc(p)}</td><td className="text-brown-300">{ownerLabel(p.by)}</td>
                     <td className={p.side === "long" ? "text-green-400" : "text-red-400"}>{p.side === "long" ? "Long" : "Short"}</td>
                     <td>{p.size}</td><td>{p.lev ?? 1}x</td><td>{fmtPx(p.entry)}</td><td className="text-red-300/80">{fmtPx(liqPx(p))}</td><td>{p.tp ? fmtPx(p.tp) : "None"}</td><td>{p.sl ? fmtPx(p.sl) : "None"}</td>
                     <td className={u >= 0 ? "text-green-400" : "text-red-400"}>{usd(u)}</td>
                     <td className="whitespace-nowrap text-right">
-                      <button className="btn-bracket mr-1 px-2 py-0.5" disabled={price == null} onClick={() => setCardFor({ posId: p.id })}>PnL Card</button>
-                      <button className="btn-bracket px-2 py-0.5" disabled={!canTrade || price == null} onClick={() => price != null && closePos(p, price, "Closed By Owner")}>Close</button>
+                      <button className="btn-bracket mr-1 px-2 py-0.5" disabled={q == null} onClick={() => setCardFor({ posId: p.id })}>PnL Card</button>
+                      <button className="btn-bracket px-2 py-0.5" disabled={!canTrade || q == null} onClick={() => q != null && closePos(p, q, "Closed By Owner")}>Close</button>
                     </td>
                   </tr>); })}
                 {st.orders.map((o) => (
                   <tr key={o.id} className="border-t border-brown-400/10 text-cream-mute">
-                    <td className="py-1">You</td><td>Limit {o.side === "long" ? "Buy" : "Sell"}</td><td>{o.size}</td><td>{o.lev ?? st.lev}x</td><td>{fmtPx(o.limit)}</td><td>None</td><td>{o.tp ? fmtPx(o.tp) : "None"}</td><td>{o.sl ? fmtPx(o.sl) : "None"}</td><td>Pending</td>
+                    <td className="py-1 text-cream">{pc(o)}</td><td>You</td><td>Limit {o.side === "long" ? "Buy" : "Sell"}</td><td>{o.size}</td><td>{o.lev ?? st.lev}x</td><td>{fmtPx(o.limit)}</td><td>None</td><td>{o.tp ? fmtPx(o.tp) : "None"}</td><td>{o.sl ? fmtPx(o.sl) : "None"}</td><td>Pending</td>
                     <td className="text-right"><button className="btn-bracket px-2 py-0.5" disabled={!canTrade} onClick={() => setSt((s) => ({ ...s, orders: s.orders.filter((x) => x.id !== o.id) }))}>Cancel</button></td>
                   </tr>))}
-                {!st.positions.length && !st.orders.length && <tr><td colSpan={10} className="py-3 text-center text-cream-mute">No Open Positions. The Desk Is Suspiciously Calm.</td></tr>}
+                {!st.positions.length && !st.orders.length && <tr><td colSpan={11} className="py-3 text-center text-cream-mute">No Open Positions. The Desk Is Suspiciously Calm.</td></tr>}
               </tbody>
             </table>
           </div>
@@ -754,7 +825,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
                 <div key={f.id + "-" + f.closedAt} className="flex items-center justify-between gap-2 border-t border-brown-400/10 pt-1">
                   <span className="min-w-0 truncate">
                     <span className={f.side === "long" ? "text-green-400" : "text-red-400"}>{f.side === "long" ? "Long" : "Short"}</span>
-                    <span className="text-cream-mute"> {fmtPx(f.entry)} → {exitLabel(f)} @ {fmtPx(f.exit)} · {ownerLabel(f.by)} · {tstr(f.closedAt)}</span>
+                    <span className="text-cream"> {pc(f)}</span><span className="text-cream-mute"> {fmtPx(f.entry)} → {exitLabel(f)} @ {fmtPx(f.exit)} · {ownerLabel(f.by)} · {tstr(f.closedAt)}</span>
                   </span>
                   <span className="flex shrink-0 items-center gap-2">
                     <span className={f.pnl >= 0 ? "text-green-400" : "text-red-400"}>{f.pnl >= 0 ? "+" : ""}{usd(f.pnl)}</span>

@@ -16,6 +16,9 @@ const cases: [string, string, Record<string, unknown>?][] = [
   ["take profit 4%", "set_tp"], ["tp at 5 percent", "set_tp"], ["target 3%", "set_tp"],
   ["set max daily loss 300", "max_loss", { usd: 300 }], ["daily loss limit 500", "max_loss", { usd: 500 }], ["max size 2000", "max_size", { usd: 2000 }],
   ["confirm", "confirm"], ["yes", "confirm"], ["yep do it", "confirm"], ["cancel", "cancel"], ["nah", "cancel"], ["nevermind", "cancel"],
+  ["long sol 50", "open", { side: "long", coin: "SOL", usd: 50 }], ["short doge with 25 bucks", "open", { side: "short", coin: "DOGE", usd: 25 }],
+  ["buy hype $40", "open", { side: "long", coin: "HYPE", usd: 40 }], ["go long xrp 30", "open", { side: "long", coin: "XRP", usd: 30 }], ["long avax 20 sl 2% tp 4%", "open", { coin: "AVAX", usd: 20 }],
+  ["close eth", "close", { coin: "ETH" }], ["close my sol", "close", { coin: "SOL" }], ["dump the doge", "close", { coin: "DOGE" }], ["exit sui", "close", { coin: "SUI" }], ["close all", "close", { coin: null }],
   ["resume", "resume"], ["start the bot", "resume"], ["wake up", "resume"], ["help", "help"], ["what can you do", "help"], ["banana", "unknown"],
 ];
 let fail = 0;
