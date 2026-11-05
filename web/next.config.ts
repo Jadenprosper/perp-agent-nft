@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
         basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
         images: { unoptimized: true },
         trailingSlash: true,
+        env: { NEXT_PUBLIC_STATIC: "1" },
       }
     : {}),
   transpilePackages: [

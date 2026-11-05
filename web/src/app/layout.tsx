@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Serif } from "next/font/google";
 import "./globals.css";
+import { Starfield } from "@/components/Starfield";
 import "@near-wallet-selector/modal-ui/styles.css";
 
 const sans = IBM_Plex_Sans({
@@ -38,7 +39,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable} ${display.variable}`}>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        <Starfield />
+        {children}
+      </body>
     </html>
   );
 }

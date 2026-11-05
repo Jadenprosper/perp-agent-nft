@@ -6,6 +6,7 @@ import { Activity, CandlestickChart, FlaskConical, Github, LayoutGrid, Terminal 
 import { AgentCard } from "@/components/AgentCard";
 import { AgentDesk } from "@/components/AgentDesk";
 import { MintPanel } from "@/components/MintPanel";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { TradeView } from "@/components/TradeView";
 import { SupplyCounter } from "@/components/SupplyCounter";
 import { ToastStack, type ToastItem } from "@/components/Toast";
@@ -13,6 +14,9 @@ import { WalletButton } from "@/components/WalletButton";
 import { api, type MintStats, type Nft } from "@/lib/api";
 import { EMPTY_LINES, ERR_PREFIX, LOADING_LINES, pick } from "@/lib/copy";
 import { getModal } from "@/lib/near";
+import { chainMintStats, tokensForOwner } from "@/lib/chain";
+
+const IS_STATIC = process.env.NEXT_PUBLIC_STATIC === "1";
 
 const TICKER = [
   "100 Agent Desks · One Per Wallet",
@@ -76,34 +80,50 @@ export default function HomePage() {
   );
 
   const refresh = useCallback(async () => {
+    // Ownership always comes straight from the NEAR contract (browser RPC view call).
+    let owned: Nft[] = [];
+    let chainOk = true;
+    if (accountId) {
+      try {
+        owned = await tokensForOwner(accountId);
+      } catch (e) {
+        chainOk = false;
+        console.warn("Chain Ownership Check Failed", e);
+      }
+    }
     try {
-      const [all, health] = await Promise.all([api.list(), api.health()]);
-      setGallery(all.nfts);
-      const mint = all.mint || health.mint;
-      setStats(mint);
-      const fromStats = (mint as MintStats).minted_ids || [];
-      const fromGallery = all.nfts.map((n) => String(n.token_id));
-      setMintedIds(Array.from(new Set([...fromStats, ...fromGallery])));
-      setMode(health.mode);
-      setVibe(String(health.vibe || "").replace(/\b\w/g, (c) => c.toUpperCase()) || "Online");
-      const owned = accountId
-        ? all.nfts.filter((n) => n.owner_id === accountId)
-        : [];
+      if (IS_STATIC) {
+        // Static GitHub Pages build: no agent API calls at all.
+        const mint = await chainMintStats().catch(() => null);
+        if (mint) setStats(mint);
+        setMintedIds(mint?.minted_ids || []);
+        setGallery(owned);
+        setMode("dry_run");
+        setVibe(chainOk ? "Reading Ownership Straight From NEAR Testnet" : "NEAR RPC Unreachable, Retrying");
+      } else {
+        const [all, health] = await Promise.all([api.list(), api.health()]);
+        setGallery(all.nfts);
+        const mint = all.mint || health.mint;
+        setStats(mint);
+        const fromStats = (mint as MintStats).minted_ids || [];
+        const fromGallery = all.nfts.map((n) => String(n.token_id));
+        setMintedIds(Array.from(new Set([...fromStats, ...fromGallery])));
+        setMode(health.mode);
+        setVibe(String(health.vibe || "").replace(/\b\w/g, (c) => c.toUpperCase()) || "Online");
+        // Enrich on-chain holdings with API config/history (Desk rules) when available.
+        owned = owned.map((n) => all.nfts.find((x) => x.token_id === n.token_id) || n);
+      }
+    } catch (e) {
+      setMintedIds([]);
+      const msg = e instanceof Error ? e.message : "Backend Ghosted Us";
+      if (!/failed \(404\)|failed to fetch|networkerror/i.test(msg)) onError(msg);
+    } finally {
       setMine(owned);
       setSelectedId((cur) => {
         if (cur && owned.some((n) => n.token_id === cur)) return cur;
         if (owned[0]) return owned[0].token_id;
         return null;
       });
-    } catch (e) {
-      // Static / undeployed: gallery still browsable; treat nothing as taken.
-      setMintedIds([]);
-      const msg = e instanceof Error ? e.message : "Backend Ghosted Us";
-      // Don't spam toasts when the demo API isn't hosted on gh-pages.
-      if (!/failed \(404\)|failed to fetch|networkerror/i.test(msg)) {
-        onError(msg);
-      }
-    } finally {
       setLoading(false);
     }
   }, [accountId, onError]);
@@ -112,8 +132,7 @@ export default function HomePage() {
     setLoading(true);
     void refresh();
     const t = setInterval(() => {
-      void api
-        .mintStats()
+      void (IS_STATIC ? chainMintStats() : api.mintStats())
         .then((s) => {
           setStats(s);
           if (s.minted_ids) setMintedIds(s.minted_ids.map(String));
@@ -145,7 +164,7 @@ export default function HomePage() {
       setView("desk");
     } catch (e) {
       onError(e instanceof Error ? e.message : "Mint Failed");
-      void api.mintStats().then(setStats).catch(() => undefined);
+      void (IS_STATIC ? chainMintStats() : api.mintStats()).then(setStats).catch(() => undefined);
     } finally {
       setBusy(false);
     }
@@ -165,6 +184,7 @@ export default function HomePage() {
 
   return (
     <div className="relative min-h-screen">
+      <LoadingScreen dataReady={!loading} />
       {/* ticker — papertrade energy */}
       <div className="overflow-hidden border-b border-brown-400/15 bg-ink-900/95">
         <div className="ticker-track flex whitespace-nowrap py-1.5 font-mono text-[10px] tracking-micro text-brown-300/80">
