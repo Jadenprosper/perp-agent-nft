@@ -20,9 +20,21 @@ type ChatMsg = { role: "you" | "agent"; text: string; time: number };
 /** Pending chat order. sl/tp: undefined = not answered yet, null = explicitly skipped. */
 type Draft = { side: "long" | "short"; usd?: number; sl?: Level | null; tp?: Level | null };
 type Saved = { cash: number; positions: Position[]; orders: PendingOrder[]; fills: Fill[]; log: Decision[]; running: boolean;
-  until: number | null; chat: ChatMsg[]; maxSize: number; maxLoss: number; defSl: Level | null; defTp: Level | null; lev: number; draft?: Draft | null; lossResetAt?: number };
+  until: number | null; chat: ChatMsg[]; maxSize: number; maxLoss: number; defSl: Level | null; defTp: Level | null; lev: number; draft?: Draft | null; lossResetAt?: number; lastEvalAt?: number; lastCheckAt?: number; lastNote?: string };
 const empty = (): Saved => ({ cash: START_EQUITY, positions: [], orders: [], fills: [], log: [], running: false,
   until: null, chat: [], maxSize: 1000, maxLoss: 200, defSl: null, defTp: null, lev: DEFAULT_LEVERAGE, draft: null });
+/** Strategy entry sizing: risk % of cash, capped at max size (floored so the guard never trips on rounding). */
+function agentEntry(strat: ReturnType<typeof agentConfig>["strategy"], closed: Candle[], px: number, side: "long" | "short", s: Saved) {
+  const a = atr(closed, strat.atrPeriod) || px * 0.002;
+  const dir = side === "long" ? 1 : -1;
+  const sl = px - dir * a * strat.slAtr, tp = px + dir * a * strat.tpAtr;
+  const lev = clampLeverage(s.lev);
+  const floor4 = (n: number) => { if (!(n > 0)) return 0; const e = Math.pow(10, Math.floor(Math.log10(n)) - 3); return Math.floor(n / e) * e; };
+  let size = floor4((s.cash * (strat.riskPct / 100)) / (Math.abs(px - sl) * lev));
+  if (size * px > s.maxSize) size = floor4((s.maxSize * 0.999) / px);
+  return { size: +size.toPrecision(4), sl, tp, lev };
+}
+const hhmm = (t: number) => new Date(t).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 const lvlTxt = (l: Level) => (l.pct ? `${l.value}%` : fmtPx(l.value));
 const lvlPx = (l: Level, entry: number, side: "long" | "short", kind: "sl" | "tp") => {
   if (!l.pct) return l.value;
@@ -63,6 +75,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
   const [name, setName] = useState(`Bag Worker #${tokenId}`);
   const candlesRef = useRef<Candle[]>([]);
   const lastEvalRef = useRef(0);
+  const caughtUpRef = useRef(false);
   const chartEl = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
@@ -145,7 +158,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     }
     // agent
     const cs = candlesRef.current;
-    if (!s.running || !canTrade || cs.length < 3) return;
+    if (!s.running || !canTrade || cs.length < 3 || !caughtUpRef.current) return;
     if (s.until && Date.now() > s.until) {
       setSt((x) => ({ ...x, running: false, until: null }));
       say("Session Expired, Pausing. Closing Up Shop Like A Responsible Bag."); agentEvents.emit({ type: "paused" }); return;
@@ -160,25 +173,100 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     lastEvalRef.current = lastClosed;
     const mine = stRef.current.positions.find((p) => p.by === "agent-auto") || null;
     const sig = evaluate(cfg.strategy, closed, mine?.side ?? null);
+    const note = !sig.action ? (mine ? `In A ${mine.side === "long" ? "Long" : "Short"}, Waiting For Exit` : "Watching, No Setup Yet") : sig.reason;
+    setSt((x) => ({ ...x, lastEvalAt: lastClosed, lastCheckAt: Date.now(), lastNote: note }));
     if (!sig.action) return;
     if (sig.action === "close" && mine) { closePos(mine, px, sig.reason); return; }
     if ((sig.action === "long" || sig.action === "short") && !mine) {
-      const a = atr(closed, cfg.strategy.atrPeriod) || px * 0.002;
-      const dir = sig.action === "long" ? 1 : -1;
-      const slPx = px - dir * a * cfg.strategy.slAtr;
-      const tpPx = px + dir * a * cfg.strategy.tpAtr;
-      const equity = stRef.current.cash;
-      const lev = clampLeverage(stRef.current.lev);
-      let sz = +((equity * (cfg.strategy.riskPct / 100)) / (Math.abs(px - slPx) * lev)).toPrecision(4);
-      if (sz * px > stRef.current.maxSize) sz = +(stRef.current.maxSize / px).toPrecision(4);
-      const blocked = guard(sz * px);
-      if (blocked) { log(`Skipped Signal (${sig.reason}). ${blocked}`); return; }
-      setSt((x) => ({ ...x, positions: [...x.positions, { id: uid(), side: sig.action as "long" | "short", size: sz, entry: px, tp: tpPx, sl: slPx, openedAt: Date.now(), by: "agent-auto", lev }] }));
-      log(`${sig.reason} · ${sz} ${coin} @ ${fmtPx(px)} · ${lev}x · TP ${fmtPx(tpPx)} · SL ${fmtPx(slPx)}`);
+      const o = agentEntry(cfg.strategy, closed, px, sig.action, stRef.current);
+      const blocked = guard(o.size * px);
+      if (blocked) { log(`Skipped Signal (${sig.reason}). ${blocked}`); setSt((x) => ({ ...x, lastNote: `Skipped A Signal: ${blocked.replace(/^Blocked: /, "")}` })); return; }
+      setSt((x) => ({ ...x, positions: [...x.positions, { id: uid(), side: sig.action as "long" | "short", size: o.size, entry: px, tp: o.tp, sl: o.sl, openedAt: Date.now(), by: "agent-auto", lev: o.lev }] }));
+      log(`${sig.reason} · ${o.size} ${coin} @ ${fmtPx(px)} · ${o.lev}x · TP ${fmtPx(o.tp)} · SL ${fmtPx(o.sl)}`);
+      say(`${sig.reason} · ${fmtPx(px)} · TP ${fmtPx(o.tp)} · SL ${fmtPx(o.sl)}`);
       agentEvents.emit({ type: "entry", side: sig.action, reason: sig.reason });
     }
   }, [canTrade, cfg, closePos, coin, log, say, guard]);
   const tickRef = useRef(onTick); tickRef.current = onTick;
+
+  /** Replay closed candles missed while the tab was closed or the phone slept, so a timed session still trades (paper). */
+  const catchUp = useCallback(() => {
+    const cs = candlesRef.current;
+    const s0 = stRef.current;
+    const closedAll = cs.slice(0, -1);
+    const lastT = closedAll[closedAll.length - 1]?.time ?? 0;
+    if (!closedAll.length || !canTrade) return;
+    if (!s0.running || !canTrade || !s0.lastEvalAt || s0.lastEvalAt >= lastT) {
+      lastEvalRef.current = lastT; caughtUpRef.current = true;
+      if (s0.running && canTrade) setSt((x) => ({ ...x, lastEvalAt: lastT, lastCheckAt: Date.now() }));
+      return;
+    }
+    const endMs = s0.until ? Math.min(s0.until, Date.now()) : Date.now();
+    let s: Saved = { ...s0, positions: [...s0.positions], fills: [...s0.fills] };
+    let entries = 0, exits = 0, bars = 0, processed = s0.lastEvalAt, stopped = "";
+    const exitAt = (p: Position, px: number, at: number, reason: string) => {
+      const pnl = upnl(p, px); exits++;
+      s = { ...s, cash: s.cash + pnl, positions: s.positions.filter((x) => x.id !== p.id),
+        fills: [{ id: p.id, side: p.side, size: p.size, entry: p.entry, exit: px, pnl, openedAt: p.openedAt, closedAt: at, by: p.by, reason: `${reason} (Caught Up)`, lev: p.lev }, ...s.fills].slice(0, 300) };
+    };
+    for (let i = 0; i < closedAll.length; i++) {
+      const c = closedAll[i];
+      if (c.time <= s0.lastEvalAt) continue;
+      const at = c.time * 1000 + 59_000;
+      if (c.time * 1000 > endMs) break;
+      bars++; processed = c.time;
+      for (const p of [...s.positions]) {
+        const long = p.side === "long";
+        if (long ? c.low <= liqPx(p) : c.high >= liqPx(p)) { exitAt(p, liqPx(p), at, "Liquidated"); continue; }
+        if (p.sl != null && (long ? c.low <= p.sl : c.high >= p.sl)) { exitAt(p, p.sl, at, "Stop Loss Hit"); continue; }
+        if (p.tp != null && (long ? c.high >= p.tp : c.low <= p.tp)) exitAt(p, p.tp, at, "Take Profit Hit");
+      }
+      if (dailyPnl(s) <= -s.maxLoss) { stopped = `Daily Loss Limit Of ${usd(s.maxLoss)} Hit While You Were Away, Auto-Paused.`; break; }
+      const win = closedAll.slice(Math.max(0, i - 299), i + 1);
+      const mine = s.positions.find((p) => p.by === "agent-auto") || null;
+      const sig = evaluate(cfg.strategy, win, mine?.side ?? null);
+      if (sig.action === "close" && mine) exitAt(mine, c.close, at, sig.reason);
+      else if ((sig.action === "long" || sig.action === "short") && !mine) {
+        const o = agentEntry(cfg.strategy, win, c.close, sig.action, s);
+        if (o.size > 0 && o.size * c.close <= s.maxSize + 1e-6) {
+          entries++;
+          s = { ...s, positions: [...s.positions, { id: uid(), side: sig.action, size: o.size, entry: c.close, tp: o.tp, sl: o.sl, openedAt: c.time * 1000, by: "agent-auto", lev: o.lev }] };
+        }
+      }
+    }
+    const expired = !!s0.until && Date.now() > s0.until;
+    s = { ...s, lastEvalAt: processed, lastCheckAt: Date.now(), ...(stopped || expired ? { running: false, until: null } : {}) };
+    lastEvalRef.current = expired || stopped ? lastT : processed; caughtUpRef.current = true;
+    const pnlNow = s.cash - s0.cash;
+    const msg = `Back Online. Caught Up ${bars} Missed Candle${bars === 1 ? "" : "s"} · ${entries} Entr${entries === 1 ? "y" : "ies"} · ${exits} Exit${exits === 1 ? "" : "s"} · ${pnlNow >= 0 ? "+" : ""}${usd(pnlNow)}.`;
+    s = { ...s, chat: [...s.chat, { role: "agent" as const, text: msg, time: Date.now() }, ...(stopped ? [{ role: "agent" as const, text: stopped, time: Date.now() }] : []),
+      ...(expired && !stopped ? [{ role: "agent" as const, text: "Session Ended While You Were Away, Paused.", time: Date.now() }] : [])].slice(-200) };
+    setSt(s); stRef.current = s;
+    if (stopped || expired) agentEvents.emit({ type: "paused" });
+  }, [canTrade, cfg]);
+
+  // run catch-up once the saved state and candles are both loaded, and again whenever the tab comes back
+  useEffect(() => { caughtUpRef.current = false; }, [key, coin]);
+  useEffect(() => {
+    if (!chartGen || loadedKey !== key || caughtUpRef.current) return;
+    catchUp();
+  }, [chartGen, loadedKey, key, canTrade, catchUp]);
+  useEffect(() => {
+    const onVis = () => {
+      if (document.visibilityState === "hidden") return;
+      caughtUpRef.current = false;
+      fetchCandles(coin).then((fresh) => {
+        const arr = candlesRef.current;
+        const map = new Map(arr.map((c) => [c.time, c]));
+        for (const c of fresh) map.set(c.time, c);
+        candlesRef.current = [...map.values()].sort((a, b) => a.time - b.time).slice(-600);
+        try { seriesRef.current?.setData(candlesRef.current.map((c) => ({ ...c, time: c.time as UTCTimestamp }))); } catch { /* chart gone */ }
+        catchUp();
+      }).catch(() => { caughtUpRef.current = true; });
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [coin, catchUp]);
 
   // chart + data
   useEffect(() => {
@@ -277,7 +365,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     const running = !st.running;
     if (running && dailyPnl(st) <= -st.maxLoss) { setStartMsg(`Can't Start, Daily Loss Limit Of ${usd(st.maxLoss)} Is Hit. Raise It First.`); return; }
     setStartMsg(null);
-    setSt((s) => ({ ...s, running, until: running ? s.until : null }));
+    setSt((s) => ({ ...s, running, until: running ? s.until : null, ...(running ? { lastEvalAt: lastEvalRef.current || s.lastEvalAt, lastCheckAt: Date.now(), lastNote: "Watching, No Setup Yet" } : {}) }));
     log(running ? `Agent Started · ${cfg.strategy.label} On ${coin}` : "Agent Paused By Owner");
     agentEvents.emit(running ? { type: "running" } : { type: "paused" });
   };
@@ -320,10 +408,17 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     const px = price;
     const lo = msg.toLowerCase();
     const parsedOpen = parseIntent(msg);
-    if (s.draft && parsedOpen.kind !== "open") {
+    // A pending draft only captures direct answers to it; any other command runs right away.
+    const draftAnswer = ["confirm", "cancel", "set_sl", "set_tp", "unknown"].includes(parsedOpen.kind);
+    if (s.draft && !draftAnswer && parsedOpen.kind !== "open") {
+      setSt((x) => ({ ...x, draft: null })); stRef.current = { ...stRef.current, draft: null };
+      say("Dropped The Pending Order Draft, Doing This Instead.");
+    }
+    if (!s.draft && (parsedOpen.kind === "confirm" || parsedOpen.kind === "cancel")) { say(parsedOpen.kind === "confirm" ? "Nothing Pending To Confirm. Try \"Long BTC 100\" First." : "Nothing Pending To Cancel. All Clear."); return; }
+    if (s.draft && draftAnswer) {
       const d: Draft = { ...s.draft };
-      if (/^(cancel|nevermind|never mind|nah|no)$|^(cancel|nevermind|never mind)\b/.test(lo)) { setSt((x) => ({ ...x, draft: null })); say("Done, Draft Dropped. Nothing Opened."); return; }
-      if (/^(confirm|confirmed|yes|y|yep|send it)\b/.test(lo)) { confirmDraft(d); return; }
+      if (parsedOpen.kind === "cancel") { setSt((x) => ({ ...x, draft: null })); say("Done, Draft Dropped. Nothing Opened."); return; }
+      if (parsedOpen.kind === "confirm") { confirmDraft(d); return; }
       let touched = false;
       if (/\bno\s*(sl|stop\s*loss)\b/.test(lo)) { d.sl = null; touched = true; }
       if (/\bno\s*(tp|take\s*profit)\b/.test(lo)) { d.tp = null; touched = true; }
@@ -335,6 +430,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
       const mM = rest.match(/(?:^|\s)(?:margin\s*)?\$?([\d][\d,]*(?:\.\d+)?)(?:\s*(?:usd|dollars|margin))?(?:\s|$)/);
       if (mM) { d.usd = Number(mM[1].replace(/,/g, "")); touched = true; }
       if (touched) { setSt((x) => ({ ...x, draft: d })); askDraft(d); return; }
+      if (parsedOpen.kind === "unknown") { say(`Still Holding Your Draft. Reply With The Missing Bits, "Confirm" Or "Cancel". Or Just Give Me A New Command.`); askDraft(d); return; }
     }
     const it = parsedOpen;
     switch (it.kind) {
@@ -358,7 +454,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
         if (dailyPnl(s) <= -s.maxLoss) { say(`Can't, Daily Loss Limit Of ${usd(s.maxLoss)} Is Hit. Raise It First.`); return; }
         const until = it.kind === "trade_for_me" && it.hours === "today" ? startOfDay() + 86_400_000
           : it.kind === "trade_for_me" && typeof it.hours === "number" ? Date.now() + it.hours * 3_600_000 : null;
-        setSt((x) => ({ ...x, running: true, until }));
+        setSt((x) => ({ ...x, running: true, until, lastEvalAt: lastEvalRef.current || x.lastEvalAt, lastCheckAt: Date.now(), lastNote: "Watching, No Setup Yet" }));
         say(`Done, Running ${cfg.strategy.label} On ${coin}${until ? ` Until ${new Date(until).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : " Until You Say Pause"}. I'll Post Every Entry And Exit Here.`);
         agentEvents.emit({ type: "running" }); return;
       }
@@ -381,8 +477,9 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
         setSt((x) => ({ ...x, draft: d }));
         askDraft(d); return;
       }
+      case "confirm": case "cancel": return;
       default:
-        say(`Didn't Catch That. Try: "Trade For Me For 2h", "Long BTC 100 SL 2% TP 4%" (Then Confirm), "Close All", "Status" Or "Help".`);
+        say(`Didn't Catch That.${it.kind === "unknown" && it.suggestion && it.suggestion !== "Help" ? ` Did You Mean "${it.suggestion}"?` : ""} Try: "Trade For Me For 2h", "Long BTC 100 SL 2% TP 4%", "Close All", "Status" Or "Help".`);
     }
   };
 
@@ -534,7 +631,8 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
             </div>
             <AgentAvatar image={withBase(`/agents-desk/${tokenId}.jpg`)} name={name} running={st.running && canTrade} />
             <p className="mt-2 font-display text-sm text-brown-100">{cfg.strategy.label}</p>
-            {st.running && <p className="font-mono text-[10px] text-green-400">Running{st.until ? ` Until ${new Date(st.until).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : ""}</p>}
+            {st.running && <p className="font-mono text-[10px] text-green-400">Running{st.until ? ` Until ${hhmm(st.until)}` : ""}</p>}
+            {st.running && canTrade && <p className="rounded border border-brown-400/20 bg-ink-950/60 px-2 py-1 text-center font-mono text-[10px] leading-snug text-brown-200" aria-live="polite">{st.lastNote ?? "Watching, No Setup Yet"}{st.until ? ` · Ends ${hhmm(st.until)}` : ""} · Last Check {st.lastCheckAt ? hhmm(st.lastCheckAt) : "Starting"}</p>}
             <p className="font-mono text-[10px] text-cream-mute">Leverage {st.lev}x · Guardrails · Max Size {usd(st.maxSize)} · Max Daily Loss {usd(st.maxLoss)} · Today {usd(dailyPnl(st))}</p>
             {canTrade && <div className="mt-1 flex flex-col items-start gap-1"><button className="btn-bracket px-2 py-1 text-[11px]" onClick={() => setLimitOpen((o) => !o)}>{limitOpen ? "Close" : "Edit Daily Loss Limit"}</button>{limitOpen && limitEditor()}</div>}
             <dl className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5 font-mono text-[10px]">
