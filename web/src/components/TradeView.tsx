@@ -285,6 +285,13 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     }
   };
 
+  const resetPaper = () => {
+    if (!canTrade) return;
+    if (!window.confirm("Reset Paper Balance To $10,000? This Clears Positions, Orders And Fills.")) return;
+    setSt((s) => ({ ...s, cash: START_EQUITY, positions: [], orders: [], fills: [], running: false, until: null }));
+    agentEvents.emit({ type: "paused" });
+  };
+
   const totalU = price != null ? st.positions.reduce((a, p) => a + upnl(p, price), 0) : 0;
   const agentFills = st.fills.filter((f) => f.by === "agent");
   const wins = agentFills.filter((f) => f.pnl > 0).length;
@@ -298,6 +305,25 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
           <button className="btn-bracket mb-2 px-2 py-1" onClick={onBack}>← Back To Gallery</button>
           <p className="label-micro">Bag Worker #{tokenId} · Trade Desk</p>
           <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-cream sm:text-3xl">{name} Trades {coin}-PERP</h1>
+        </div>
+        <div className="w-full rounded-md border border-brown-400/30 bg-brown-500/10 px-3 py-2 sm:w-auto">
+          <div className="flex flex-wrap items-end gap-x-5 gap-y-2">
+            <div>
+              <p className="label-micro">Paper Equity</p>
+              <p className="font-mono text-2xl font-semibold text-cream">{usd(st.cash + totalU)}</p>
+            </div>
+            <div>
+              <p className="label-micro">Cash</p>
+              <p className="font-mono text-xl text-cream">{usd(st.cash)}</p>
+            </div>
+            <div>
+              <p className="label-micro">uPnL</p>
+              <p className={`font-mono text-xl ${totalU > 0 ? "text-green-400" : totalU < 0 ? "text-red-400" : "text-cream"}`}>{totalU > 0 ? "+" : ""}{usd(totalU)}</p>
+            </div>
+            {canTrade && (
+              <button className="btn-bracket px-2 py-1 text-[11px]" onClick={resetPaper}>Reset Paper Balance</button>
+            )}
+          </div>
         </div>
         <div className="flex flex-wrap gap-1.5">
           <span className="chip chip-live">{status === "Live" ? "● " : ""}{status} · Hyperliquid Mainnet Data</span>
