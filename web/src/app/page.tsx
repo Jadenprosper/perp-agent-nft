@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Activity, CandlestickChart, FlaskConical, Github, LayoutGrid, Terminal } from "lucide-react";
+import { Activity, CandlestickChart,
+  Images, FlaskConical, Github, LayoutGrid, Terminal } from "lucide-react";
 import { AgentCard } from "@/components/AgentCard";
 import { AgentDesk } from "@/components/AgentDesk";
 import { MintPanel } from "@/components/MintPanel";
@@ -254,6 +255,10 @@ export default function HomePage() {
                 {label}
               </button>
             ))}
+            <a href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/gallery/`} className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold text-cream-mute transition hover:bg-ink-800 hover:text-cream-dim">
+              <Images size={13} />
+              Gallery
+            </a>
           </nav>
 
           <div className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-2">
@@ -297,6 +302,9 @@ export default function HomePage() {
               [ {label} ]
             </button>
           ))}
+          <a href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/gallery/`} className="flex-1 rounded-md py-1.5 text-center font-mono text-[11px] tracking-micro text-cream-mute">
+            [ Gallery ]
+          </a>
         </div>
       </header>
 

@@ -1,0 +1,602 @@
+[
+{
+"id": 1,
+"name": "Bag Worker #1",
+"img": "gallery/bagworker-001.webp",
+"description": "Classic kraft crumpled bag, black wraparound sport shades, black crewneck, black joggers, black sneakers. Backdrop: plain soft off-white studio."
+},
+{
+"id": 2,
+"name": "Bag Worker #2",
+"img": "gallery/bagworker-002.webp",
+"description": "Kraft tilted slightly bag, red mirror wraparound shades, black hoodie, baggy black pants, white sneakers, thin silver chain. Backdrop: deep forest green with faint fading green trading chart candles in the distance."
+},
+{
+"id": 3,
+"name": "Bag Worker #3",
+"img": "gallery/bagworker-003.webp",
+"description": "Glossy brand-new kraft bag, blue mirror wraparound shades, navy crewneck, navy joggers, red sneakers, chunky gold Cuban chain. Backdrop: stormy dark gray cloudy sky with lightning glow."
+},
+{
+"id": 4,
+"name": "Bag Worker #4",
+"img": "gallery/bagworker-004.webp",
+"description": "Worn kraft with tape patches bag, gold mirror wraparound shades, white crewneck, gray sweatpants, gold sneakers, red beanie on bag. Backdrop: bright daylight fluffy white clouds on blue sky."
+},
+{
+"id": 5,
+"name": "Bag Worker #5",
+"img": "gallery/bagworker-005.webp",
+"description": "White paper bag crumpled bag, green mirror wraparound shades, neon green crewneck, black cargo pants, chunky black sneakers, blue baseball cap backwards on bag. Backdrop: soft evening purple-orange cloudy sky."
+},
+{
+"id": 6,
+"name": "Bag Worker #6",
+"img": "gallery/bagworker-006.webp",
+"description": "Matte black paper bag, neon pink wraparound shades, purple hoodie, olive cargo, blue sneakers, olive bucket hat on bag. Backdrop: golden morning misty cloudy sky."
+},
+{
+"id": 7,
+"name": "Bag Worker #7",
+"img": "gallery/bagworker-007.webp",
+"description": "Newspaper print bag, pixelated 8-bit black shades, orange puffer, white joggers, green sneakers, over-ear headphones on bag. Backdrop: hot pink to coral horizontal gradient."
+},
+{
+"id": 8,
+"name": "Bag Worker #8",
+"img": "gallery/bagworker-008.webp",
+"description": "Kraft with torn corner bag, ski goggles orange lens, black white striped long sleeve, red track pants, checkered black white sneakers, red scarf. Backdrop: mint to teal vertical gradient."
+},
+{
+"id": 9,
+"name": "Bag Worker #9",
+"img": "gallery/bagworker-009.webp",
+"description": "Polka-dot kraft bag, round gold wireframe glasses, blue denim jacket over black tee, blue jeans, brown boots, black fingerless gloves. Backdrop: neon magenta city night skyline with wet street reflections."
+},
+{
+"id": 10,
+"name": "Bag Worker #10",
+"img": "gallery/bagworker-010.webp",
+"description": "Camo print paper bag, single gold monocle left, red flannel open over black tee, black skinny pants, black high tops, yellow backpack. Backdrop: deep space with purple nebula and tiny stars."
+},
+{
+"id": 11,
+"name": "Bag Worker #11",
+"img": "gallery/bagworker-011.webp",
+"description": "Blue denim-textured bag, clear visor wraparound, yellow raincoat, black joggers, black sneakers, gold rings on tiny fingers. Backdrop: lush green forest with soft tree silhouettes."
+},
+{
+"id": 12,
+"name": "Bag Worker #12",
+"img": "gallery/bagworker-012.webp",
+"description": "Holographic iridescent bag, heart-shaped pink shades, pink hoodie, baggy black pants, white sneakers, holding a glowing green trading candle upright. Backdrop: sunny beach turquoise ocean and sand."
+},
+{
+"id": 13,
+"name": "Bag Worker #13",
+"img": "gallery/bagworker-013.webp",
+"description": "Pastel pink paper bag, star-shaped gold shades, camo jacket, navy joggers, red sneakers, crossbody messenger bag. Backdrop: trading desk teal wall with soft blurred green/red candle charts fading behind."
+},
+{
+"id": 14,
+"name": "Bag Worker #14",
+"img": "gallery/bagworker-014.webp",
+"description": "Pastel mint paper bag, mirrored chrome wraparound, black turtleneck, gray sweatpants, gold sneakers, pearl necklace. Backdrop: soft rainy gray with diagonal rain streaks."
+},
+{
+"id": 15,
+"name": "Bag Worker #15",
+"img": "gallery/bagworker-015.webp",
+"description": "Checkered black white bag, rainbow mirror wraparound, teal bomber, black cargo pants, chunky black sneakers, gold crown on bag. Backdrop: sunset orange to magenta gradient."
+},
+{
+"id": 16,
+"name": "Bag Worker #16",
+"img": "gallery/bagworker-016.webp",
+"description": "Kraft covered in stickers bag, black wraparound sport shades, red white varsity jacket, olive cargo, blue sneakers, holding takeaway coffee cup. Backdrop: icy pale blue snowy soft hills."
+},
+{
+"id": 17,
+"name": "Bag Worker #17",
+"img": "gallery/bagworker-017.webp",
+"description": "Kraft with packing tape x bag, black wraparound sport shades, black puffer, white joggers, green sneakers. Backdrop: black studio with single soft spotlight rim light."
+},
+{
+"id": 18,
+"name": "Bag Worker #18",
+"img": "gallery/bagworker-018.webp",
+"description": "Tall narrow kraft bag, red mirror wraparound shades, gray zip hoodie, red track pants, checkered black white sneakers, holding a glowing red trading candle upright. Backdrop: lavender soft cloudy dusk sky."
+},
+{
+"id": 19,
+"name": "Bag Worker #19",
+"img": "gallery/bagworker-019.webp",
+"description": "Kraft glitter speckles bag, blue mirror wraparound shades, black tracksuit jacket, blue jeans, brown boots, chunky gold Cuban chain. Backdrop: desert warm sand dunes under clear sky."
+},
+{
+"id": 20,
+"name": "Bag Worker #20",
+"img": "gallery/bagworker-020.webp",
+"description": "Kraft gold foil edges bag, gold mirror wraparound shades, black crewneck, black skinny pants, black high tops, red beanie on bag. Backdrop: cyber purple neon geometric floor grid."
+},
+{
+"id": 21,
+"name": "Bag Worker #21",
+"img": "gallery/bagworker-021.webp",
+"description": "Classic kraft crumpled bag, green mirror wraparound shades, black crewneck, black joggers, black sneakers. Backdrop: cherry blossom soft pink park path."
+},
+{
+"id": 22,
+"name": "Bag Worker #22",
+"img": "gallery/bagworker-022.webp",
+"description": "Kraft tilted slightly bag, neon pink wraparound shades, black hoodie, baggy black pants, white sneakers, thin silver chain. Backdrop: autumn orange leaf park soft blur."
+},
+{
+"id": 23,
+"name": "Bag Worker #23",
+"img": "gallery/bagworker-023.webp",
+"description": "Glossy brand-new kraft bag, pixelated 8-bit black shades, navy crewneck, navy joggers, red sneakers, chunky gold Cuban chain. Backdrop: mountain mist blue-gray peaks."
+},
+{
+"id": 24,
+"name": "Bag Worker #24",
+"img": "gallery/bagworker-024.webp",
+"description": "Worn kraft with tape patches bag, ski goggles orange lens, white crewneck, gray sweatpants, gold sneakers, holding a glowing green trading candle upright. Backdrop: tropical palm green with warm light."
+},
+{
+"id": 25,
+"name": "Bag Worker #25",
+"img": "gallery/bagworker-025.webp",
+"description": "White paper bag crumpled bag, round gold wireframe glasses, neon green crewneck, black cargo pants, chunky black sneakers, blue baseball cap backwards on bag. Backdrop: warehouse brick wall soft warm lights."
+},
+{
+"id": 26,
+"name": "Bag Worker #26",
+"img": "gallery/bagworker-026.webp",
+"description": "Matte black paper bag, single gold monocle left, purple hoodie, olive cargo, blue sneakers, olive bucket hat on bag. Backdrop: rooftop dusk city purple silhouettes."
+},
+{
+"id": 27,
+"name": "Bag Worker #27",
+"img": "gallery/bagworker-027.webp",
+"description": "Newspaper print bag, clear visor wraparound, orange puffer, white joggers, green sneakers, over-ear headphones on bag. Backdrop: underwater soft teal light rays."
+},
+{
+"id": 28,
+"name": "Bag Worker #28",
+"img": "gallery/bagworker-028.webp",
+"description": "Kraft with torn corner bag, heart-shaped pink shades, black white striped long sleeve, red track pants, checkered black white sneakers, red scarf. Backdrop: aurora green northern lights night sky."
+},
+{
+"id": 29,
+"name": "Bag Worker #29",
+"img": "gallery/bagworker-029.webp",
+"description": "Polka-dot kraft bag, star-shaped gold shades, blue denim jacket over black tee, blue jeans, brown boots, black fingerless gloves. Backdrop: volcano distant red glow dark sky."
+},
+{
+"id": 30,
+"name": "Bag Worker #30",
+"img": "gallery/bagworker-030.webp",
+"description": "Camo print paper bag, mirrored chrome wraparound, red flannel open over black tee, black skinny pants, black high tops, holding a glowing red trading candle upright. Backdrop: library warm wood bookshelf soft blur."
+},
+{
+"id": 31,
+"name": "Bag Worker #31",
+"img": "gallery/bagworker-031.webp",
+"description": "Blue denim-textured bag, rainbow mirror wraparound, yellow raincoat, black joggers, black sneakers, gold rings on tiny fingers. Backdrop: gym soft gray walls with mats."
+},
+{
+"id": 32,
+"name": "Bag Worker #32",
+"img": "gallery/bagworker-032.webp",
+"description": "Holographic iridescent bag, black wraparound sport shades, pink hoodie, baggy black pants, white sneakers, bandana at neck. Backdrop: graffiti colorful wall soft out of focus."
+},
+{
+"id": 33,
+"name": "Bag Worker #33",
+"img": "gallery/bagworker-033.webp",
+"description": "Pastel pink paper bag, black wraparound sport shades, camo jacket, navy joggers, red sneakers, crossbody messenger bag. Backdrop: subway platform soft yellow lights."
+},
+{
+"id": 34,
+"name": "Bag Worker #34",
+"img": "gallery/bagworker-034.webp",
+"description": "Pastel mint paper bag, red mirror wraparound shades, black turtleneck, gray sweatpants, gold sneakers, pearl necklace. Backdrop: airport terminal soft glass blue light."
+},
+{
+"id": 35,
+"name": "Bag Worker #35",
+"img": "gallery/bagworker-035.webp",
+"description": "Checkered black white bag, blue mirror wraparound shades, teal bomber, black cargo pants, chunky black sneakers, gold crown on bag. Backdrop: cafe warm bokeh lights brown tones."
+},
+{
+"id": 36,
+"name": "Bag Worker #36",
+"img": "gallery/bagworker-036.webp",
+"description": "Kraft covered in stickers bag, gold mirror wraparound shades, red white varsity jacket, olive cargo, blue sneakers, holding a glowing green trading candle upright. Backdrop: stadium floodlights soft dark field."
+},
+{
+"id": 37,
+"name": "Bag Worker #37",
+"img": "gallery/bagworker-037.webp",
+"description": "Kraft with packing tape x bag, green mirror wraparound shades, black puffer, white joggers, green sneakers. Backdrop: arcade neon purple pink soft lights."
+},
+{
+"id": 38,
+"name": "Bag Worker #38",
+"img": "gallery/bagworker-038.webp",
+"description": "Tall narrow kraft bag, neon pink wraparound shades, gray zip hoodie, red track pants, checkered black white sneakers, thin silver chain. Backdrop: skatepark concrete ramps soft daylight."
+},
+{
+"id": 39,
+"name": "Bag Worker #39",
+"img": "gallery/bagworker-039.webp",
+"description": "Kraft glitter speckles bag, pixelated 8-bit black shades, black tracksuit jacket, blue jeans, brown boots, chunky gold Cuban chain. Backdrop: meadow wildflower soft green yellow."
+},
+{
+"id": 40,
+"name": "Bag Worker #40",
+"img": "gallery/bagworker-040.webp",
+"description": "Kraft gold foil edges bag, ski goggles orange lens, black crewneck, black skinny pants, black high tops, red beanie on bag. Backdrop: moonlit night blue with full moon."
+},
+{
+"id": 41,
+"name": "Bag Worker #41",
+"img": "gallery/bagworker-041.webp",
+"description": "Classic kraft crumpled bag, round gold wireframe glasses, black crewneck, black joggers, black sneakers. Backdrop: foggy morning pale gray-green."
+},
+{
+"id": 42,
+"name": "Bag Worker #42",
+"img": "gallery/bagworker-042.webp",
+"description": "Kraft tilted slightly bag, single gold monocle left, black hoodie, baggy black pants, white sneakers, holding a glowing red trading candle upright. Backdrop: ember orange fireplace warm studio."
+},
+{
+"id": 43,
+"name": "Bag Worker #43",
+"img": "gallery/bagworker-043.webp",
+"description": "Glossy brand-new kraft bag, clear visor wraparound, navy crewneck, navy joggers, red sneakers, chunky gold Cuban chain. Backdrop: crystal cave soft purple reflections."
+},
+{
+"id": 44,
+"name": "Bag Worker #44",
+"img": "gallery/bagworker-044.webp",
+"description": "Worn kraft with tape patches bag, heart-shaped pink shades, white crewneck, gray sweatpants, gold sneakers, red beanie on bag. Backdrop: bamboo forest green vertical stalks."
+},
+{
+"id": 45,
+"name": "Bag Worker #45",
+"img": "gallery/bagworker-045.webp",
+"description": "White paper bag crumpled bag, star-shaped gold shades, neon green crewneck, black cargo pants, chunky black sneakers, blue baseball cap backwards on bag. Backdrop: coral reef soft pink-orange underwater light."
+},
+{
+"id": 46,
+"name": "Bag Worker #46",
+"img": "gallery/bagworker-046.webp",
+"description": "Matte black paper bag, mirrored chrome wraparound, purple hoodie, olive cargo, blue sneakers, olive bucket hat on bag. Backdrop: wheat field golden wind soft."
+},
+{
+"id": 47,
+"name": "Bag Worker #47",
+"img": "gallery/bagworker-047.webp",
+"description": "Newspaper print bag, rainbow mirror wraparound, orange puffer, white joggers, green sneakers, over-ear headphones on bag. Backdrop: rainforest canopy dappled green light."
+},
+{
+"id": 48,
+"name": "Bag Worker #48",
+"img": "gallery/bagworker-048.webp",
+"description": "Kraft with torn corner bag, black wraparound sport shades, black white striped long sleeve, red track pants, checkered black white sneakers, holding a glowing green trading candle upright. Backdrop: arctic ice blue flat horizon."
+},
+{
+"id": 49,
+"name": "Bag Worker #49",
+"img": "gallery/bagworker-049.webp",
+"description": "Polka-dot kraft bag, black wraparound sport shades, blue denim jacket over black tee, blue jeans, brown boots, black fingerless gloves. Backdrop: savannah sunset warm orange grass."
+},
+{
+"id": 50,
+"name": "Bag Worker #50",
+"img": "gallery/bagworker-050.webp",
+"description": "Camo print paper bag, red mirror wraparound shades, red flannel open over black tee, black skinny pants, black high tops, yellow backpack. Backdrop: soft cream off-white studio."
+},
+{
+"id": 51,
+"name": "Bag Worker #51",
+"img": "gallery/bagworker-051.webp",
+"description": "Blue denim-textured bag, blue mirror wraparound shades, yellow raincoat, black joggers, black sneakers, gold rings on tiny fingers. Backdrop: lavender field purple rows soft."
+},
+{
+"id": 52,
+"name": "Bag Worker #52",
+"img": "gallery/bagworker-052.webp",
+"description": "Holographic iridescent bag, gold mirror wraparound shades, pink hoodie, baggy black pants, white sneakers, bandana at neck. Backdrop: canyon red rock warm daylight."
+},
+{
+"id": 53,
+"name": "Bag Worker #53",
+"img": "gallery/bagworker-053.webp",
+"description": "Pastel pink paper bag, green mirror wraparound shades, camo jacket, navy joggers, red sneakers, crossbody messenger bag. Backdrop: waterfall mist cool blue-green."
+},
+{
+"id": 54,
+"name": "Bag Worker #54",
+"img": "gallery/bagworker-054.webp",
+"description": "Pastel mint paper bag, neon pink wraparound shades, black turtleneck, gray sweatpants, gold sneakers, holding a glowing red trading candle upright. Backdrop: vineyard green hills soft."
+},
+{
+"id": 55,
+"name": "Bag Worker #55",
+"img": "gallery/bagworker-055.webp",
+"description": "Checkered black white bag, pixelated 8-bit black shades, teal bomber, black cargo pants, chunky black sneakers, gold crown on bag. Backdrop: harbor boats soft blue water."
+},
+{
+"id": 56,
+"name": "Bag Worker #56",
+"img": "gallery/bagworker-056.webp",
+"description": "Kraft covered in stickers bag, ski goggles orange lens, red white varsity jacket, olive cargo, blue sneakers, holding takeaway coffee cup. Backdrop: lighthouse cliff gray-blue sea."
+},
+{
+"id": 57,
+"name": "Bag Worker #57",
+"img": "gallery/bagworker-057.webp",
+"description": "Kraft with packing tape x bag, round gold wireframe glasses, black puffer, white joggers, green sneakers. Backdrop: hot air balloon festival soft pastel sky."
+},
+{
+"id": 58,
+"name": "Bag Worker #58",
+"img": "gallery/bagworker-058.webp",
+"description": "Tall narrow kraft bag, single gold monocle left, gray zip hoodie, red track pants, checkered black white sneakers, thin silver chain. Backdrop: fireworks night soft colorful bursts."
+},
+{
+"id": 59,
+"name": "Bag Worker #59",
+"img": "gallery/bagworker-059.webp",
+"description": "Kraft glitter speckles bag, clear visor wraparound, black tracksuit jacket, blue jeans, brown boots, chunky gold Cuban chain. Backdrop: rainy neon alley magenta cyan reflections."
+},
+{
+"id": 60,
+"name": "Bag Worker #60",
+"img": "gallery/bagworker-060.webp",
+"description": "Kraft gold foil edges bag, heart-shaped pink shades, black crewneck, black skinny pants, black high tops, holding a glowing green trading candle upright. Backdrop: sunny meadow blue sky."
+},
+{
+"id": 61,
+"name": "Bag Worker #61",
+"img": "gallery/bagworker-061.webp",
+"description": "Classic kraft crumpled bag, star-shaped gold shades, black crewneck, black joggers, black sneakers. Backdrop: overcast soft gray daylight clouds."
+},
+{
+"id": 62,
+"name": "Bag Worker #62",
+"img": "gallery/bagworker-062.webp",
+"description": "Kraft tilted slightly bag, mirrored chrome wraparound, black hoodie, baggy black pants, white sneakers, thin silver chain. Backdrop: twilight blue hour city silhouette."
+},
+{
+"id": 63,
+"name": "Bag Worker #63",
+"img": "gallery/bagworker-063.webp",
+"description": "Glossy brand-new kraft bag, rainbow mirror wraparound, navy crewneck, navy joggers, red sneakers, chunky gold Cuban chain. Backdrop: pastel rainbow soft horizontal bands."
+},
+{
+"id": 64,
+"name": "Bag Worker #64",
+"img": "gallery/bagworker-064.webp",
+"description": "Worn kraft with tape patches bag, black wraparound sport shades, white crewneck, gray sweatpants, gold sneakers, red beanie on bag. Backdrop: monochrome charcoal gray studio with rim light."
+},
+{
+"id": 65,
+"name": "Bag Worker #65",
+"img": "gallery/bagworker-065.webp",
+"description": "White paper bag crumpled bag, black wraparound sport shades, neon green crewneck, black cargo pants, chunky black sneakers, blue baseball cap backwards on bag. Backdrop: emerald marble soft pattern studio."
+},
+{
+"id": 66,
+"name": "Bag Worker #66",
+"img": "gallery/bagworker-066.webp",
+"description": "Matte black paper bag, red mirror wraparound shades, purple hoodie, olive cargo, blue sneakers, holding a glowing red trading candle upright. Backdrop: gold foil soft shimmer studio."
+},
+{
+"id": 67,
+"name": "Bag Worker #67",
+"img": "gallery/bagworker-067.webp",
+"description": "Newspaper print bag, blue mirror wraparound shades, orange puffer, white joggers, green sneakers, over-ear headphones on bag. Backdrop: paper craft kraft texture soft studio wall."
+},
+{
+"id": 68,
+"name": "Bag Worker #68",
+"img": "gallery/bagworker-068.webp",
+"description": "Kraft with torn corner bag, gold mirror wraparound shades, black white striped long sleeve, red track pants, checkered black white sneakers, red scarf. Backdrop: pixel soft 8-bit green hills."
+},
+{
+"id": 69,
+"name": "Bag Worker #69",
+"img": "gallery/bagworker-069.webp",
+"description": "Polka-dot kraft bag, green mirror wraparound shades, blue denim jacket over black tee, blue jeans, brown boots, black fingerless gloves. Backdrop: vaporwave pink grid sunset."
+},
+{
+"id": 70,
+"name": "Bag Worker #70",
+"img": "gallery/bagworker-070.webp",
+"description": "Camo print paper bag, neon pink wraparound shades, red flannel open over black tee, black skinny pants, black high tops, yellow backpack. Backdrop: lofi bedroom soft desk lamp glow."
+},
+{
+"id": 71,
+"name": "Bag Worker #71",
+"img": "gallery/bagworker-071.webp",
+"description": "Blue denim-textured bag, pixelated 8-bit black shades, yellow raincoat, black joggers, black sneakers, gold rings on tiny fingers. Backdrop: classroom chalkboard green soft blur."
+},
+{
+"id": 72,
+"name": "Bag Worker #72",
+"img": "gallery/bagworker-072.webp",
+"description": "Holographic iridescent bag, ski goggles orange lens, pink hoodie, baggy black pants, white sneakers, holding a glowing green trading candle upright. Backdrop: lab soft white-blue sterile lights."
+},
+{
+"id": 73,
+"name": "Bag Worker #73",
+"img": "gallery/bagworker-073.webp",
+"description": "Pastel pink paper bag, round gold wireframe glasses, camo jacket, navy joggers, red sneakers, crossbody messenger bag. Backdrop: music studio soft foam panels purple."
+},
+{
+"id": 74,
+"name": "Bag Worker #74",
+"img": "gallery/bagworker-074.webp",
+"description": "Pastel mint paper bag, single gold monocle left, black turtleneck, gray sweatpants, gold sneakers, pearl necklace. Backdrop: recording booth soft warm wood."
+},
+{
+"id": 75,
+"name": "Bag Worker #75",
+"img": "gallery/bagworker-075.webp",
+"description": "Checkered black white bag, clear visor wraparound, teal bomber, black cargo pants, chunky black sneakers, gold crown on bag. Backdrop: diner booth red vinyl soft."
+},
+{
+"id": 76,
+"name": "Bag Worker #76",
+"img": "gallery/bagworker-076.webp",
+"description": "Kraft covered in stickers bag, heart-shaped pink shades, red white varsity jacket, olive cargo, blue sneakers, holding takeaway coffee cup. Backdrop: bakery warm cream pastry blur."
+},
+{
+"id": 77,
+"name": "Bag Worker #77",
+"img": "gallery/bagworker-077.webp",
+"description": "Kraft with packing tape x bag, star-shaped gold shades, black puffer, white joggers, green sneakers. Backdrop: flower shop soft floral pink green."
+},
+{
+"id": 78,
+"name": "Bag Worker #78",
+"img": "gallery/bagworker-078.webp",
+"description": "Tall narrow kraft bag, mirrored chrome wraparound, gray zip hoodie, red track pants, checkered black white sneakers, holding a glowing red trading candle upright. Backdrop: bookstore soft stacked books blur."
+},
+{
+"id": 79,
+"name": "Bag Worker #79",
+"img": "gallery/bagworker-079.webp",
+"description": "Kraft glitter speckles bag, rainbow mirror wraparound, black tracksuit jacket, blue jeans, brown boots, chunky gold Cuban chain. Backdrop: observatory dome soft star projection."
+},
+{
+"id": 80,
+"name": "Bag Worker #80",
+"img": "gallery/bagworker-080.webp",
+"description": "Kraft gold foil edges bag, black wraparound sport shades, black crewneck, black skinny pants, black high tops, red beanie on bag. Backdrop: planetarium soft constellation dots."
+},
+{
+"id": 81,
+"name": "Bag Worker #81",
+"img": "gallery/bagworker-081.webp",
+"description": "Classic kraft crumpled bag, black wraparound sport shades, black crewneck, black joggers, black sneakers. Backdrop: greenhouse glass soft plant green."
+},
+{
+"id": 82,
+"name": "Bag Worker #82",
+"img": "gallery/bagworker-082.webp",
+"description": "Kraft tilted slightly bag, red mirror wraparound shades, black hoodie, baggy black pants, white sneakers, thin silver chain. Backdrop: rooftop garden soft city haze."
+},
+{
+"id": 83,
+"name": "Bag Worker #83",
+"img": "gallery/bagworker-083.webp",
+"description": "Glossy brand-new kraft bag, blue mirror wraparound shades, navy crewneck, navy joggers, red sneakers, chunky gold Cuban chain. Backdrop: pier wooden planks soft ocean fog."
+},
+{
+"id": 84,
+"name": "Bag Worker #84",
+"img": "gallery/bagworker-084.webp",
+"description": "Worn kraft with tape patches bag, gold mirror wraparound shades, white crewneck, gray sweatpants, gold sneakers, holding a glowing green trading candle upright. Backdrop: carnival soft lights bokeh."
+},
+{
+"id": 85,
+"name": "Bag Worker #85",
+"img": "gallery/bagworker-085.webp",
+"description": "White paper bag crumpled bag, green mirror wraparound shades, neon green crewneck, black cargo pants, chunky black sneakers, blue baseball cap backwards on bag. Backdrop: castle courtyard soft stone gray."
+},
+{
+"id": 86,
+"name": "Bag Worker #86",
+"img": "gallery/bagworker-086.webp",
+"description": "Matte black paper bag, neon pink wraparound shades, purple hoodie, olive cargo, blue sneakers, olive bucket hat on bag. Backdrop: pagoda soft mist mountain."
+},
+{
+"id": 87,
+"name": "Bag Worker #87",
+"img": "gallery/bagworker-087.webp",
+"description": "Newspaper print bag, pixelated 8-bit black shades, orange puffer, white joggers, green sneakers, over-ear headphones on bag. Backdrop: sahara dunes night starry."
+},
+{
+"id": 88,
+"name": "Bag Worker #88",
+"img": "gallery/bagworker-088.webp",
+"description": "Kraft with torn corner bag, ski goggles orange lens, black white striped long sleeve, red track pants, checkered black white sneakers, red scarf. Backdrop: northern village snow soft warm windows."
+},
+{
+"id": 89,
+"name": "Bag Worker #89",
+"img": "gallery/bagworker-089.webp",
+"description": "Polka-dot kraft bag, round gold wireframe glasses, blue denim jacket over black tee, blue jeans, brown boots, black fingerless gloves. Backdrop: tokyo-like neon soft bokeh night."
+},
+{
+"id": 90,
+"name": "Bag Worker #90",
+"img": "gallery/bagworker-090.webp",
+"description": "Camo print paper bag, single gold monocle left, red flannel open over black tee, black skinny pants, black high tops, holding a glowing red trading candle upright. Backdrop: lagos market soft colorful stall blur."
+},
+{
+"id": 91,
+"name": "Bag Worker #91",
+"img": "gallery/bagworker-091.webp",
+"description": "Blue denim-textured bag, clear visor wraparound, yellow raincoat, black joggers, black sneakers, gold rings on tiny fingers. Backdrop: sahara sunrise peach dunes."
+},
+{
+"id": 92,
+"name": "Bag Worker #92",
+"img": "gallery/bagworker-092.webp",
+"description": "Holographic iridescent bag, heart-shaped pink shades, pink hoodie, baggy black pants, white sneakers, bandana at neck. Backdrop: amazon river soft green banks."
+},
+{
+"id": 93,
+"name": "Bag Worker #93",
+"img": "gallery/bagworker-093.webp",
+"description": "Pastel pink paper bag, star-shaped gold shades, camo jacket, navy joggers, red sneakers, crossbody messenger bag. Backdrop: alps snow peak blue sky."
+},
+{
+"id": 94,
+"name": "Bag Worker #94",
+"img": "gallery/bagworker-094.webp",
+"description": "Pastel mint paper bag, mirrored chrome wraparound, black turtleneck, gray sweatpants, gold sneakers, pearl necklace. Backdrop: pacific island soft lagoon."
+},
+{
+"id": 95,
+"name": "Bag Worker #95",
+"img": "gallery/bagworker-095.webp",
+"description": "Checkered black white bag, rainbow mirror wraparound, teal bomber, black cargo pants, chunky black sneakers, gold crown on bag. Backdrop: nordic fjord gray water cliffs."
+},
+{
+"id": 96,
+"name": "Bag Worker #96",
+"img": "gallery/bagworker-096.webp",
+"description": "Kraft covered in stickers bag, black wraparound sport shades, red white varsity jacket, olive cargo, blue sneakers, holding a glowing green trading candle upright. Backdrop: andes terrace green soft."
+},
+{
+"id": 97,
+"name": "Bag Worker #97",
+"img": "gallery/bagworker-097.webp",
+"description": "Kraft with packing tape x bag, black wraparound sport shades, black puffer, white joggers, green sneakers. Backdrop: sahara oasis palm pool soft."
+},
+{
+"id": 98,
+"name": "Bag Worker #98",
+"img": "gallery/bagworker-098.webp",
+"description": "Tall narrow kraft bag, red mirror wraparound shades, gray zip hoodie, red track pants, checkered black white sneakers, thin silver chain. Backdrop: caribbean sunset palm silhouette."
+},
+{
+"id": 99,
+"name": "Bag Worker #99",
+"img": "gallery/bagworker-099.webp",
+"description": "Kraft glitter speckles bag, blue mirror wraparound shades, black tracksuit jacket, blue jeans, brown boots, chunky gold Cuban chain. Backdrop: arctic aurora magenta green."
+},
+{
+"id": 100,
+"name": "Bag Worker #100",
+"img": "gallery/bagworker-100.webp",
+"description": "Kraft gold foil edges bag, gold mirror wraparound shades, black crewneck, black skinny pants, black high tops, holding a glowing red trading candle upright. Backdrop: legendary soft gold studio glow with faint candle chart watermark fading."
+}
+]
