@@ -61,7 +61,7 @@ export function AgentDesk({
         <p className="relative mt-2 max-w-sm text-sm text-cream-mute">
           {caller
             ? "Mint Your One-Per-Wallet Bag Worker To Open The Trading Desk. No NFT = Locked Out (On Purpose)."
-            : "Wallet Selector First (Meteor / MyNearWallet). Then Mint. Then Degen — Testnet Only."}
+            : "Wallet Selector First (Meteor / MyNearWallet). Then Mint. Then Degen, Testnet Only."}
         </p>
         <p className="relative mt-4 chip">Token-Gated · 1 NFT / Wallet · Max 100</p>
       </div>
@@ -174,7 +174,7 @@ export function AgentDesk({
       {!isOwner && (
         <div className="mx-3.5 mt-3 flex items-start gap-2 rounded-md border border-rust/35 bg-rust/10 px-3 py-2.5 text-sm text-rust-soft sm:mx-4">
           <ShieldAlert size={15} className="mt-0.5 shrink-0" />
-          You Don&apos;t Hold This NFT. Look, Don&apos;t Touch — Transfer It To Yourself First.
+          You Don&apos;t Hold This NFT. Look, Don&apos;t Touch, Transfer It To Yourself First.
         </div>
       )}
 
@@ -309,7 +309,7 @@ export function AgentDesk({
             >
               <p className="text-sm text-cream-mute">
                 Sell The NFT, Sell The Agent. Rules, History, And Desk Rights Move Together. Old Owner
-                Gets The Boot — No Take-Backsies.
+                Gets The Boot, No Take-Backsies.
               </p>
               <input
                 className="input"
@@ -365,7 +365,7 @@ export function AgentDesk({
                       </li>
                     </ul>
                   ) : (
-                    <p className="text-cream-mute">Classic Blank Agent — Traits Arrive On Fresh Mints.</p>
+                    <p className="text-cream-mute">Classic Blank Agent, Traits Arrive On Fresh Mints.</p>
                   )}
                   <p className="text-xs text-cream-mute/70">{nft.description}</p>
                 </div>

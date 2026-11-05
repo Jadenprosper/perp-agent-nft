@@ -89,7 +89,7 @@ export function WalletButton({
         setHint(
           e instanceof Error
             ? e.message
-            : "Meteor In-App Connect Failed — Try The Wallet List"
+            : "Meteor In-App Connect Failed, Try The Wallet List"
         );
         await connectDesktopOrModal();
       } finally {

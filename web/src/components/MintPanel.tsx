@@ -160,7 +160,7 @@ export function MintPanel({
             Browse The Drop · {catalog.length || 100} Unique Desks
           </h3>
           <p className="mt-1 text-[11px] text-cream-mute">
-            Choose The Vibe You Want To Clock In With. Taken Ones Stay On The Wall — Just Grey.
+            Choose The Vibe You Want To Clock In With. Taken Ones Stay On The Wall, Just Grey.
           </p>
         </div>
         <label className="chip cursor-pointer select-none hover:bg-brown-500/20">

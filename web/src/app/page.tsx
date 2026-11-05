@@ -193,7 +193,7 @@ export default function HomePage() {
     if (err) {
       pushToast(err === "userRejected" ? "Mint Cancelled In Wallet" : `Wallet Error: ${err}`, "err");
     } else {
-      pushToast(`Mint Confirmed — Tx ${hashes!.slice(0, 8)}…`);
+      pushToast(`Mint Confirmed · Tx ${hashes!.slice(0, 8)}…`);
       if (minted) void afterMint(minted);
       else void refresh();
     }
@@ -215,7 +215,7 @@ export default function HomePage() {
   return (
     <div className="relative min-h-screen">
       <LoadingScreen dataReady={!loading} />
-      {/* ticker — papertrade energy */}
+      {/* ticker, papertrade energy */}
       <div className="ticker-bar border-b border-brown-400/15 bg-ink-900/95">
         <div className="ticker-track font-mono text-[10px] tracking-micro text-brown-300/80">
           <span className="ticker-item">{tickerText}</span>
@@ -225,7 +225,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* top nav — bulk density */}
+      {/* top nav, bulk density */}
       <header className="sticky top-0 z-40 border-b border-brown-400/15 bg-ink-950/92 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2.5 sm:px-4">
           <a href="#" className="group relative flex shrink-0 items-baseline gap-0.5 pb-1.5">
@@ -343,7 +343,7 @@ export default function HomePage() {
                 </h1>
                 <p className="mt-2 max-w-2xl text-xs leading-relaxed text-cream-mute sm:text-sm">
                   Mint One Of <span className="text-brown-300">100</span> Unique Agents. Pick The Face
-                  You Want On The Desk. Write Trades In Plain English. Transfer The NFT — The Bot
+                  You Want On The Desk. Write Trades In Plain English. Transfer The NFT And The Bot
                   Clocks In For The New Owner.
                 </p>
               </div>
@@ -408,7 +408,7 @@ export default function HomePage() {
                   </div>
                 ) : !accountId ? (
                   <div className="rounded-md border border-dashed border-brown-400/25 bg-ink-900/40 p-6 text-center text-sm text-cream-mute">
-                    Wallet First — Meteor Or MyNearWallet On Testnet.{" "}
+                    Wallet First, Meteor Or MyNearWallet On Testnet.{" "}
                     <button className="text-brown-300 underline" onClick={() => setView("mint")}>
                       Browse The Drop
                     </button>
