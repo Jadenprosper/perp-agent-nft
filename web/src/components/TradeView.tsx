@@ -13,6 +13,7 @@ import { agentEvents } from "@/lib/agentEvents";
 import { withBase } from "@/lib/basePath";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { CHAT_EXAMPLES, parseIntent, type Level } from "@/lib/intent";
+import { ASK_CHIPS, converse, type TalkCtx } from "@/lib/talk";
 import { clampLeverage, DEFAULT_LEVERAGE, MAX_LEVERAGE, writeLeverage } from "@/lib/leverage";
 
 const START_EQUITY = 10_000;
@@ -399,6 +400,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
   };
   const lvl = (raw: string): Level => { const m = raw.match(/\$?([\d.,]+)\s*(%)?/)!; return { value: Number(m[1].replace(/,/g, "")), pct: Boolean(m[2]) }; };
 
+  const topicRef = useRef<string | undefined>(undefined);
   const handle = (text: string) => {
     const msg = text.trim(); if (!msg) return;
     setSt((s) => ({ ...s, chat: [...s.chat, { role: "you" as const, text: msg, time: Date.now() }].slice(-200) }));
@@ -408,6 +410,16 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     const px = price;
     const lo = msg.toLowerCase();
     const parsedOpen = parseIntent(msg);
+    // Questions and casual talk go to the conversational layer, grounded in live state.
+    const talkCtx = (): TalkCtx => ({ name, coin, strategy: cfg.strategy, closed: candlesRef.current.slice(0, -1), price: px, running: s.running, until: s.until,
+      lastNote: s.lastNote, lastCheckAt: s.lastCheckAt, positions: s.positions, fills: s.fills, cash: s.cash, lev: s.lev, maxSize: s.maxSize, maxLoss: s.maxLoss,
+      today: dailyPnl(s), lastTopic: topicRef.current });
+    const isQuestion = /^(what|whats|why|how|hows|should|is|are|do|does|did|when|would|will|who|where|explain|tell me|any|thoughts|opinion)\b/.test(lo) || /\?\s*$/.test(lo);
+    const draftReply = s.draft && ["confirm", "cancel", "set_sl", "set_tp"].includes(parsedOpen.kind);
+    if (!draftReply && (parsedOpen.kind === "unknown" || (isQuestion && !/^(can|could) you\b/.test(lo)))) {
+      const rep = converse(msg, talkCtx());
+      if (rep && !(rep.topic === "fallback" && parsedOpen.kind !== "unknown")) { topicRef.current = rep.topic; say(rep.text); return; }
+    }
     // A pending draft only captures direct answers to it; any other command runs right away.
     const draftAnswer = ["confirm", "cancel", "set_sl", "set_tp", "unknown"].includes(parsedOpen.kind);
     if (s.draft && !draftAnswer && parsedOpen.kind !== "open") {
@@ -651,7 +663,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
         <section className="panel flex flex-col rounded-md p-3 lg:col-span-12">
           <p className="label-micro mb-2 flex items-center gap-1"><MessageSquare size={11} /> Chat With {name} · Paper Trades Only</p>
           <div className="terminal-scroll h-56 space-y-1.5 overflow-y-auto rounded border border-brown-400/10 bg-ink-950/60 p-2 text-xs">
-            {!st.chat.length && <p className="text-cream-mute">Tell Me What To Do. I Never Trade On My Own, Only When You Say So. Try &quot;Trade For Me For 2h&quot; Or &quot;Help&quot;.</p>}
+            {!st.chat.length && <p className="text-cream-mute">Tell Me What To Do Or Just Ask Me Something. I Never Trade On My Own, Only When You Say So. Try &quot;What Setup Are You Looking For?&quot; Or &quot;Trade For Me For 2h&quot;.</p>}
             {st.chat.map((m, i) => (
               <div key={i} className={`flex ${m.role === "you" ? "justify-end" : "justify-start"}`}>
                 <p className={`max-w-[85%] rounded-lg px-2.5 py-1.5 leading-relaxed ${m.role === "you" ? "bg-brown-500 text-ink-950" : "border border-brown-400/20 bg-ink-800 text-cream-dim"}`}>
@@ -662,6 +674,8 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
             <div ref={chatEnd} />
           </div>
           <div className="mt-2 flex flex-wrap gap-1.5">
+            <span className="label-micro w-full">Ask Me Anything</span>
+            {ASK_CHIPS(coin).map((c) => (<button key={c} className="chip border-brown-300/40 hover:bg-brown-500/25" onClick={() => handle(c)}>{c}</button>))}
             {CHAT_EXAMPLES.map((c) => (<button key={c} className="chip hover:bg-brown-500/25" onClick={() => handle(c)}>{c}</button>))}
           </div>
           <form className="mt-2 flex gap-2" onSubmit={(e) => { e.preventDefault(); handle(input); }}>
