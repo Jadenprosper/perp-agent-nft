@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Activity, FlaskConical, Github, LayoutGrid, Terminal } from "lucide-react";
+import { Activity, CandlestickChart, FlaskConical, Github, LayoutGrid, Terminal } from "lucide-react";
 import { AgentCard } from "@/components/AgentCard";
 import { AgentDesk } from "@/components/AgentDesk";
 import { MintPanel } from "@/components/MintPanel";
+import { TradeView } from "@/components/TradeView";
 import { SupplyCounter } from "@/components/SupplyCounter";
 import { ToastStack, type ToastItem } from "@/components/Toast";
 import { WalletButton } from "@/components/WalletButton";
@@ -38,11 +39,30 @@ export default function HomePage() {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [emptyLine] = useState(() => pick(EMPTY_LINES));
   const [loadingLine] = useState(() => pick(LOADING_LINES));
-  const [view, setView] = useState<"desk" | "mint">(() => {
+  const [view, setViewRaw] = useState<"desk" | "mint" | "trade">(() => {
     if (typeof window === "undefined") return "desk";
     const q = new URLSearchParams(window.location.search).get("view");
-    return q === "mint" || q === "desk" ? q : "desk";
+    return q === "mint" || q === "desk" || q === "trade" ? q : "desk";
   });
+  const [tradeId, setTradeId] = useState<number>(() => {
+    if (typeof window === "undefined") return 1;
+    const n = Number(new URLSearchParams(window.location.search).get("agent"));
+    return n >= 1 && n <= 100 ? Math.trunc(n) : 1;
+  });
+  const setView = useCallback((v: "desk" | "mint" | "trade", agent?: number) => {
+    setViewRaw(v);
+    if (agent) setTradeId(agent);
+    if (typeof window !== "undefined") {
+      const u = new URL(window.location.href);
+      u.searchParams.set("view", v);
+      if (v === "trade") u.searchParams.set("agent", String(agent ?? tradeIdRef.current));
+      else u.searchParams.delete("agent");
+      window.history.replaceState(null, "", u.toString());
+    }
+  }, []);
+
+  const tradeIdRef = useRef(tradeId);
+  tradeIdRef.current = tradeId;
 
   const pushToast = useCallback((text: string, kind: ToastItem["kind"] = "ok") => {
     const id = `${Date.now()}-${Math.random()}`;
@@ -170,11 +190,12 @@ export default function HomePage() {
               [
                 ["desk", "Desk", Terminal],
                 ["mint", "Mint", LayoutGrid],
+                ["trade", "Trade", CandlestickChart],
               ] as const
             ).map(([id, label, Icon]) => (
               <button
                 key={id}
-                onClick={() => setView(id)}
+                onClick={() => setView(id, id === "trade" && selectedId ? Number(selectedId) : undefined)}
                 className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition ${
                   view === id
                     ? "bg-brown-500/20 text-brown-200"
@@ -213,11 +234,12 @@ export default function HomePage() {
             [
               ["desk", "Desk"],
               ["mint", "Mint"],
+              ["trade", "Trade"],
             ] as const
           ).map(([id, label]) => (
             <button
               key={id}
-              onClick={() => setView(id)}
+              onClick={() => setView(id, id === "trade" && selectedId ? Number(selectedId) : undefined)}
               className={`flex-1 rounded-md py-1.5 font-mono text-[11px] tracking-micro ${
                 view === id
                   ? "bg-brown-500/25 text-brown-200"
@@ -244,7 +266,15 @@ export default function HomePage() {
         </div>
       </div>
 
-      {view === "mint" ? (
+      {view === "trade" ? (
+        <TradeView
+          tokenId={tradeId}
+          accountId={accountId}
+          isHolder={mine.some((n) => String(n.token_id) === String(tradeId))}
+          onConnect={onConnect}
+          onBack={() => setView("mint")}
+        />
+      ) : view === "mint" ? (
         <main className="mx-auto max-w-[1400px]">
           <div className="terminal-scroll p-3 sm:p-4 lg:max-h-[calc(100vh-7.5rem)] lg:overflow-y-auto">
             <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
@@ -278,6 +308,7 @@ export default function HomePage() {
               mintedIds={mintedIds}
               onMint={onMint}
               onConnect={onConnect}
+              onTrade={(id) => setView("trade", id)}
               expanded
             />
           </div>

@@ -40,6 +40,7 @@ export function MintPanel({
   mintedIds,
   onMint,
   onConnect,
+  onTrade,
   expanded = false,
 }: {
   owner: string | null;
@@ -54,6 +55,8 @@ export function MintPanel({
     token_id: number;
   }) => Promise<void>;
   onConnect: () => void;
+  /** Open the paper Trade desk for an agent. */
+  onTrade?: (tokenId: number) => void;
   /** Full-width mint view (picker deserves room). */
   expanded?: boolean;
 }) {
@@ -310,7 +313,7 @@ export function MintPanel({
   );
 
   const selectedStrip =
-    selected && !alreadyMinted && !soldOut ? (
+    selected ? (
       <div className="panel flex flex-col gap-3 rounded-md p-3 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
           <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md border border-brown-400/30 bg-ink-800 sm:h-20 sm:w-20">
@@ -335,6 +338,11 @@ export function MintPanel({
         >
           <Sparkles size={12} /> Traits
         </button>
+        {onTrade && (
+          <button type="button" className="btn-primary self-start px-3 py-2 text-xs" onClick={() => onTrade(selected.id)}>
+            Open Trade Desk
+          </button>
+        )}
       </div>
     ) : null;
 
