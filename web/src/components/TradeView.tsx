@@ -306,19 +306,19 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
           <p className="label-micro">Bag Worker #{tokenId} · Trade Desk</p>
           <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-cream sm:text-3xl">{name} Trades {coin}-PERP</h1>
         </div>
-        <div className="w-full rounded-md border border-brown-400/30 bg-brown-500/10 px-3 py-2 sm:w-auto">
+        <div className="order-first w-full rounded-md border border-brown-400/30 bg-brown-500/10 px-3 py-2 sm:order-none sm:w-auto">
           <div className="flex flex-wrap items-end gap-x-5 gap-y-2">
             <div>
               <p className="label-micro">Paper Equity</p>
-              <p className="font-mono text-2xl font-semibold text-cream">{usd(st.cash + totalU)}</p>
+              <p className="font-mono text-xl font-semibold text-cream sm:text-2xl">{usd(st.cash + totalU)}</p>
             </div>
             <div>
               <p className="label-micro">Cash</p>
-              <p className="font-mono text-xl text-cream">{usd(st.cash)}</p>
+              <p className="font-mono text-lg text-cream sm:text-xl">{usd(st.cash)}</p>
             </div>
             <div>
               <p className="label-micro">uPnL</p>
-              <p className={`font-mono text-xl ${totalU > 0 ? "text-green-400" : totalU < 0 ? "text-red-400" : "text-cream"}`}>{totalU > 0 ? "+" : ""}{usd(totalU)}</p>
+              <p className={`font-mono text-lg sm:text-xl ${totalU > 0 ? "text-green-400" : totalU < 0 ? "text-red-400" : "text-cream"}`}>{totalU > 0 ? "+" : ""}{usd(totalU)}</p>
             </div>
             {canTrade && (
               <button className="btn-bracket px-2 py-1 text-[11px]" onClick={resetPaper}>Reset Paper Balance</button>
