@@ -1,6 +1,6 @@
 {
  "name": "Bag Worker #92",
- "description": "Perp trading agent NFT on NEAR testnet. Ownership = control. Seated at a trading desk.",
+ "description": "Perp trading agent NFT on NEAR testnet. Ownership = control.",
  "image": "https://jadenprosper.github.io/perp-agent-nft/gallery/bagworker-092.webp",
  "external_url": "https://jadenprosper.github.io/perp-agent-nft/?view=trade&agent=92",
  "attributes": [
@@ -11,10 +11,6 @@
   {
    "trait_type": "Drop",
    "value": "Genesis 100"
-  },
-  {
-   "trait_type": "Pose",
-   "value": "Seated At Trading Desk"
   }
  ]
 }

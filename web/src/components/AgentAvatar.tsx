@@ -46,9 +46,9 @@ export function AgentAvatar({ image, name, running }: { image: string; name: str
           {bubble}
         </div>
       )}
-      <div className={`agent-av agent-${mood} relative h-28 w-28 sm:h-32 sm:w-32`}>
+      <div className={`agent-av agent-${mood} relative ${mood === "sleep" ? "h-28 w-28 sm:h-32 sm:w-32" : "aspect-square w-full max-w-[260px] sm:max-w-[300px]"}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={mood === "sleep" ? withBase("/agent-sleep.webp") : image} alt={mood === "sleep" ? `${name} Sleeping` : name} className={`h-full w-full rounded-xl border border-brown-400/30 object-cover ${mood === "sleep" ? "agent-breathe" : ""}`} />
+        <img src={mood === "sleep" ? withBase("/agent-sleep.webp") : image} alt={mood === "sleep" ? `${name} Sleeping` : name} className={`h-full w-full rounded-xl border border-brown-400/30 bg-ink-900 object-cover ${mood === "sleep" ? "agent-breathe" : ""}`} />
         {mood === "sleep" && (
           <span className="agent-zzz pointer-events-none absolute -right-3 -top-2 font-mono text-sm font-bold text-brown-300">Zzz</span>
         )}
