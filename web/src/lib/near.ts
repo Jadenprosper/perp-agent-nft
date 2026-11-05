@@ -150,3 +150,23 @@ export async function connectMeteorInApp(): Promise<string | null> {
   const accounts = await wallet.signIn({ contractId: CONTRACT_ID } as never);
   return accounts[0]?.accountId ?? null;
 }
+
+type MeteorExtWindow = Window & { meteorCom?: unknown; meteorWallet?: unknown };
+
+/** True when the Meteor browser extension has injected its bridge into the page. */
+export function isMeteorExtensionInstalled(): boolean {
+  if (typeof window === "undefined") return false;
+  const w = window as MeteorExtWindow;
+  return Boolean(w.meteorCom || w.meteorWallet);
+}
+
+/**
+ * Browser connect via @near-wallet-selector/meteor-wallet. Uses the Meteor extension
+ * when injected, otherwise opens the wallet.meteorwallet.app web wallet (popup/redirect).
+ */
+export async function connectMeteorBrowser(): Promise<string | null> {
+  const selector = await getSelector();
+  const wallet = await selector.wallet("meteor-wallet");
+  const accounts = await wallet.signIn({ contractId: CONTRACT_ID } as never);
+  return accounts?.[0]?.accountId ?? (await getAccountId());
+}

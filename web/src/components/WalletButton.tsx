@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { LogOut, Smartphone, Wallet, X } from "lucide-react";
+import { Globe, LogOut, Puzzle, Smartphone, Wallet, X } from "lucide-react";
 import {
+  connectMeteorBrowser,
   connectMeteorInApp,
+  isMeteorExtensionInstalled,
   getAccountId,
   getModal,
   getSelector,
@@ -27,6 +29,7 @@ export function WalletButton({
   const [hint, setHint] = useState<string | null>(null);
   const [inMeteor, setInMeteor] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [hasExt, setHasExt] = useState(false);
 
   useEffect(() => {
     let unsub: (() => void) | undefined;
@@ -87,14 +90,31 @@ export function WalletButton({
       return;
     }
 
-    if (isMobileUa()) {
-      setSheetOpen(true);
-      setHint(null);
-      return;
-    }
-
-    await connectDesktopOrModal();
+    // Every browser (desktop + mobile): show the connect sheet with browser options first.
+    setHasExt(isMeteorExtensionInstalled());
+    setSheetOpen(true);
+    setHint(null);
   }, [connectDesktopOrModal, onChange]);
+
+  const connectBrowser = useCallback(async () => {
+    setBusy(true);
+    setHint(null);
+    try {
+      const id = await connectMeteorBrowser();
+      if (id) {
+        onChange(id);
+        setSheetOpen(false);
+      }
+    } catch (e) {
+      setHint(
+        e instanceof Error && e.message
+          ? `Meteor Connect Failed: ${e.message}`
+          : "Meteor Connect Failed. Try The Meteor Web Wallet Or App Link Below."
+      );
+    } finally {
+      setBusy(false);
+    }
+  }, [onChange]);
 
   const openMeteorApp = useCallback(() => {
     const result = tryOpenMeteorNativeApp(window.location.href);
@@ -186,9 +206,9 @@ export function WalletButton({
           >
             <div className="mb-3 flex items-start justify-between gap-3">
               <div>
-                <h3 className="font-display text-base text-brown-100">Connect Meteor App</h3>
+                <h3 className="font-display text-base text-brown-100">Connect Meteor Wallet</h3>
                 <p className="mt-1 text-xs leading-relaxed text-brown-300/80">
-                  Phone Connect Uses WalletConnect → Meteor For One-Tap App Handoff — Not The Website.
+                  Connect Right Here In Your Browser. No Need To Open The Meteor App.
                 </p>
               </div>
               <button
@@ -200,25 +220,50 @@ export function WalletButton({
               </button>
             </div>
 
+            <p className="mb-2 text-[10px] uppercase tracking-widest text-brown-400/80">In Your Browser</p>
             <div className="flex flex-col gap-2">
-              {WC_PROJECT_ID ? (
+              {hasExt && (
                 <button
                   className="btn-primary w-full justify-center py-3 text-sm"
+                  onClick={connectBrowser}
+                  disabled={busy}
+                >
+                  <Puzzle size={15} />
+                  {busy ? "Waiting On Meteor…" : "Meteor Extension (Detected)"}
+                </button>
+              )}
+              <button
+                className={(hasExt ? "btn-ghost border border-brown-700/40" : "btn-primary") + " w-full justify-center py-3 text-sm"}
+                onClick={connectBrowser}
+                disabled={busy}
+              >
+                <Globe size={15} />
+                {busy && !hasExt ? "Waiting On Meteor…" : "Meteor Web Wallet"}
+              </button>
+              {!hasExt && (
+                <p className="rounded-md border border-brown-800/60 bg-black/40 px-3 py-2 text-[11px] leading-relaxed text-brown-300/80">
+                  No Meteor Extension Found In This Browser. Use The Meteor Web Wallet, The Meteor App
+                  Link Below, Or Install The Extension From{" "}
+                  <a className="text-brown-100 underline" href="https://meteorwallet.app" target="_blank" rel="noreferrer">
+                    Meteorwallet.App
+                  </a>
+                  .
+                </p>
+              )}
+            </div>
+
+            <p className="mb-2 mt-4 text-[10px] uppercase tracking-widest text-brown-400/80">Meteor App (Fallback)</p>
+            <div className="flex flex-col gap-2">
+              {WC_PROJECT_ID && (
+                <button
+                  className="btn-ghost w-full justify-center border border-brown-700/40 py-3 text-sm"
                   onClick={connectViaWalletConnect}
                   disabled={busy}
                 >
                   <Wallet size={15} />
-                  {busy ? "Waiting On Wallet…" : "WalletConnect → Meteor"}
+                  WalletConnect → Meteor App
                 </button>
-              ) : (
-                <p className="rounded-md border border-brown-800/60 bg-black/40 px-3 py-2 text-[11px] leading-relaxed text-brown-300/80">
-                  WalletConnect Deep-Link Needs A Free Project Id From{" "}
-                  <span className="text-brown-100">Dashboard.Reown.Com</span>. Set{" "}
-                  <span className="font-mono text-brown-100">NEXT_PUBLIC_WC_PROJECT_ID</span> Then
-                  Redeploy For One-Tap App Handoff.
-                </p>
               )}
-
               <button
                 className="btn-ghost w-full justify-center border border-brown-700/40 py-3 text-sm"
                 onClick={openMeteorApp}
@@ -226,7 +271,6 @@ export function WalletButton({
                 <Smartphone size={15} />
                 Open Meteor App
               </button>
-
               <button
                 className="btn-ghost w-full justify-center py-2.5 text-xs text-brown-300"
                 onClick={async () => {
@@ -234,7 +278,7 @@ export function WalletButton({
                   await connectDesktopOrModal();
                 }}
               >
-                Other Wallets (Meteor Web / Mynearwallet)
+                All Wallets (Meteor / MyNearWallet)
               </button>
             </div>
 
@@ -245,8 +289,7 @@ export function WalletButton({
             )}
 
             <p className="mt-3 text-[10px] leading-relaxed text-brown-400/80">
-              Primary Path: Tap WalletConnect → Meteor For One-Tap Handoff Into The App. Backup: Open
-              Meteor App → Built-In Browser → Paste This Site → Connect (Injected Module Auto-Hooks).
+              Tip: Already Inside The Meteor App Browser? Tap Connect And It Hooks In Automatically.
             </p>
           </div>
         </div>
