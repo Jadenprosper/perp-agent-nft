@@ -1,0 +1,16 @@
+{
+ "name": "Perp Agent #43",
+ "description": "Perp trading agent NFT on NEAR testnet. Ownership = control.",
+ "image": "https://jadenprosper.github.io/perp-agent-nft/agents/43.jpg",
+ "external_url": "https://jadenprosper.github.io/perp-agent-nft/?view=trade&agent=43",
+ "attributes": [
+  {
+   "trait_type": "Token Id",
+   "value": 43
+  },
+  {
+   "trait_type": "Drop",
+   "value": "Genesis 100"
+  }
+ ]
+}
