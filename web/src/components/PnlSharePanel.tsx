@@ -35,7 +35,7 @@ export function PnlSharePanel({
 
   const [market, setMarket] = useState(guessed.market || "ETH");
   const [side, setSide] = useState<PnlSide>(guessed.side || "long");
-  // Leverage is owned by the Trade page (shared, capped at 1000x).
+  // Leverage is owned by the Trade page (shared, capped at 100x).
   const [leverage, setLeverage] = useState(DEFAULT_LEVERAGE);
   useEffect(() => {
     setLeverage(readLeverage(nft.token_id));

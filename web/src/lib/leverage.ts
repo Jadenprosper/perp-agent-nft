@@ -1,10 +1,10 @@
 /** Shared leverage setting: Trade page writes it, PnL share card reads it. */
-export const MAX_LEVERAGE = 1000;
+export const MAX_LEVERAGE = 100;
 export const MIN_LEVERAGE = 1;
-export const DEFAULT_LEVERAGE = 1000;
+export const DEFAULT_LEVERAGE = 100;
 export const LEV_EVENT = "pa:leverage";
 
-/** Clamp to an integer in [1, 1000]; junk falls back to the default. */
+/** Clamp to an integer in [1, 100]; junk falls back to the default. */
 export function clampLeverage(v: unknown, fallback = DEFAULT_LEVERAGE): number {
   const n = Math.round(Number(v));
   if (!Number.isFinite(n)) return fallback;
