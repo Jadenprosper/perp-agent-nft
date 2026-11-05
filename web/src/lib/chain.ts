@@ -7,7 +7,7 @@ const RPCS = (
     ? [process.env.NEXT_PUBLIC_NEAR_RPC]
     : NETWORK_ID === "mainnet"
       ? ["https://rpc.mainnet.near.org", "https://free.rpc.fastnear.com"]
-      : ["https://rpc.testnet.near.org", "https://test.rpc.fastnear.com"]
+      : ["https://test.rpc.fastnear.com", "https://rpc.testnet.near.org"]
 );
 
 const b64 = (s: string) => btoa(unescape(encodeURIComponent(s)));

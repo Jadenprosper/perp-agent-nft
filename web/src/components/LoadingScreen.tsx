@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { withBase } from "@/lib/basePath";
 
 /** Crowned paper-bag agent running with its green candle sword; run speed tracks real load progress. */
@@ -9,8 +9,11 @@ export function LoadingScreen({ dataReady }: { dataReady: boolean }) {
   const [win, setWin] = useState(false);
   const [creep, setCreep] = useState(0);
   const [gone, setGone] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
+    // The image can finish before hydration attaches onLoad, so check it directly.
+    if (imgRef.current?.complete) setImg(true);
     document.fonts?.ready.then(() => setFonts(true)).catch(() => setFonts(true));
     if (document.readyState === "complete") setWin(true);
     else window.addEventListener("load", () => setWin(true), { once: true });
@@ -39,7 +42,7 @@ export function LoadingScreen({ dataReady }: { dataReady: boolean }) {
         <div className="run-speedlines absolute inset-0" aria-hidden />
         <div className="run-body absolute bottom-3 left-1/2 -ml-[68px] h-40 w-[136px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={withBase("/loader-runner.webp")} alt="" onLoad={() => setImg(true)} onError={() => setImg(true)}
+          <img ref={imgRef} src={withBase("/loader-runner.webp")} alt="" onLoad={() => setImg(true)} onError={() => setImg(true)}
             className="h-40 w-[136px] object-contain drop-shadow-[0_0_12px_rgba(34,197,94,0.25)]" />
         </div>
         <div className="run-ground absolute inset-x-0 bottom-4 h-1" aria-hidden />

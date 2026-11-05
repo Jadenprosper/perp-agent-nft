@@ -114,7 +114,16 @@ function buildModules(): WalletModuleFactory[] {
 export async function getSelector(): Promise<WalletSelector> {
   if (!selectorPromise) {
     selectorPromise = setupWalletSelector({
-      network: NETWORK_ID,
+      network:
+        NETWORK_ID === "testnet"
+          ? {
+              networkId: "testnet",
+              nodeUrl: "https://test.rpc.fastnear.com",
+              helperUrl: "https://helper.testnet.near.org",
+              explorerUrl: "https://testnet.nearblocks.io",
+              indexerUrl: "https://testnet-api.kitwallet.app",
+            }
+          : NETWORK_ID,
       modules: buildModules(),
     });
   }
