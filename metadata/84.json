@@ -1,0 +1,16 @@
+{
+ "name": "Bag Worker #84",
+ "description": "Perp trading agent NFT on NEAR testnet. Ownership = control.",
+ "image": "https://jadenprosper.github.io/perp-agent-nft/gallery/bagworker-084.webp",
+ "external_url": "https://jadenprosper.github.io/perp-agent-nft/?view=trade&agent=84",
+ "attributes": [
+  {
+   "trait_type": "Token Id",
+   "value": 84
+  },
+  {
+   "trait_type": "Drop",
+   "value": "Genesis 100"
+  }
+ ]
+}
