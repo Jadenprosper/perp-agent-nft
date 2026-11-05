@@ -5,5 +5,6 @@ export function withBase(path: string): string {
   if (!path) return path;
   if (/^https?:\/\//i.test(path) || path.startsWith("data:")) return path;
   const p = path.startsWith("/") ? path : `/${path}`;
-  return `${BASE_PATH}${p}`;
+  const v = /\.(jpe?g|png|webp)$/i.test(p) && !p.includes("?") ? "?v=std2" : "";
+  return `${BASE_PATH}${p}${v}`;
 }
