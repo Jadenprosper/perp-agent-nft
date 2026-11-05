@@ -66,3 +66,30 @@ export async function chainMintStats(): Promise<MintStats> {
   ]);
   return { ...s, minted_ids: ids.map(String) };
 }
+
+/** Mint a chosen agent via the connected wallet (wallet-selector FunctionCall). */
+export async function mintAgentTx(p: { token_id: number; rules?: string; max_size?: string }) {
+  const { getSelector } = await import("@/lib/near");
+  const selector = await getSelector();
+  const wallet = await selector.wallet();
+  const back = new URL(window.location.href);
+  back.searchParams.set("minted", String(p.token_id));
+  return wallet.signAndSendTransaction({
+    receiverId: CONTRACT_ID,
+    callbackUrl: back.toString(),
+    actions: [{ type: "FunctionCall", params: {
+      methodName: "mint_agent",
+      args: { token_id: p.token_id, rules: p.rules || null, max_size: p.max_size || null },
+      gas: "100000000000000", // 100 Tgas
+      deposit: "100000000000000000000000", // 0.1 NEAR; unused storage is refunded by the contract
+    } }],
+  } as Parameters<typeof wallet.signAndSendTransaction>[0]);
+}
+
+/** Pretty contract panic text ("Smart contract panicked: ..."). */
+export function chainError(e: unknown): string {
+  const raw = e instanceof Error ? e.message : typeof e === "string" ? e : JSON.stringify(e);
+  const m = raw.match(/panicked: ([^"\\]+)/) || raw.match(/ExecutionError":"([^"]+)/);
+  const msg = (m ? m[1] : raw).replace(/^Smart contract panicked: /, "");
+  return msg.replace(/\b\w/g, (c) => c.toUpperCase()).slice(0, 160);
+}

@@ -14,7 +14,7 @@ import { WalletButton } from "@/components/WalletButton";
 import { api, type MintStats, type Nft } from "@/lib/api";
 import { EMPTY_LINES, ERR_PREFIX, LOADING_LINES, pick } from "@/lib/copy";
 import { getModal } from "@/lib/near";
-import { chainMintStats, tokensForOwner } from "@/lib/chain";
+import { chainError, chainMintStats, mintAgentTx, tokensForOwner } from "@/lib/chain";
 
 const IS_STATIC = process.env.NEXT_PUBLIC_STATIC === "1";
 
@@ -151,24 +151,51 @@ export default function HomePage() {
     if (!accountId) return;
     setBusy(true);
     try {
-      const res = await api.mint({
-        owner_id: accountId,
-        rules: payload.rules,
-        max_size: payload.max_size,
-        token_id: payload.token_id,
-      });
-      pushToast(res.toast);
-      setStats(res.mint);
-      await refresh();
-      setSelectedId(res.nft.token_id);
-      setView("desk");
+      // Direct on-chain mint through the connected wallet (Meteor etc.). No API.
+      await mintAgentTx(payload);
+      pushToast(`Agent #${payload.token_id} Minted On-Chain`);
+      await afterMint(String(payload.token_id));
     } catch (e) {
-      onError(e instanceof Error ? e.message : "Mint Failed");
-      void (IS_STATIC ? chainMintStats() : api.mintStats()).then(setStats).catch(() => undefined);
+      const msg = chainError(e);
+      if (/reject|cancel|closed/i.test(msg)) pushToast("Mint Cancelled In Wallet", "err");
+      else onError(msg || "Mint Failed");
+      void chainMintStats().then(setStats).catch(() => undefined);
     } finally {
       setBusy(false);
     }
   }
+
+  async function afterMint(id: string) {
+    // RPC finality lags a moment; poll ownership until the token shows up.
+    for (let i = 0; i < 6; i++) {
+      await refresh();
+      if (accountId && (await tokensForOwner(accountId).catch(() => [])).some((n) => n.token_id === id)) break;
+      await new Promise((r) => setTimeout(r, 1500));
+    }
+    await refresh();
+    setSelectedId(id);
+    setView("desk");
+  }
+
+  // Redirect-wallet return: ?transactionHashes=... or ?errorCode=...
+  useEffect(() => {
+    if (!accountId || typeof window === "undefined") return;
+    const u = new URL(window.location.href);
+    const hashes = u.searchParams.get("transactionHashes");
+    const err = u.searchParams.get("errorCode");
+    const minted = u.searchParams.get("minted");
+    if (!hashes && !err) return;
+    ["transactionHashes", "errorCode", "errorMessage", "minted"].forEach((k) => u.searchParams.delete(k));
+    window.history.replaceState(null, "", u.toString());
+    if (err) {
+      pushToast(err === "userRejected" ? "Mint Cancelled In Wallet" : `Wallet Error: ${err}`, "err");
+    } else {
+      pushToast(`Mint Confirmed — Tx ${hashes!.slice(0, 8)}…`);
+      if (minted) void afterMint(minted);
+      else void refresh();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountId]);
 
   function onUpdated(n: Nft) {
     setMine((list) => list.map((x) => (x.token_id === n.token_id ? n : x)));

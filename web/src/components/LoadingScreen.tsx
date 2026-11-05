@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { withBase } from "@/lib/basePath";
 
-/** Paper-bag agent running with a candlestick sword; run speed tracks real load progress. */
+/** Crowned paper-bag agent running with its green candle sword; run speed tracks real load progress. */
 export function LoadingScreen({ dataReady }: { dataReady: boolean }) {
   const [fonts, setFonts] = useState(false);
   const [img, setImg] = useState(false);
@@ -35,16 +35,12 @@ export function LoadingScreen({ dataReady }: { dataReady: boolean }) {
   return (
     <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-ink-950/90 backdrop-blur-sm transition-opacity duration-500 ${done ? "opacity-0" : "opacity-100"}`}
       style={{ ["--run" as string]: `${stride}s` }} role="status" aria-live="polite">
-      <div className="relative h-40 w-56 overflow-hidden">
+      <div className="relative h-52 w-72 overflow-hidden">
         <div className="run-speedlines absolute inset-0" aria-hidden />
-        <div className="run-body absolute bottom-6 left-1/2 -ml-12 h-24 w-24">
+        <div className="run-body absolute bottom-3 left-1/2 -ml-[68px] h-40 w-[136px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={withBase("/agents/7.jpg")} alt="" onLoad={() => setImg(true)} onError={() => setImg(true)}
-            className="h-24 w-24 rounded-md border border-brown-400/40 object-cover" />
-          <svg className="run-sword absolute -right-7 top-6 h-16 w-6" viewBox="0 0 12 40" aria-hidden>
-            <line x1="6" y1="0" x2="6" y2="40" stroke="#22c55e" strokeWidth="1.6" />
-            <rect x="2" y="8" width="8" height="22" rx="1" fill="#22c55e" stroke="#86efac" strokeWidth="0.8" />
-          </svg>
+          <img src={withBase("/loader-runner.webp")} alt="" onLoad={() => setImg(true)} onError={() => setImg(true)}
+            className="h-40 w-[136px] object-contain drop-shadow-[0_0_12px_rgba(34,197,94,0.25)]" />
         </div>
         <div className="run-ground absolute inset-x-0 bottom-4 h-1" aria-hidden />
       </div>

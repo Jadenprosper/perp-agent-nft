@@ -129,13 +129,10 @@ body {
 
 /* Loading run cycle — duration driven by --run (real load progress) */
 .run-body { animation: run-bob var(--run, 0.8s) ease-in-out infinite; transform-origin: 50% 100%; }
-.run-sword { animation: run-swing calc(var(--run, 0.8s) * 2) ease-in-out infinite; transform-origin: 50% 100%; }
 .run-ground { background: repeating-linear-gradient(90deg, rgba(196,165,116,0.6) 0 14px, transparent 14px 28px); animation: run-scroll calc(var(--run, 0.8s) * 0.8) linear infinite; }
 .run-speedlines { background: repeating-linear-gradient(90deg, transparent 0 40px, rgba(212,184,150,0.18) 40px 70px, transparent 70px 120px) 0 30%/120px 2px no-repeat,
   repeating-linear-gradient(90deg, transparent 0 60px, rgba(212,184,150,0.12) 60px 100px) 0 60%/160px 2px no-repeat;
   background-repeat: repeat-x; animation: run-lines var(--run, 0.8s) linear infinite; }
-@keyframes run-bob { 0%,100% { transform: translateY(0) rotate(8deg); } 50% { transform: translateY(-10px) rotate(12deg); } }
-@keyframes run-swing { 0%,100% { transform: rotate(25deg); } 50% { transform: rotate(-10deg); } }
+@keyframes run-bob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
 @keyframes run-scroll { to { background-position: -28px 0; } }
 @keyframes run-lines { to { background-position: -120px 30%, -160px 60%; } }
-@media (prefers-reduced-motion: reduce) { .run-body, .run-sword, .run-ground, .run-speedlines { animation-duration: 2.4s; } }

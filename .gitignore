@@ -12,3 +12,4 @@ web/out/
 contract/target/
 *.log
 .DS_Store
+loader-runner-src.jpg

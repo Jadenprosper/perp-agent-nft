@@ -272,6 +272,7 @@ impl Contract {
         max_size: Option<String>,
     ) -> Token {
         let owner = env::predecessor_account_id();
+        let storage_before = env::storage_usage();
         require!(
             (1..=self.max_supply).contains(&token_id),
             "token_id out of range — pick an agent from 1 to 100"
@@ -335,7 +336,10 @@ impl Contract {
             starts_at: None,
             updated_at: Some(now.to_string()),
             extra: Some(extra),
-            reference: None,
+            reference: Some(format!(
+                "https://jadenprosper.github.io/perp-agent-nft/metadata/{}.json",
+                token_id
+            )),
             reference_hash: None,
         };
 
@@ -349,8 +353,20 @@ impl Contract {
             &token_id_str,
             "mint",
             &format!("{} (# {}) hired by {}", traits.name, token_id, owner),
-            owner,
+            owner.clone(),
         );
+        // Minter pays their own storage; any excess deposit is refunded.
+        let used = env::storage_usage().saturating_sub(storage_before);
+        let cost = env::storage_byte_cost().saturating_mul(used as u128);
+        let attached = env::attached_deposit();
+        require!(
+            attached >= cost,
+            format!("attach at least {} yoctoNEAR for storage", cost.as_yoctonear())
+        );
+        let refund = attached.saturating_sub(cost);
+        if refund.as_yoctonear() > 1 {
+            let _ = near_sdk::Promise::new(owner).transfer(refund);
+        }
         token
     }
 
