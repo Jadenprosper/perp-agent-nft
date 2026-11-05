@@ -112,7 +112,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 
 function fmtPx(n: number): string {
-  if (!n) return "—";
+  if (!n) return "-";
   if (n >= 1000) return n.toLocaleString(undefined, { maximumFractionDigits: 2 });
   if (n >= 1) return n.toFixed(2);
   return n.toPrecision(4);

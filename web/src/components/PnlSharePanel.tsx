@@ -102,7 +102,7 @@ export function PnlSharePanel({
       a.href = dataUrl;
       a.download = `perp-agent-${nft.token_id}-${tier}-pnl.png`;
       a.click();
-      onToast("PNG Saved — Go Flex Responsibly.");
+      onToast("PNG Saved - Go Flex Responsibly.");
     } catch (e) {
       onError(e instanceof Error ? e.message : "PNG Export Failed");
     } finally {
@@ -113,7 +113,7 @@ export function PnlSharePanel({
   function shareOnX() {
     const text = buildShareText(snapshot, tier, oneLiner);
     window.open(xIntentUrl(text), "_blank", "noopener,noreferrer");
-    onToast("Opened X Compose — You Hit Post, We Don't.", "info");
+    onToast("Opened X Compose - You Hit Post, We Don't.", "info");
   }
 
   return (
@@ -221,7 +221,7 @@ export function PnlSharePanel({
           </button>
         </div>
         <p className="text-[11px] text-cream-mute/55">
-          Opens An X Draft With Caption Prefilled — No Auto-Posting. PNG Is Rendered In Your
+          Opens An X Draft With Caption Prefilled - No Auto-Posting. PNG Is Rendered In Your
           Browser From The Card Preview.
         </p>
       </div>
