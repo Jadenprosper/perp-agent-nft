@@ -34,7 +34,16 @@ export const PnlCard = forwardRef<
         src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${scene.src}`}
         alt=""
         crossOrigin="anonymous"
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover opacity-60 blur-sm"
+        draggable={false}
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${scene.src}`}
+        alt=""
+        crossOrigin="anonymous"
+        className="absolute left-1/2 top-[4%] aspect-[4/5] h-[66%] -translate-x-1/2 object-cover"
+        style={{ WebkitMaskImage: "radial-gradient(ellipse 70% 70% at 50% 42%, #000 55%, transparent 100%)", maskImage: "radial-gradient(ellipse 70% 70% at 50% 42%, #000 55%, transparent 100%)" }}
         draggable={false}
       />
 

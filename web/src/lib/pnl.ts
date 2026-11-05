@@ -46,28 +46,28 @@ export const TIER_SCENES: Record<PnlTier, { src: string; label: string; accent: 
 
 const ONE_LINERS: Record<PnlTier, string[]> = {
   moon: [
-    "Houston, We Printed The Bag.",
-    "Leverage Said Yes And So Did The Charts.",
-    "The NFT Just Paid Rent On The Moon.",
-    "Funding Rates Filed A Missing Persons Report.",
+    "Quitting My Job. Not Joking This Time.",
+    "Told You Guys. Nobody Listened.",
+    "Lambo Dealership Hasn't Called Back Yet.",
+    "Screenshot Before It Goes Back Down.",
   ],
   win: [
-    "Stop-Loss Never Even Got Invited.",
-    "Paper Hands Hate To See It.",
-    "The Agent Ate. The Bag Stayed Crowned.",
-    "Green Candles, Gold Chain Energy.",
+    "Small Win But I'm Telling Everyone.",
+    "Took Profit For Once. Proud Of Me.",
+    "Rent Paid. Back To Gambling.",
+    "Up Only Until I Check Again.",
   ],
   small_loss: [
-    "This Is Fine. The Dumpster Is A Vibe.",
-    "Down Bad, Still HODLing The Mug.",
-    "Character Development, Not A Drawdown.",
-    "Tiny Scar. Big Narrative Arc.",
+    "It's Fine. I'm Fine. Everything's Fine.",
+    "Not A Loss If You Don't Look At It.",
+    "Down A Bit. Still Smarter Than You.",
+    "Just A Flesh Wound. Adding More.",
   ],
   liquidated: [
-    "Rekt Note Stuck To The Bag. Classic.",
-    "The Exchange Said Goodbye First.",
-    "Margin Called. Dignity Declined The Call.",
-    "Zeroed With Style. See You At The Faucet.",
+    "Wendy's Is Hiring. I Checked.",
+    "Max Leverage, Min Brain Cells.",
+    "Sold The Bottom Like A Pro.",
+    "Should've Just Bought And Slept.",
   ],
 };
 
