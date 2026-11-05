@@ -538,15 +538,6 @@ export function MintPanel({
 
           <div className="mt-3 space-y-3">
             <label className="block space-y-1.5">
-              <span className="label-micro">Starter Rules (Plain English)</span>
-              <textarea
-                className="input min-h-[84px] resize-y"
-                value={rules}
-                onChange={(e) => setRules(e.target.value)}
-                placeholder="Long ETH At 3200, TP 3500, SL 3100"
-              />
-            </label>
-            <label className="block space-y-1.5">
               <span className="label-micro">Max Size (Safety Leash)</span>
               <input
                 className="input"
