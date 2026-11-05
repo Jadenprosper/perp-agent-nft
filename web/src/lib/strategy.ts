@@ -2,9 +2,9 @@ import type { Candle } from "@/lib/hl";
 import type { StrategyConfig } from "@/lib/agentConfig";
 
 /** Paper position (agent or manual). Mirrors agent/ rule shape: side + entry + TP/SL. */
-export type Position = { id: string; side: "long" | "short"; size: number; entry: number; tp?: number; sl?: number; openedAt: number; by: "agent" | "manual" };
-export type PendingOrder = { id: string; side: "long" | "short"; size: number; limit: number; tp?: number; sl?: number; createdAt: number };
-export type Fill = { id: string; side: "long" | "short"; size: number; entry: number; exit: number; pnl: number; openedAt: number; closedAt: number; by: "agent" | "manual"; reason: string };
+export type Position = { id: string; side: "long" | "short"; size: number; entry: number; tp?: number; sl?: number; openedAt: number; by: "agent" | "manual"; lev?: number };
+export type PendingOrder = { id: string; side: "long" | "short"; size: number; limit: number; tp?: number; sl?: number; createdAt: number; lev?: number };
+export type Fill = { id: string; side: "long" | "short"; size: number; entry: number; exit: number; pnl: number; openedAt: number; closedAt: number; by: "agent" | "manual"; reason: string; lev?: number };
 export type Decision = { time: number; text: string };
 
 export function ema(vals: number[], p: number): number[] {
@@ -67,5 +67,12 @@ export function evaluate(s: StrategyConfig, closed: Candle[], pos: "long" | "sho
   return { action: null, reason: "" };
 }
 
-export const upnl = (p: Position, px: number) => (p.side === "long" ? px - p.entry : p.entry - px) * p.size;
+/** Margin = entry * size (the ticket size is margin, same number the max size guard checks). */
+export const margin = (p: Position) => p.entry * p.size;
+/** Leveraged uPnL = price move * size * leverage, floored at -margin (a loss can't exceed what was posted). */
+export const upnl = (p: Position, px: number) =>
+  Math.max(-margin(p), (p.side === "long" ? px - p.entry : p.entry - px) * p.size * (p.lev ?? 1));
+/** Liquidation price: where loss hits 100% of margin, i.e. an adverse move of entry / leverage. */
+export const liqPx = (p: Position) => p.entry * (p.side === "long" ? 1 - 1 / (p.lev ?? 1) : 1 + 1 / (p.lev ?? 1));
+export const isLiquidated = (p: Position, px: number) => (p.side === "long" ? px <= liqPx(p) : px >= liqPx(p));
 export { fmt as fmtPx };

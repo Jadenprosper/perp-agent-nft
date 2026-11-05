@@ -11,6 +11,7 @@ export type Intent =
   | { kind: "status" }
   | { kind: "max_size"; usd: number }
   | { kind: "max_loss"; usd: number }
+  | { kind: "leverage"; value: number }
   | { kind: "help" }
   | { kind: "unknown" };
 
@@ -26,7 +27,9 @@ export function parseIntent(raw: string): Intent {
   if (!t) return { kind: "unknown" };
   if (/^(help|\?|commands|what can you do)/.test(t)) return { kind: "help" };
   if (/(status|how are we doing|how we doing|pnl|positions\??$|win rate)/.test(t)) return { kind: "status" };
-  let m = t.match(/max\s*(?:position\s*)?size\s*(?:to|at|=)?\s*\$?([\d.,]+)/);
+  let m = t.match(/^(?:set\s+)?(?:leverage|lev)\s*(?:to|at|=)?\s*([\d.,]+)\s*x?\b/) || t.match(/^(?:use\s+)?([\d.,]+)\s*x\s*(?:leverage|lev)?$/);
+  if (m) return { kind: "leverage", value: num(m[1]) };
+  m = t.match(/max\s*(?:position\s*)?size\s*(?:to|at|=)?\s*\$?([\d.,]+)/);
   if (m) return { kind: "max_size", usd: num(m[1]) };
   m = t.match(/max\s*(?:daily\s*)?loss\s*(?:to|at|=)?\s*\$?([\d.,]+)/);
   if (m) return { kind: "max_loss", usd: num(m[1]) };
@@ -52,4 +55,4 @@ export function parseIntent(raw: string): Intent {
   return { kind: "unknown" };
 }
 
-export const CHAT_EXAMPLES = ["Trade For Me For 2h", "Long BTC 100 SL 2% TP 4%", "Set Stop Loss At 1.5%", "Status", "Close All", "Pause", "Set Max Daily Loss 200", "Help"];
+export const CHAT_EXAMPLES = ["Trade For Me For 2h", "Long BTC 100 SL 2% TP 4%", "Set Stop Loss At 1.5%", "Status", "Close All", "Pause", "Set Max Daily Loss 200", "Set Leverage 50x", "Help"];

@@ -1,3 +1,4 @@
+import { clampLeverage } from "@/lib/leverage";
 /** Shareable PnL card tiers + copy. */
 
 export type PnlTier = "moon" | "win" | "small_loss" | "liquidated";
@@ -96,10 +97,12 @@ export function computePnl(opts: {
   if (!entry || !exit || !size) return { pnlPct: 0, pnlUsd: 0 };
   const dir = side === "long" ? 1 : -1;
   const move = ((exit - entry) / entry) * dir;
-  const pnlPct = move * leverage * 100;
-  const notional = entry * size;
-  const margin = notional / Math.max(leverage, 1);
-  const pnlUsd = margin * (pnlPct / 100);
+  const lev = clampLeverage(leverage);
+  const pnlPct = Math.max(-100, move * lev * 100);
+  // Same model as the Trade page: size * entry = margin, PnL = move * size * leverage,
+  // floored at -100% of margin (liquidation).
+  const margin = entry * size;
+  const pnlUsd = Math.max(-margin, margin * move * lev);
   return { pnlPct, pnlUsd };
 }
 
@@ -121,7 +124,6 @@ export function guessTradeFromRules(rules: string): Partial<PnlSnapshot> {
     side,
     entry,
     exit,
-    leverage: 10,
   };
 }
 

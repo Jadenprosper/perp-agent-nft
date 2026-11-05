@@ -17,6 +17,7 @@ import {
   xIntentUrl,
 } from "@/lib/pnl";
 import { PnlCard } from "./PnlCard";
+import { DEFAULT_LEVERAGE, LEV_EVENT, MAX_LEVERAGE, clampLeverage, readLeverage } from "@/lib/leverage";
 
 const TIERS: PnlTier[] = ["moon", "win", "small_loss", "liquidated"];
 
@@ -34,7 +35,18 @@ export function PnlSharePanel({
 
   const [market, setMarket] = useState(guessed.market || "ETH");
   const [side, setSide] = useState<PnlSide>(guessed.side || "long");
-  const [leverage, setLeverage] = useState(guessed.leverage || 10);
+  // Leverage is owned by the Trade page (shared, capped at 1000x).
+  const [leverage, setLeverage] = useState(DEFAULT_LEVERAGE);
+  useEffect(() => {
+    setLeverage(readLeverage(nft.token_id));
+    const onLev = (e: Event) => {
+      const d = (e as CustomEvent<{ tokenId: string; lev: number }>).detail;
+      if (d && d.tokenId === String(nft.token_id)) setLeverage(clampLeverage(d.lev));
+    };
+    const onStorage = (e: StorageEvent) => { if (e.key === `pa:leverage:${nft.token_id}`) setLeverage(readLeverage(nft.token_id)); };
+    window.addEventListener(LEV_EVENT, onLev); window.addEventListener("storage", onStorage);
+    return () => { window.removeEventListener(LEV_EVENT, onLev); window.removeEventListener("storage", onStorage); };
+  }, [nft.token_id]);
   const [entry, setEntry] = useState(guessed.entry || 3200);
   const [exit, setExit] = useState(guessed.exit || 3500);
   const [size, setSize] = useState(Number(nft.config.max_size) || 0.01);
@@ -48,7 +60,6 @@ export function PnlSharePanel({
     if (g.side) setSide(g.side);
     if (g.entry) setEntry(g.entry);
     if (g.exit) setExit(g.exit);
-    if (g.leverage) setLeverage(g.leverage);
     setSize(Number(nft.config.max_size) || 0.01);
     setLiquidated(false);
     setTierOverride("auto");
@@ -130,14 +141,10 @@ export function PnlSharePanel({
             </select>
           </Field>
           <Field label="Leverage">
-            <input
-              className="input py-2"
-              type="number"
-              min={1}
-              max={50}
-              value={leverage}
-              onChange={(e) => setLeverage(Number(e.target.value) || 1)}
-            />
+            <div className="input flex items-center justify-between py-2 font-mono" title="Set On The Trade Page">
+              <span>{leverage}x</span>
+              <span className="text-[9px] text-cream-mute">From Trade Page · Max {MAX_LEVERAGE}x</span>
+            </div>
           </Field>
           <Field label="Entry">
             <input
