@@ -20,7 +20,7 @@ type ChatMsg = { role: "you" | "agent"; text: string; time: number };
 /** Pending chat order. sl/tp: undefined = not answered yet, null = explicitly skipped. */
 type Draft = { side: "long" | "short"; usd?: number; sl?: Level | null; tp?: Level | null };
 type Saved = { cash: number; positions: Position[]; orders: PendingOrder[]; fills: Fill[]; log: Decision[]; running: boolean;
-  until: number | null; chat: ChatMsg[]; maxSize: number; maxLoss: number; defSl: Level | null; defTp: Level | null; lev: number; draft?: Draft | null };
+  until: number | null; chat: ChatMsg[]; maxSize: number; maxLoss: number; defSl: Level | null; defTp: Level | null; lev: number; draft?: Draft | null; lossResetAt?: number };
 const empty = (): Saved => ({ cash: START_EQUITY, positions: [], orders: [], fills: [], log: [], running: false,
   until: null, chat: [], maxSize: 1000, maxLoss: 200, defSl: null, defTp: null, lev: DEFAULT_LEVERAGE, draft: null });
 const lvlTxt = (l: Level) => (l.pct ? `${l.value}%` : fmtPx(l.value));
@@ -104,7 +104,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     setSt((s) => ({ ...s, chat: [...s.chat, { role: "agent" as const, text, time: Date.now() }].slice(-200) }));
     agentEvents.emit({ type: "say", text });
   }, []);
-  const dailyPnl = (s: Saved) => s.fills.filter((f) => f.closedAt >= startOfDay()).reduce((a, f) => a + f.pnl, 0);
+  const dailyPnl = (s: Saved) => { const from = Math.max(startOfDay(), s.lossResetAt ?? 0); return s.fills.filter((f) => f.closedAt >= from).reduce((a, f) => a + f.pnl, 0); };
   /** Hard guardrails checked before every order. */
   const guard = useCallback((notional: number): string | null => {
     const s = stRef.current;
@@ -386,10 +386,27 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     }
   };
 
+  const [limitText, setLimitText] = useState("");
+  const [limitOpen, setLimitOpen] = useState(false);
+  const applyLimit = (raw?: string) => {
+    const n = Math.round(Number(String(raw ?? limitText).replace(/[$,\s]/g, "")));
+    if (!Number.isFinite(n) || n <= 0) return;
+    setSt((x) => ({ ...x, maxLoss: n })); setLimitOpen(false); setStartMsg(null);
+  };
+  const limitHit = dailyPnl(st) <= -st.maxLoss;
+  const limitEditor = () => canTrade ? (
+    <form className="mt-1 flex w-full max-w-xs items-center gap-1.5" onSubmit={(e) => { e.preventDefault(); applyLimit(); }}>
+      <label className="sr-only" htmlFor="maxloss">Max Daily Loss</label>
+      <input id="maxloss" inputMode="decimal" className="input h-8 min-w-0 flex-1 text-xs" placeholder={`New Limit, E.g. ${Math.max(st.maxLoss * 2, Math.ceil(-dailyPnl(st) + 100))}`} value={limitText} onChange={(e) => setLimitText(e.target.value)} />
+      <button type="submit" className="btn-primary whitespace-nowrap px-3 py-1.5 text-[11px]">Save Limit</button>
+    </form>
+  ) : null;
+
   const resetPaper = () => {
     if (!canTrade) return;
     if (!window.confirm("Reset Paper Balance To $10,000? This Clears Positions, Orders And Fills.")) return;
-    setSt((s) => ({ ...s, cash: START_EQUITY, positions: [], orders: [], fills: [], running: false, until: null, draft: null }));
+    setSt((s) => ({ ...s, cash: START_EQUITY, positions: [], orders: [], fills: [], running: false, until: null, draft: null, lossResetAt: Date.now() }));
+    setStartMsg(null);
     agentEvents.emit({ type: "paused" });
   };
 
@@ -518,7 +535,8 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
             <AgentAvatar image={withBase(`/agents-desk/${tokenId}.jpg`)} name={name} running={st.running && canTrade} />
             <p className="mt-2 font-display text-sm text-brown-100">{cfg.strategy.label}</p>
             {st.running && <p className="font-mono text-[10px] text-green-400">Running{st.until ? ` Until ${new Date(st.until).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : ""}</p>}
-            <p className="font-mono text-[10px] text-cream-mute">Leverage {st.lev}x · Guardrails · Max Size {usd(st.maxSize)} · Max Daily Loss {usd(st.maxLoss)}</p>
+            <p className="font-mono text-[10px] text-cream-mute">Leverage {st.lev}x · Guardrails · Max Size {usd(st.maxSize)} · Max Daily Loss {usd(st.maxLoss)} · Today {usd(dailyPnl(st))}</p>
+            {canTrade && <div className="mt-1 flex flex-col items-start gap-1"><button className="btn-bracket px-2 py-1 text-[11px]" onClick={() => setLimitOpen((o) => !o)}>{limitOpen ? "Close" : "Edit Daily Loss Limit"}</button>{limitOpen && limitEditor()}</div>}
             <dl className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5 font-mono text-[10px]">
               {strategyParams(cfg.strategy).flatMap(([k, v]) => [<dt key={k} className="text-cream-mute">{k}</dt>, <dd key={k + "v"} className="text-right text-brown-200">{v}</dd>])}
               <dt className="text-cream-mute">Market</dt><dd className="text-right text-brown-200">{coin}-PERP</dd>
@@ -559,7 +577,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
           <p className="text-sm text-cream">Start Your Agent To Open The Chat</p>
           <p className="text-[11px] text-cream-mute">{canTrade ? "Your Chat History Is Saved And Comes Back When The Agent Runs." : "Holder Only · Preview Mode"}</p>
           <button className="btn-primary px-4 py-1.5 text-xs" disabled={!canTrade} onClick={toggleAgent}><Play size={12} /> Start Agent</button>
-          {startMsg && <p className="text-[11px] text-red-400">{startMsg}</p>}
+          {(startMsg || (limitHit && canTrade)) && (<div className="flex w-full flex-col items-center gap-1.5"><p className="text-[11px] text-red-400">{startMsg ?? `Daily Loss Limit Of ${usd(st.maxLoss)} Is Hit. Raise It To Start Again.`}</p><div className="flex flex-wrap justify-center gap-1.5"><button className="btn-primary px-3 py-1.5 text-[11px]" onClick={() => applyLimit(String(Math.max(st.maxLoss * 2, Math.ceil(-dailyPnl(st) + 100))))}>Raise Limit To {usd(Math.max(st.maxLoss * 2, Math.ceil(-dailyPnl(st) + 100)))}</button><button className="btn-bracket px-3 py-1.5 text-[11px]" onClick={resetPaper}>Reset Paper Balance</button></div>{limitEditor()}</div>)}
         </section>
         )}
 
