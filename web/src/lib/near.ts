@@ -96,7 +96,7 @@ function buildModules(): WalletModuleFactory[] {
           description: "NEAR Hackathon — NFT That Trades Perps (Testnet)",
           url: "https://jadenprosper.github.io/perp-agent-nft/",
           icons: [
-            "https://jadenprosper.github.io/perp-agent-nft/agents/1.jpg",
+            "https://jadenprosper.github.io/perp-agent-nft/gallery/bagworker-001.webp",
           ],
         },
         chainId: NETWORK_ID === "mainnet" ? "near:mainnet" : "near:testnet",

@@ -48,7 +48,7 @@ export function normalizeAgentCatalog(raw: unknown): AgentCatalogEntry[] {
     const id = Math.trunc(idNum);
     const name = String(row.name ?? row.title ?? `Bag Worker #${id}`);
     const image = String(
-      row.image ?? row.image_url ?? row.media ?? `/agents/${id}.jpg`
+      row.image ?? row.image_url ?? row.media ?? `/gallery/bagworker-${String(id).padStart(3, "0")}.webp`
     );
     out.push({
       id,

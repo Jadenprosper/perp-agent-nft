@@ -26,7 +26,7 @@ export function AgentPortrait({
   const rawPortrait =
     (nft as { portrait_url?: string }).portrait_url ||
     (typeof traits.image === "string" ? traits.image : null) ||
-    (nft.token_id ? `/agents/${nft.token_id}.jpg` : null);
+    (nft.token_id ? `/gallery/bagworker-${String(nft.token_id).padStart(3, "0")}.webp` : null);
   const portraitUrl = rawPortrait ? withBase(rawPortrait) : null;
 
   return (

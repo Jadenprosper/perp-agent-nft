@@ -361,7 +361,7 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
                 {st.running ? <><Pause size={12} /> Pause Agent</> : <><Play size={12} /> Start Agent</>}
               </button>
             </div>
-            <AgentAvatar image={withBase(`/agents/${tokenId}.jpg`)} name={name} running={st.running && canTrade} />
+            <AgentAvatar image={withBase(`/gallery/bagworker-${String(tokenId).padStart(3, "0")}.webp`)} name={name} running={st.running && canTrade} />
             <p className="mt-2 font-display text-sm text-brown-100">{cfg.strategy.label}</p>
             {st.running && <p className="font-mono text-[10px] text-green-400">Running{st.until ? ` Until ${new Date(st.until).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : ""}</p>}
             <p className="font-mono text-[10px] text-cream-mute">Leverage {st.lev}x · Guardrails · Max Size {usd(st.maxSize)} · Max Daily Loss {usd(st.maxLoss)}</p>

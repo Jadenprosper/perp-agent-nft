@@ -282,7 +282,7 @@ export default function HomePage() {
         </div>
 
         {/* mobile view switch */}
-        <div className="flex gap-1 border-t border-brown-400/10 px-3 py-1.5 md:hidden">
+        <div className="flex gap-1 border-t border-brown-400/10 px-2 py-1.5 md:hidden">
           {(
             [
               ["desk", "Desk"],
@@ -293,7 +293,7 @@ export default function HomePage() {
             <button
               key={id}
               onClick={() => setView(id, id === "trade" && selectedId ? Number(selectedId) : undefined)}
-              className={`flex-1 rounded-md py-1.5 font-mono text-[11px] tracking-micro ${
+              className={`min-w-0 flex-1 whitespace-nowrap rounded-md px-0 py-1.5 font-mono text-[11px] tracking-normal ${
                 view === id
                   ? "bg-brown-500/25 text-brown-200"
                   : "text-cream-mute"
@@ -302,7 +302,7 @@ export default function HomePage() {
               [ {label} ]
             </button>
           ))}
-          <a href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/gallery/`} className="flex-1 rounded-md py-1.5 text-center font-mono text-[11px] tracking-micro text-cream-mute">
+          <a href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/gallery/`} className="min-w-0 flex-1 whitespace-nowrap rounded-md px-0 py-1.5 text-center font-mono text-[11px] tracking-normal text-cream-mute">
             [ Gallery ]
           </a>
         </div>
