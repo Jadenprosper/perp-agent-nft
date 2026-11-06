@@ -16,6 +16,7 @@ const px = (n: number) => (n >= 1000 ? `$${n.toLocaleString("en-US", { maximumFr
 const pct = (n: number, d = 2) => `${n >= 0 ? "+" : ""}${n.toFixed(d)}%`;
 const hhmm = (t: number) => new Date(t).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 let rot = 0;
+const disc = " Paper trading only, not financial advice.";
 const pick = <T,>(a: T[], seed?: number) => a[(seed ?? rot++) % a.length];
 
 /** Live market read from closed 1m candles. Null when there is not enough data. */
@@ -28,9 +29,37 @@ export function marketRead(c: TalkCtx) {
   const trend = e20[n] > e50[n] * 1.0005 ? "up" : e20[n] < e50[n] * 0.9995 ? "down" : "flat";
   const a = atr(cs, 14); const atrPct = (a / last) * 100;
   const ch = (bars: number) => (closes.length > bars ? ((last - closes[n - bars]) / closes[n - bars]) * 100 : null);
-  const hi = Math.max(...cs.slice(-60).map((x) => x.high)), lo = Math.min(...cs.slice(-60).map((x) => x.low));
+  const win60 = cs.slice(-60);
+  const hi = Math.max(...win60.map((x) => x.high)), lo = Math.min(...win60.map((x) => x.low));
+  const hi4 = Math.max(...cs.slice(-240).map((x) => x.high)), lo4 = Math.min(...cs.slice(-240).map((x) => x.low));
   const vol = atrPct > 0.15 ? "jumpy" : atrPct > 0.06 ? "normal" : "quiet";
-  return { last, trend, atr: a, atrPct, ch15: ch(15), ch60: ch(60), hi, lo, vol, rsi14: rsi(closes, 14) };
+  const r14 = rsi(closes, 14);
+  let bbMean = 0, bbUp = 0, bbLo = 0, bbPos = "mid";
+  if (closes.length >= 22) {
+    const w = closes.slice(-20); bbMean = w.reduce((a, b) => a + b, 0) / w.length;
+    const sd = Math.sqrt(w.reduce((a, b) => a + (b - bbMean) ** 2, 0) / w.length);
+    bbUp = bbMean + 2 * sd; bbLo = bbMean - 2 * sd;
+    bbPos = last > bbUp ? "above the upper band" : last < bbLo ? "below the lower band" : last > bbMean ? "in the upper half of the bands" : "in the lower half of the bands";
+  }
+  const resist = last < hi ? hi : hi4 > last ? hi4 : hi;
+  const support = last > lo ? lo : lo4 < last ? lo4 : lo;
+  return {
+    last, trend, atr: a, atrPct, ch15: ch(15), ch60: ch(60), ch24h: ch(Math.min(n, 1439)),
+    hi, lo, hi4, lo4, resist, support, vol, rsi14: r14, bbMean, bbUp, bbLo, bbPos, bars: cs.length,
+  };
+}
+
+/** Full TA-style analysis grounded only in live candle math. */
+export function analysisRead(c: TalkCtx): string {
+  const m = marketRead(c);
+  if (!m) return `I don't have enough candles yet for a real read on ${c.coin}. Give the feed a minute.`;
+  const sr = setupRead(c);
+  const lean = m.trend === "up" ? "bullish short-term bias" : m.trend === "down" ? "bearish short-term bias" : "neutral short-term bias";
+  const ch1 = m.ch60 != null ? `${pct(m.ch60)} over 1h` : "1h change n/a";
+  const ch24 = m.ch24h != null && m.bars >= 200 ? `${pct(m.ch24h)} over ~24h` : "24h change needs more candles";
+  const toRes = ((m.resist - m.last) / m.last) * 100, toSup = ((m.last - m.support) / m.last) * 100;
+  const setupLine = sr.ready ? "My strategy already has a setup on the latest closed candle." : "My strategy does not have a setup yet.";
+  return `${pick(["Here's my read on", "Quick analysis on", "Numbers only on"], c.seed)} ${c.coin}: price ${px(m.last)}, ${ch1}, ${ch24}. Trend ${m.trend}, RSI 14 at ${m.rsi14.toFixed(1)}, sitting ${m.bbPos} (mid ${px(m.bbMean)}, lower ${px(m.bbLo)}, upper ${px(m.bbUp)}). Volatility ${m.vol}, ATR 14 ${px(m.atr)} (${m.atrPct.toFixed(3)}% per minute). Nearest support ${px(m.support)} (${toSup.toFixed(2)}% below), resistance ${px(m.resist)} (${toRes.toFixed(2)}% above). ${setupLine} Overall ${lean}.${disc}`;
 }
 
 /** Where the strategy trigger is versus price right now. */
@@ -79,24 +108,33 @@ export function coinMentioned(raw: string): string | null {
   return null;
 }
 
+/** Strip curly/smart quotes and odd punctuation for matching. */
+export function scrubTalk(raw: string): string {
+  return raw.toLowerCase()
+    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035\u02BC\u02BB']/g, "")
+    .replace(/[\u201C\u201D\u201E]/g, "")
+    .replace(/[^a-z0-9%$.?\s/]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function converse(raw: string, c: TalkCtx): TalkReply | null {
-  const q = ` ${raw.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9%$.?\s/]/g, " ").replace(/\s+/g, " ").trim()} `;
+  const q = ` ${scrubTalk(raw)} `;
   const m = marketRead(c);
   const mine = c.positions.find((p) => p.by === "agent-auto");
   const sess = c.running ? `I'm on shift${c.until ? ` until ${hhmm(c.until)}` : " until you say pause"}` : "I'm paused right now";
   const agentFills = c.fills.filter((f) => f.by === "agent-auto");
   const wins = agentFills.filter((f) => f.pnl > 0).length;
   const mood = () => (m ? `${c.coin} is ${px(m.last)}, ${m.ch60 != null ? `${pct(m.ch60)} over the last hour` : "no hourly change yet"}, trend ${m.trend}, volatility ${m.vol} (ATR ${m.atrPct.toFixed(3)}% per minute).` : `I don't have enough candles yet for a read on ${c.coin}.`);
-  const disc = " Paper trading only, not financial advice.";
   const say = (text: string, topic: string): TalkReply => ({ text, topic });
 
   // follow ups that lean on the last topic
   if (T(/^ (and |so )?(why( not)?|how come|really|explain( that)?|what does that mean|meaning)\s?\?? $/, q) && c.lastTopic) {
     if (c.lastTopic === "setup") return say(`Because both conditions have to line up on a closed candle. ${setupRead(c).text}`, "setup");
     if (c.lastTopic === "skip") return say(c.lastNote ? `Last thing I noted: ${c.lastNote}. The guardrails are Max Size ${usd(c.maxSize)} and Max Daily Loss ${usd(c.maxLoss)}.` : "I haven't skipped anything this session.", "skip");
-    if (c.lastTopic === "opinion") return say(`My view is just the numbers. ${m ? mood() : ""} ${setupRead(c).text}`, "opinion");
+    if (c.lastTopic === "opinion" || c.lastTopic === "analysis") return say(analysisRead(c), "analysis");
   }
-  const CANON: Record<string, string> = { setup: "what setup are you looking for", market: "how is the market looking", opinion: "should i long now", positions: "what positions do i have", session: "are you running", pnl: "how much money have i made", stats: "win rate", skip: "why no trades" };
+  const CANON: Record<string, string> = { setup: "what setup are you looking for", market: "how is the market looking", opinion: "should i long now", analysis: "whats your analysis", positions: "what positions do i have", session: "are you running", pnl: "how much money have i made", stats: "win rate", skip: "why no trades" };
   if (T(/^ (and |so |ok |okay )?(now|and now|what about now|how about now|still|any change|anything yet|yet|update|again|same question|and)\s?\?? $/, q) && c.lastTopic && CANON[c.lastTopic])
     return converse(CANON[c.lastTopic], { ...c, lastTopic: undefined });
 
@@ -134,26 +172,30 @@ export function converse(raw: string, c: TalkCtx): TalkReply | null {
     return say(`${c.lastNote && /skip/i.test(c.lastNote) ? `I did skip one: ${c.lastNote}. ` : ""}${c.running ? "" : "First thing, I'm paused, so I'm not taking trades. "}${agentFills.length ? `I've made ${agentFills.length} trade${agentFills.length === 1 ? "" : "s"} so far. ` : ""}${sr.text}`, "skip");
   }
 
-  // opinion
-  if (T(/\b(should i|would you|do you think|is it (a )?good|good time|buy now|long now|short now|go long|go short|ape|worth it|bullish|bearish|your (view|take|opinion)|what would you do|prediction|where.*going)\b/, q)) {
-    if (!m) return say(`Not enough data for a view yet.${disc}`, "opinion");
-    const sr = setupRead(c);
-    const lean = m.trend === "up" ? "the short term trend is up" : m.trend === "down" ? "the short term trend is down" : "there's no clear short term trend";
-    const wantShort = /\b(short|sell|bearish|down)\b/.test(q) && !/\b(long|buy|bullish|up)\b/.test(q);
-    const wantLong = /\b(long|buy|bullish|up)\b/.test(q) && !/\b(short|sell|bearish|down)\b/.test(q);
-    const fit = wantLong ? (m.trend === "up" ? "A long goes with the short term trend." : m.trend === "down" ? "A long fights the short term trend." : "A long has no trend behind it.")
-      : wantShort ? (m.trend === "down" ? "A short goes with the short term trend." : m.trend === "up" ? "A short fights the short term trend." : "A short has no trend behind it.") : "";
-    const verdict = `${fit} ${sr.ready ? "My strategy actually has a setup right now." : "My own strategy doesn't have a setup yet, so I'd be waiting."}`.trim();
-    return say(`Honest read on ${c.coin}: ${lean}, ${m.ch60 != null ? `${pct(m.ch60)} in the last hour,` : ""} volatility is ${m.vol}, RSI 14 ${m.rsi14.toFixed(1)}. ${verdict}${m.rsi14 > 70 ? " RSI is hot, chasing a long here is risky." : m.rsi14 < 30 ? " RSI is washed out, shorting here is risky." : ""} If you do trade, size small and set a stop.${disc}`, "opinion");
+  // analysis / opinion / TA
+  const wantsAnalysis = T(/\b(analys[ei]s|analy[sz]e|thoughts?|opinion|outlook|view|take|bias|prediction|forecast|breakdown|ta\b|technical|levels?|support|resistance|s\/r|bullish|bearish|pumping|dumping|pump\b|dump\b|where (is|are|will)|what do you think|your (read|take|view|bias|call)|good time|should i|would you|do you think|worth it|ape|long now|short now|buy now|go long|go short|what would you do)\b/, q)
+    || T(/\b(whats?|what is|give me|tell me|share|got|any)\b.{0,40}\b(analys[ei]s|read|take|view|outlook|thoughts?|opinion|bias|ta)\b/, q);
+  if (wantsAnalysis) {
+    if (!m) return say(`Not enough data for a view yet.${disc}`, "analysis");
+    const wantShort = /\b(short|sell|bearish|down|dump)\b/.test(q) && !/\b(long|buy|bullish|up|pump)\b/.test(q);
+    const wantLong = /\b(long|buy|bullish|up|pump)\b/.test(q) && !/\b(short|sell|bearish|down|dump)\b/.test(q);
+    if (wantLong || wantShort) {
+      const sr = setupRead(c);
+      const lean = m.trend === "up" ? "the short term trend is up" : m.trend === "down" ? "the short term trend is down" : "there's no clear short term trend";
+      const fit = wantLong ? (m.trend === "up" ? "A long goes with the short term trend." : m.trend === "down" ? "A long fights the short term trend." : "A long has no trend behind it.")
+        : (m.trend === "down" ? "A short goes with the short term trend." : m.trend === "up" ? "A short fights the short term trend." : "A short has no trend behind it.");
+      return say(`${analysisRead(c)} ${fit} ${sr.ready ? "My strategy actually has a setup right now." : "My own strategy doesn't have a setup yet, so I'd be waiting."}${m.rsi14 > 70 ? " RSI is hot, chasing a long here is risky." : m.rsi14 < 30 ? " RSI is washed out, shorting here is risky." : ""} If you do trade, size small and set a stop.`, "analysis");
+    }
+    return say(analysisRead(c), "analysis");
   }
 
-  // market
+  // market snapshot
   const coinAsked = q.match(/\b(btc|bitcoin|eth|ether|ethereum|sol|solana|hype|xrp|doge|sui|avax|link|bnb|near|aave)\b/);
-  if (T(/\b(how.?s|how is|hows|looking|market|price|chart|trend|vol|volatil\w*|moving|pumping|dumping|up or down|direction|what.?s .* (at|doing))\b/, q) || (coinAsked && T(/\?/, q))) {
+  if (T(/\b(how.?s|how is|hows|looking|market|price|chart|trend|vol|volatil\w*|moving|pumping|dumping|up or down|direction|what.?s .* (at|doing)|whats the (price|chart|trend))\b/, q) || (coinAsked && (T(/\?/, q) || T(/\b(look|price|chart|trend|status|update)\b/, q)))) {
     if (!m) return say(mood(), "market");
     const range = `Last hour range ${px(m.lo)} to ${px(m.hi)}.`;
     const vibe = m.trend === "up" ? pick(["Bulls have the wheel for now.", "Grinding higher."], c.seed) : m.trend === "down" ? pick(["Sellers are leaning on it.", "Drifting lower."], c.seed) : pick(["Chopping sideways.", "Going nowhere fast."], c.seed);
-    return say(`${mood()} ${range} ${vibe}`, "market");
+    return say(`${mood()} ${range} Support ${px(m.support)}, resistance ${px(m.resist)}. ${vibe}`, "market");
   }
 
   // pnl / positions / session
@@ -175,9 +217,24 @@ export function converse(raw: string, c: TalkCtx): TalkReply | null {
   if (T(/\b(pnl|profit|money|up or down|am i up|am i down|balance|equity|made|lost|losing|winning)\b/, q))
     return say(`Cash ${usd(c.cash)}, today ${usd(c.today)}, all time realized ${usd(c.fills.reduce((a, f) => a + f.pnl, 0))}. Daily loss limit ${usd(c.maxLoss)}.`, "pnl");
 
-  if (T(/\?\s*$/, q) || T(/^ (what|why|how|when|where|who|is|are|do|does|can|could|should|will|would)\b/, q))
+  // Any leftover question, question-word opener, or coin mention gets a real market/analysis read, never silence.
+  const looksAsk = T(/\?\s*$/, q) || T(/^ (what|whats|why|how|hows|when|where|who|is|are|do|does|can|could|should|will|would|any|tell|give|share)\b/, q) || Boolean(coinAsked);
+  if (looksAsk) {
+    if (m) return say(`${pick(["Not sure I caught the exact ask, so here's the live read.", "I'll give you the market instead.", "Quick read while I catch up:"], c.seed)} ${analysisRead(c)}`, "analysis");
     return say(`Not sure I follow, but here's where things stand. ${mood()} ${sess}. You can ask me "What Setup Are You Looking For?", "How's ${c.coin} Looking?", "Should I Long Now?" or "Why No Trades?".`, "fallback");
+  }
   return null;
 }
 
-export const ASK_CHIPS = (coin: string) => ["What Setup Are You Looking For?", `How's ${coin} Looking?`, "Should I Long Now?", "Why No Trades Yet?", "What's My Risk?", "Explain RSI"];
+/** True when the message looks like chat/question, not a trading command. */
+export function looksLikeTalk(raw: string): boolean {
+  const lo = scrubTalk(raw);
+  if (!lo) return false;
+  if (/\?\s*$/.test(lo)) return true;
+  if (/^(what|whats|why|how|hows|should|is|are|do|does|did|when|would|will|who|where|explain|tell me|any|thoughts|opinion|analyse|analyze|analysis|outlook|bias|prediction|forecast|breakdown|bullish|bearish)\b/.test(lo)) return true;
+  if (/\b(analys[ei]s|analy[sz]e|thoughts?|opinion|outlook|your (view|take|read|bias)|what do you think|where is|support|resistance|levels?|ta\b)\b/.test(lo)) return true;
+  if (coinMentioned(raw) && !/\b(long|short|buy|sell|close|exit|dump|flatten|pause|stop|resume|start|leverage|lev\b|confirm|cancel|trade for me|run (it|the)|set )\b/.test(lo)) return true;
+  return false;
+}
+
+export const ASK_CHIPS = (coin: string) => ["What Setup Are You Looking For?", `How's ${coin} Looking?`, `What's Your Analysis On ${coin}?`, "Should I Long Now?", "Why No Trades Yet?", "What's My Risk?", "Explain RSI"];

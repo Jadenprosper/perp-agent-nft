@@ -57,7 +57,7 @@ const WORDNUM: Record<string, number> = { a: 1, an: 1, one: 1, two: 2, three: 3,
 
 /** Lowercase, expand slang, fix typos. Exported for tests. */
 export function normalize(raw: string): string {
-  let t = ` ${raw.toLowerCase().replace(/[’']/g, "").replace(/[!?.,;]+(\s|$)/g, " ").replace(/\s+/g, " ").trim()} `;
+  let t = ` ${raw.toLowerCase().replace(/[\u2018\u2019\u201A\u201B\u2032\u2035\u02BC\u02BB']/g, "").replace(/[!?.,;]+(\s|$)/g, " ").replace(/\s+/g, " ").trim()} `;
   t = t.replace(/\s(\d+(?:\.\d+)?)\s*k\b/g, (_, n) => ` ${Number(n) * 1000} `);
   t = t.split(" ").map((w) => (w ? fix(w) : w)).join(" ");
   const rep: [RegExp, string][] = [

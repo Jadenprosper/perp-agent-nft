@@ -13,7 +13,7 @@ import { agentEvents } from "@/lib/agentEvents";
 import { withBase } from "@/lib/basePath";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { CHAT_EXAMPLES, parseIntent, type Level } from "@/lib/intent";
-import { ASK_CHIPS, coinMentioned, converse, type TalkCtx } from "@/lib/talk";
+import { ASK_CHIPS, coinMentioned, converse, looksLikeTalk, scrubTalk, type TalkCtx } from "@/lib/talk";
 import { clampLeverage, DEFAULT_LEVERAGE, MAX_LEVERAGE, writeLeverage } from "@/lib/leverage";
 
 const START_EQUITY = 10_000;
@@ -450,27 +450,28 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
     if (!canTrade) { say("I Only Take Orders From My Holder. Connect The Wallet That Owns Me To Chat Trades."); return; }
     const s = stRef.current;
     const px = price;
-    const lo = msg.toLowerCase();
+    const lo = scrubTalk(msg);
     const parsedOpen = parseIntent(msg);
     // Questions and casual talk go to the conversational layer, grounded in live state.
     const talkCtx = (): TalkCtx => ({ name, coin, strategy: cfg.strategy, closed: candlesRef.current.slice(0, -1), price: px, running: s.running, until: s.until,
       lastNote: s.lastNote, lastCheckAt: s.lastCheckAt, positions: s.positions, priceOf: (c: string) => midsRef.current[c] ?? null, defaultCoin: cfg.market, fills: s.fills, cash: s.cash, lev: s.lev, maxSize: s.maxSize, maxLoss: s.maxLoss,
       today: dailyPnl(s), lastTopic: topicRef.current });
-    const isQuestion = /^(what|whats|why|how|hows|should|is|are|do|does|did|when|would|will|who|where|explain|tell me|any|thoughts|opinion)\b/.test(lo) || /\?\s*$/.test(lo);
+    const talkish = looksLikeTalk(msg) || parsedOpen.kind === "unknown";
     const draftReply = s.draft && ["confirm", "cancel", "set_sl", "set_tp"].includes(parsedOpen.kind);
-    if (!draftReply && (parsedOpen.kind === "unknown" || (isQuestion && !/^(can|could) you\b/.test(lo)))) {
+    if (!draftReply && talkish && !/^(can|could) you\b/.test(lo)) {
       const other = coinMentioned(msg);
       if (other && other !== coin && (PERPS as readonly string[]).includes(other)) {
         fetchCandles(other).then((cs) => {
           const rep = converse(msg, { ...talkCtx(), coin: other, closed: cs.slice(0, -1), price: midsRef.current[other] ?? cs[cs.length - 1]?.close ?? null,
-            priceOf: (c: string) => (c === coin ? px : midsRef.current[c] ?? null) });
-          if (rep) { topicRef.current = rep.topic; say(`${rep.text}${coin !== other && rep.topic !== "explain" ? ` (I'm Trading ${coin} Right Now. Tap ${other} Up Top To Switch Me.)` : ""}`); }
-          else say(`Couldn't Read ${other} Right Now. Try Again In A Second.`);
+            priceOf: (c: string) => (c === coin ? px : midsRef.current[c] ?? null) })
+            ?? { text: `Couldn't build a read on ${other} yet. Give the feed a second.`, topic: "fallback" };
+          topicRef.current = rep.topic; say(`${rep.text}${coin !== other && rep.topic !== "explain" ? ` (I'm Trading ${coin} Right Now. Tap ${other} Up Top To Switch Me.)` : ""}`);
         }).catch(() => say(`Couldn't Load ${other} Candles. Try Again In A Second.`));
         return;
       }
       const rep = converse(msg, talkCtx());
-      if (rep && !(rep.topic === "fallback" && parsedOpen.kind !== "unknown")) { topicRef.current = rep.topic; say(rep.text); return; }
+      if (rep) { topicRef.current = rep.topic; say(rep.text); return; }
+      if (looksLikeTalk(msg)) { say(`Here's the live read while I catch that. ${coin} feed is ${px != null ? "up" : "warming"}. Try "What's Your Analysis On ${coin}?" or "How's ${coin} Looking?".`); return; }
     }
     // A pending draft only captures direct answers to it; any other command runs right away.
     const draftAnswer = ["confirm", "cancel", "set_sl", "set_tp", "unknown"].includes(parsedOpen.kind);
@@ -547,8 +548,12 @@ export function TradeView({ tokenId, accountId, isHolder, onConnect, onBack }: {
         askDraft(d); return;
       }
       case "confirm": case "cancel": return;
-      default:
+      default: {
+        const again = converse(msg, talkCtx());
+        if (again) { topicRef.current = again.topic; say(again.text); return; }
+        if (looksLikeTalk(msg)) { say(`Here's where things stand on ${coin}. Ask "What's Your Analysis On ${coin}?" for the full read.`); return; }
         say(`Didn't Catch That.${it.kind === "unknown" && it.suggestion && it.suggestion !== "Help" ? ` Did You Mean "${it.suggestion}"?` : ""} Try: "Trade For Me For 2h", "Long BTC 100 SL 2% TP 4%", "Close All", "Status" Or "Help".`);
+      }
     }
   };
 

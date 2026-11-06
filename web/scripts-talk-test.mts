@@ -14,8 +14,22 @@ const qs = ["What setup are you looking for?", "what are you waiting for", "when
   "win rate?", "how many trades have you made", "how much money have i made", "am i up", "what's my balance", "are you running?", "when does the session end", "time left?",
   "what is rsi", "explain bollinger bands", "what's atr", "what is leverage", "what does liquidation mean", "explain stop loss", "is this real money?", "what's an ema",
   "hi", "hey there", "gm", "how are you?", "who are you", "thanks", "tell me a joke", "lol", "what's the meaning of life?", "blah blah", "close everything", "stop the bot", "set leverage to 20", "can you close my position?"];
+
+const curly = "What\u2019s your analysis on BTC";
+const more = [
+  curly, "Whats your analysis on BTC", "What's your analysis on BTC?", "analysis on btc", "analyze BTC", "analyse eth",
+  "your thoughts on sol", "thoughts on HYPE?", "opinion on doge", "outlook for AVAX", "your view on link",
+  "your take on bnb", "TA on BTC", "technical analysis BTC", "breakdown of eth", "give me a read on sol",
+  "bias on BTC?", "bullish or bearish on eth?", "prediction for BTC", "where is BTC going?", "where is sol going",
+  "what do you think of BTC", "what do you think about eth", "is it a good time to buy BTC", "good time to long eth?",
+  "is BTC pumping?", "is eth dumping?", "support and resistance on BTC", "levels on sol", "S/R for eth",
+  "any analysis?", "share your analysis", "got a take on BTC?", "tell me your outlook", "forecast for BTC",
+  "What\u2019s the outlook on BTC", "What\u2018s your take?", "BTC analysis please", "read on near",
+  "how do you see BTC", "whats the bias", "market analysis", "full analysis please", "quick TA",
+];
+
 let n = 0, bad = 0;
-for (const q of qs) {
+for (const q of [...qs, ...more]) {
   const it = parseIntent(q); const lo = q.toLowerCase();
   const isQ = /^(what|whats|why|how|hows|should|is|are|do|does|did|when|would|will|who|where|explain|tell me|any|thoughts|opinion)\b/.test(lo) || /\?\s*$/.test(lo);
   const routed = it.kind === "unknown" || (isQ && !/^(can|could) you\b/.test(lo));
@@ -35,4 +49,13 @@ for (const coin of ["SOL", "ETH", "HYPE", "DOGE", "SUI"]) {
     console.log(`Q: ${q}\nA: ${out}\n`);
   }
 }
+
+const curlyRep = converse(curly, ctx);
+if (!curlyRep || curlyRep.topic !== "analysis" || /Didn.?t Catch|NaN|undefined|—/.test(curlyRep.text) || !/BTC/.test(curlyRep.text)) {
+  bad++; console.log("FAIL curly", curlyRep);
+} else {
+  console.log("CURLY OK:", curlyRep.text.slice(0, 220));
+}
+const sample = converse("What's your analysis on BTC?", ctx);
+console.log("SAMPLE:", sample?.text.slice(0, 320));
 console.log(`${n} Questions, ${bad} Bad`);
